@@ -1,0 +1,35 @@
+{
+  "name": "seed",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A self-hostable generative TTRPG engine with proactive, agentic NPCs.",
+  "author": "Runkai Zhang",
+  "license": "Apache-2.0",
+  "engines": {
+    "bun": ">=1.3.0"
+  },
+  "bin": {
+    "seed": "src/cli/main.ts"
+  },
+  "scripts": {
+    "setup": "bun install --frozen-lockfile",
+    "check": "bun run typecheck && bun test",
+    "dev": "bun run src/cli/main.ts",
+    "start": "bun run src/cli/main.ts",
+    "viewer": "bun run src/viewer/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "playtest:sweep": "bun run playtest/auto/run.ts",
+    "playtest:triage": "bun run playtest/auto/triage.ts",
+    "playtest:loop": "bash playtest/auto/loop.sh"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}

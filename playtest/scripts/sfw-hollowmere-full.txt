@@ -1,0 +1,18 @@
+/state
+Marisa, what do you know about the keeper's last few days before he vanished?
+/inspect Marisa
+/whisper Tobin keep your eyes open for anything the grown-ups miss
+/go boardwalk
+/go gardens
+Old Bram, take your time — tell me what you heard from the keeper's bench that night.
+/go boardwalk
+/go guildhall
+/advance
+/go boardwalk
+/go pier
+/look
+/go cottage
+/state
+/advance
+/state
+/quit

@@ -1,0 +1,1534 @@
+{
+  "id": "world.black-concord",
+  "name": "The Black Concord",
+  "summary": "A brutal medieval-fantasy war setting for exercising Seed's world systems: dynastic collapse, plague law, famine markets, crusader debts, inquisitorial terror, battlefield horror, hidden lore, faction conflict, proactive companions, combat spawns, and authored event beats.",
+  "constitution": {
+    "useGenericDefeatOutcomes": true,
+    "defeatOutcomes": []
+  },
+  "lore": [
+    {
+      "id": "lore.interregnum",
+      "title": "The Aurelian Interregnum",
+      "body": "The last High King died without an heir after the winter siege of Veyrstadt. Three claimants now mint their own coin, hang each other's heralds, and hire hungry free companies to enforce paper rights. The common folk call the civil war the Black Concord because every treaty is signed over a grave.",
+      "tags": [
+        "history",
+        "war",
+        "politics"
+      ]
+    },
+    {
+      "id": "lore.red-year",
+      "title": "The Red Year",
+      "body": "Nine years ago, a livestock blight became a human plague and then an excuse for emergency law. Quarantine pyres, corpse carts, plague taxes, and mass confessions broke the old guild order. Those who survived remember which lords sealed their gates and which priests sold absolution by the ounce.",
+      "tags": [
+        "history",
+        "plague",
+        "class"
+      ]
+    },
+    {
+      "id": "lore.sable-crusade",
+      "title": "The Sable Crusade",
+      "body": "The church's crusade into the eastern barrows promised relics and salvation. It returned with debts, maimed veterans, and reliquaries that whisper in storms. The campaign's atrocities are officially denied, but songs about the salt-pits and hostage columns are sung in every mercenary camp.",
+      "tags": [
+        "history",
+        "religion",
+        "war"
+      ]
+    },
+    {
+      "id": "lore.concordat-law",
+      "title": "Concordat Law",
+      "body": "Under Concordat law, noble blood is worth coin, guild blood is worth labor, and outlaw blood is worth nothing. Trial by ordeal remains legal. Torture warrants are sealed with black wax. Sanctuary still exists, but only until the temple ledger is audited.",
+      "tags": [
+        "law",
+        "immorality",
+        "institutions"
+      ]
+    },
+    {
+      "id": "lore.court-customs",
+      "title": "Court Custom and Vice",
+      "body": "Noble marriages, blackmail, inheritance disputes, and secret bargains drive the realm's court intrigue. The setting treats these forces as social power and consequence.",
+      "tags": [
+        "society",
+        "intrigue"
+      ]
+    },
+    {
+      "id": "lore.undercrypt",
+      "title": "The Undercrypt Treaty",
+      "body": "Secret: the Black Concord is not only a metaphor. Beneath Veyrstadt, the rival claimants signed a real pact with the Ashen Choir, trading future battle-dead for help winning the civil war. The dead now rise because the Choir is collecting early.",
+      "tags": [
+        "secret",
+        "gm",
+        "supernatural"
+      ]
+    },
+    {
+      "id": "lore.isolde-secret",
+      "title": "Isolde's Unburned Letter",
+      "body": "Secret: Dame Isolde carries a letter proving her own family opened Veyrstadt's postern gate during the winter siege. She joined the player to destroy the proof or decide whom to trust with it.",
+      "tags": [
+        "secret",
+        "npc",
+        "politics"
+      ]
+    },
+    {
+      "id": "lore.saint-secret",
+      "title": "The Saint Is Missing",
+      "body": "Secret: Saint Odran's relic is a fraud. The true saint was executed in the plague gaol for refusing to bless quarantine burnings. Brother Severin suspects the truth but fears what faith becomes without its lie.",
+      "tags": [
+        "secret",
+        "religion",
+        "npc"
+      ]
+    }
+  ],
+  "factions": [
+    {
+      "id": "faction.iron-crown",
+      "name": "The Iron Crown Regency",
+      "description": "A war government of tax clerks, siege engineers, and widowed nobles that claims to preserve the kingdom until a lawful heir appears.",
+      "goals": [
+        "Hold Veyrstadt",
+        "Fund the western front",
+        "Suppress plague unrest"
+      ],
+      "relationships": {
+        "faction.red-mantle": -65,
+        "faction.vespers": 20,
+        "faction.free-lances": -10,
+        "faction.undercrypt": -40
+      }
+    },
+    {
+      "id": "faction.red-mantle",
+      "name": "The Red Mantle League",
+      "description": "Rebel burghers, dispossessed knights, and famine villages bound by oaths against the regency's taxes and black-wax warrants.",
+      "goals": [
+        "Break the regency",
+        "Seize grain stores",
+        "Publish the siege ledgers"
+      ],
+      "relationships": {
+        "faction.iron-crown": -65,
+        "faction.free-lances": 15,
+        "faction.vespers": -30
+      }
+    },
+    {
+      "id": "faction.vespers",
+      "name": "The Order of Saint Vesper",
+      "description": "An inquisitorial order that burns plague cults, edits chronicles, and calls every cruelty a medicine for the soul.",
+      "goals": [
+        "Preserve doctrinal unity",
+        "Recover crusade relics",
+        "Control forbidden testimony"
+      ],
+      "relationships": {
+        "faction.iron-crown": 20,
+        "faction.red-mantle": -30,
+        "faction.undercrypt": -80
+      }
+    },
+    {
+      "id": "faction.free-lances",
+      "name": "The Free Lances of Cinder",
+      "description": "A mercenary brotherhood paid in arrears, prisoners, and looting rights. Some are veterans with a code; others are wolves in mail.",
+      "goals": [
+        "Collect overdue pay",
+        "Keep the company fed",
+        "Avoid another hopeless siege"
+      ],
+      "relationships": {
+        "faction.iron-crown": -10,
+        "faction.red-mantle": 15,
+        "faction.vespers": -15
+      }
+    },
+    {
+      "id": "faction.undercrypt",
+      "name": "The Ashen Choir",
+      "description": "A hidden cult of grave-singers, oathbreakers, and intelligent dead beneath the capital.",
+      "goals": [
+        "Collect promised bodies",
+        "Open the royal undercrypt",
+        "Turn civil war into harvest"
+      ],
+      "relationships": {
+        "faction.iron-crown": -40,
+        "faction.vespers": -80,
+        "faction.red-mantle": -30
+      }
+    }
+  ],
+  "locations": [
+    {
+      "id": "loc.black-gate",
+      "name": "The Black Gate",
+      "description": "A rain-slick barbican at Veyrstadt's western wall. Heads in tarred cages swing above the murder holes, each tagged with the crime that made someone richer.",
+      "connections": [
+        "loc.tallow-market",
+        "loc.regent-hall",
+        "loc.gallows-field"
+      ],
+      "exits": [
+        {
+          "to": "loc.tallow-market",
+          "direction": "east",
+          "name": "the tax-road into the city"
+        },
+        {
+          "to": "loc.regent-hall",
+          "direction": "north",
+          "name": "the guarded causeway to Regent Hall"
+        },
+        {
+          "to": "loc.gallows-field",
+          "direction": "west",
+          "name": "the corpse road outside the walls"
+        },
+        {
+          "to": "loc.undercrypt",
+          "direction": "down",
+          "name": "a sealed plague stair",
+          "locked": true,
+          "hidden": true
+        }
+      ],
+      "region": "region.veyrstadt",
+      "spawns": [
+        {
+          "templateId": "npc.tax-reeve",
+          "tier": "transient",
+          "max": 1
+        },
+        {
+          "templateId": "mon.corpse-cart",
+          "tier": "transient",
+          "max": 1
+        }
+      ],
+      "npcs": [
+        "npc.varro"
+      ]
+    },
+    {
+      "id": "loc.tallow-market",
+      "name": "Tallow Market",
+      "description": "A famine market under red awnings, where candles, bone broth, forged pardons, and battlefield loot change hands beside a public whipping post.",
+      "connections": [
+        "loc.black-gate",
+        "loc.plague-gaol",
+        "loc.sable-chapel",
+        "loc.velvet-court"
+      ],
+      "exits": [
+        {
+          "to": "loc.black-gate",
+          "direction": "west",
+          "name": "the gate road"
+        },
+        {
+          "to": "loc.plague-gaol",
+          "direction": "south",
+          "name": "the quarantine lane"
+        },
+        {
+          "to": "loc.sable-chapel",
+          "direction": "east",
+          "name": "the pilgrim stair"
+        },
+        {
+          "to": "loc.velvet-court",
+          "direction": "north",
+          "name": "the curtained alley"
+        }
+      ],
+      "region": "region.veyrstadt",
+      "spawns": [
+        {
+          "templateId": "npc.hungry-crowd",
+          "tier": "transient",
+          "max": 2
+        }
+      ],
+      "npcs": [
+        "npc.mirelle"
+      ]
+    },
+    {
+      "id": "loc.regent-hall",
+      "name": "Regent Hall",
+      "description": "A cold hall of iron braziers, debt maps, and banners taken from defeated cousins. Every clerk writes in duplicate because burned ledgers have become a language of politics.",
+      "connections": [
+        "loc.black-gate",
+        "loc.sable-chapel"
+      ],
+      "exits": [
+        {
+          "to": "loc.black-gate",
+          "direction": "south",
+          "name": "the guarded causeway"
+        },
+        {
+          "to": "loc.sable-chapel",
+          "direction": "east",
+          "name": "the confessor's gallery"
+        },
+        {
+          "to": "loc.undercrypt",
+          "direction": "down",
+          "name": "the royal ossuary door",
+          "locked": true,
+          "hidden": true
+        }
+      ],
+      "region": "region.veyrstadt",
+      "npcs": [
+        "npc.regent-alaric"
+      ]
+    },
+    {
+      "id": "loc.plague-gaol",
+      "name": "The Plague Gaol",
+      "description": "A converted monastery with barred infirmary windows, lime-washed cells, and a courtyard where confession benches face the burn pit.",
+      "connections": [
+        "loc.tallow-market",
+        "loc.sable-chapel",
+        "loc.undercrypt"
+      ],
+      "exits": [
+        {
+          "to": "loc.tallow-market",
+          "direction": "north",
+          "name": "the quarantine lane"
+        },
+        {
+          "to": "loc.sable-chapel",
+          "direction": "east",
+          "name": "the ash-cloister"
+        },
+        {
+          "to": "loc.undercrypt",
+          "direction": "down",
+          "name": "the charnel lift"
+        }
+      ],
+      "region": "region.veyrstadt",
+      "spawns": [
+        {
+          "templateId": "mon.fevered-dead",
+          "tier": "transient",
+          "max": 2
+        }
+      ],
+      "npcs": [
+        "npc.jailer-maud"
+      ]
+    },
+    {
+      "id": "loc.sable-chapel",
+      "name": "Sable Chapel of Saint Vesper",
+      "description": "Black candles, polished skull reliquaries, and a choir loft veiled by chainmail curtains. The sermons here are less comfort than verdict.",
+      "connections": [
+        "loc.tallow-market",
+        "loc.regent-hall",
+        "loc.plague-gaol",
+        "loc.black-bridge"
+      ],
+      "exits": [
+        {
+          "to": "loc.tallow-market",
+          "direction": "west",
+          "name": "the pilgrim stair"
+        },
+        {
+          "to": "loc.regent-hall",
+          "direction": "west",
+          "name": "the confessor's gallery"
+        },
+        {
+          "to": "loc.plague-gaol",
+          "direction": "south",
+          "name": "the ash-cloister"
+        },
+        {
+          "to": "loc.black-bridge",
+          "direction": "east",
+          "name": "the bridge road"
+        }
+      ],
+      "region": "region.veyrstadt",
+      "npcs": [
+        "npc.severin",
+        "npc.mother-kettryn"
+      ]
+    },
+    {
+      "id": "loc.velvet-court",
+      "name": "The Velvet Court",
+      "description": "A lantern-lit district of spies, debt brokers, courtiers, and masked noble envoys. Secrets are the only coin accepted at full value.",
+      "connections": [
+        "loc.tallow-market",
+        "loc.smuggler-cellar"
+      ],
+      "exits": [
+        {
+          "to": "loc.tallow-market",
+          "direction": "south",
+          "name": "the curtained alley"
+        },
+        {
+          "to": "loc.smuggler-cellar",
+          "direction": "down",
+          "name": "the wine-cellar stair"
+        }
+      ],
+      "region": "region.veyrstadt",
+      "npcs": [
+        "npc.lysandra",
+        "npc.velvet-enforcer"
+      ]
+    },
+    {
+      "id": "loc.smuggler-cellar",
+      "name": "The Smuggler Cellar",
+      "description": "A wet brick vault under the Velvet Court, stacked with false-bottom grain barrels, deserters' mail, and letters too poisonous for daylight.",
+      "connections": [
+        "loc.velvet-court",
+        "loc.undercrypt"
+      ],
+      "exits": [
+        {
+          "to": "loc.velvet-court",
+          "direction": "up",
+          "name": "the wine-cellar stair"
+        },
+        {
+          "to": "loc.undercrypt",
+          "direction": "down",
+          "name": "the old drainage arch",
+          "hidden": true
+        }
+      ],
+      "region": "region.veyrstadt",
+      "npcs": [
+        "npc.rook"
+      ]
+    },
+    {
+      "id": "loc.black-bridge",
+      "name": "Black Bridge",
+      "description": "A stone bridge over a river choked with mill-wheels and the dead of three failed assaults. Archers on both banks charge a toll in coin, blood, or names.",
+      "connections": [
+        "loc.sable-chapel",
+        "loc.gallows-field",
+        "loc.battlefield"
+      ],
+      "exits": [
+        {
+          "to": "loc.sable-chapel",
+          "direction": "west",
+          "name": "the bridge road"
+        },
+        {
+          "to": "loc.gallows-field",
+          "direction": "south",
+          "name": "the scaffold track"
+        },
+        {
+          "to": "loc.battlefield",
+          "direction": "east",
+          "name": "the siege road"
+        }
+      ],
+      "region": "region.border",
+      "spawns": [
+        {
+          "templateId": "mon.bridge-ghoul",
+          "tier": "transient",
+          "max": 1
+        }
+      ],
+      "npcs": []
+    },
+    {
+      "id": "loc.gallows-field",
+      "name": "Gallows Field",
+      "description": "Rows of weathered beams stand outside the wall, some empty, some not. War widows search the mud for buttons, teeth, and proof enough to claim a pension.",
+      "connections": [
+        "loc.black-gate",
+        "loc.black-bridge",
+        "loc.battlefield"
+      ],
+      "exits": [
+        {
+          "to": "loc.black-gate",
+          "direction": "east",
+          "name": "the corpse road"
+        },
+        {
+          "to": "loc.black-bridge",
+          "direction": "north",
+          "name": "the scaffold track"
+        },
+        {
+          "to": "loc.battlefield",
+          "direction": "east",
+          "name": "the trampled causeway"
+        }
+      ],
+      "region": "region.border",
+      "spawns": [
+        {
+          "templateId": "mon.hanged-thing",
+          "tier": "tracked",
+          "max": 1
+        }
+      ],
+      "npcs": [
+        "npc.captain-gryth"
+      ]
+    },
+    {
+      "id": "loc.battlefield",
+      "name": "The Field of Broken Lances",
+      "description": "A churned plain of snapped pikes, drowned trenches, and banners sunk into mud. Carrion bells ring in the wind, warning the living away from the unpaid dead.",
+      "connections": [
+        "loc.black-bridge",
+        "loc.gallows-field",
+        "loc.barrow-camp"
+      ],
+      "exits": [
+        {
+          "to": "loc.black-bridge",
+          "direction": "west",
+          "name": "the siege road"
+        },
+        {
+          "to": "loc.gallows-field",
+          "direction": "west",
+          "name": "the trampled causeway"
+        },
+        {
+          "to": "loc.barrow-camp",
+          "direction": "east",
+          "name": "the old crusader road"
+        }
+      ],
+      "region": "region.border",
+      "spawns": [
+        {
+          "templateId": "mon.oathbreaker",
+          "tier": "tracked",
+          "max": 1
+        },
+        {
+          "templateId": "mon.fevered-dead",
+          "tier": "transient",
+          "max": 2
+        }
+      ],
+      "npcs": []
+    },
+    {
+      "id": "loc.barrow-camp",
+      "name": "The Barrow Camp",
+      "description": "A fortified mercenary camp built in the lee of ancient burial mounds. Dice rattle, surgeons saw, and unpaid soldiers argue whether desertion is a sin or a strategy.",
+      "connections": [
+        "loc.battlefield",
+        "loc.undercrypt"
+      ],
+      "exits": [
+        {
+          "to": "loc.battlefield",
+          "name": "back to the battlefield"
+        },
+        {
+          "to": "loc.undercrypt",
+          "name": "down into the undercrypt"
+        },
+        {
+          "to": "frontier:ashen-moor",
+          "name": "a burned track onto the ashen moor"
+        }
+      ],
+      "region": "region.border",
+      "npcs": [
+        "npc.captain-gryth"
+      ]
+    },
+    {
+      "id": "loc.undercrypt",
+      "name": "The Royal Undercrypt",
+      "description": "A cathedral of bones below Veyrstadt, older than the palace above it. The walls are carved with treaties between kings and things that were never crowned.",
+      "connections": [
+        "loc.plague-gaol",
+        "loc.smuggler-cellar",
+        "loc.barrow-camp"
+      ],
+      "exits": [
+        {
+          "to": "loc.plague-gaol",
+          "direction": "up",
+          "name": "the charnel lift"
+        },
+        {
+          "to": "loc.smuggler-cellar",
+          "direction": "up",
+          "name": "the old drainage arch"
+        },
+        {
+          "to": "loc.barrow-camp",
+          "direction": "up",
+          "name": "the split barrow mouth"
+        }
+      ],
+      "region": "region.veyrstadt",
+      "spawns": [
+        {
+          "templateId": "mon.choir-dead",
+          "tier": "tracked",
+          "max": 2
+        }
+      ],
+      "npcs": []
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc.isolde",
+      "name": "Dame Isolde Varr",
+      "summary": "A disgraced knight with a regicide rumor behind her and a practical hatred of heroic speeches.",
+      "persona": "Severe, dry, and decisive. Isolde speaks like someone counting arrows and exits. She protects companions without admitting affection and treats moral purity as a luxury bought by someone else's suffering.",
+      "appearance": "Blackened half-plate, cropped iron-grey hair, a scar from lip to ear, and a knight's belt with the badge filed smooth.",
+      "goals": [
+        "Expose or bury the siege ledgers",
+        "Keep the party alive",
+        "Decide whether the realm deserves another crown"
+      ],
+      "knowledge": [
+        "Siege engineering",
+        "Noble hostages",
+        "The law of ransom",
+        "Rumors of the postern betrayal"
+      ],
+      "relationships": {
+        "pc.you": 35,
+        "npc.severin": -5,
+        "npc.lysandra": 15
+      },
+      "factionId": "faction.free-lances",
+      "age": 42,
+      "stats": {
+        "abilities": {
+          "str": 16,
+          "dex": 12,
+          "con": 15,
+          "int": 12,
+          "wis": 13,
+          "cha": 11
+        },
+        "maxHp": 38,
+        "armorClass": 17,
+        "level": 5,
+        "speed": 30,
+        "proficiencies": [
+          "athletics",
+          "intimidation",
+          "history"
+        ],
+        "spells": []
+      },
+      "autonomy": {
+        "isPartyMember": true,
+        "level": "leader",
+        "canLead": true,
+        "heartbeatSeconds": 35,
+        "replyDecayAlpha": 0.18
+      }
+    },
+    {
+      "id": "npc.severin",
+      "name": "Brother Severin Vale",
+      "summary": "A plague confessor whose faith survived the Red Year, but not cleanly.",
+      "persona": "Gentle in voice, merciless in memory. Severin asks precise questions, notices shame, and tries to drag truth out before zealots and nobles can bury it.",
+      "appearance": "Ash-stained white habit under a patched mail shirt, black prayer beads, ink burns on both hands.",
+      "goals": [
+        "Recover Saint Odran's true record",
+        "Stop the Ashen Choir",
+        "Keep mercy from becoming cowardice"
+      ],
+      "knowledge": [
+        "Plague rites",
+        "Confession law",
+        "Forbidden crusade records",
+        "The falsified saint ledger"
+      ],
+      "relationships": {
+        "pc.you": 20,
+        "npc.isolde": -5,
+        "npc.mother-kettryn": -45
+      },
+      "factionId": "faction.vespers",
+      "age": 36,
+      "stats": {
+        "abilities": {
+          "str": 10,
+          "dex": 10,
+          "con": 13,
+          "int": 14,
+          "wis": 16,
+          "cha": 12
+        },
+        "maxHp": 26,
+        "armorClass": 13,
+        "level": 4,
+        "speed": 30,
+        "proficiencies": [
+          "religion",
+          "medicine",
+          "insight"
+        ],
+        "spells": [
+          "spell.vesper-light",
+          "spell.absolve-wound",
+          "spell.salt-circle"
+        ]
+      },
+      "autonomy": {
+        "isPartyMember": true,
+        "level": "proactive",
+        "canLead": false,
+        "heartbeatSeconds": 30,
+        "replyDecayAlpha": 0.25
+      }
+    },
+    {
+      "id": "npc.lysandra",
+      "name": "Lysandra Noct",
+      "summary": "A spymaster of the Velvet Court who trades in debts, secrets, and names that can topple houses.",
+      "persona": "Elegant, amused, and strategically reserved. Lysandra never wastes a word, a glance, or a favor. She treats vice as politics with better lighting and worse consequences.",
+      "appearance": "Wine-dark silk over a hidden mail vest, gold pins shaped like thorns, and a smile that arrives before the threat.",
+      "goals": [
+        "Control the siege ledgers",
+        "Keep the Velvet Court independent",
+        "Decide whether the party is useful or dangerous"
+      ],
+      "knowledge": [
+        "Blackmail routes",
+        "Noble affairs",
+        "Smuggler passwords",
+        "The cellar path to the undercrypt"
+      ],
+      "relationships": {
+        "pc.you": 45,
+        "npc.isolde": 15,
+        "npc.regent-alaric": -30
+      },
+      "factionId": "faction.red-mantle",
+      "age": 33,
+      "stats": {
+        "abilities": {
+          "str": 9,
+          "dex": 15,
+          "con": 11,
+          "int": 16,
+          "wis": 14,
+          "cha": 18
+        },
+        "maxHp": 24,
+        "armorClass": 14,
+        "level": 5,
+        "speed": 30,
+        "proficiencies": [
+          "deception",
+          "persuasion",
+          "insight",
+          "stealth"
+        ],
+        "spells": [
+          "spell.whisper-bind",
+          "spell.mask-of-ashes"
+        ]
+      },
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "proactive",
+        "canLead": false,
+        "heartbeatSeconds": 45,
+        "replyDecayAlpha": 0.2
+      }
+    },
+    {
+      "id": "npc.varro",
+      "name": "Varro Pike",
+      "summary": "A gate-sergeant who has outlived three commanders by obeying orders slowly.",
+      "persona": "Cynical, bribable, and not as cruel as his uniform requires. Varro speaks in gallows jokes and practical warnings.",
+      "appearance": "Rust-streaked sallet, red eyes from lamp smoke, and a purse that clinks too loudly.",
+      "goals": [
+        "Survive the next purge",
+        "Protect his remaining squad",
+        "Avoid choosing a side until paid"
+      ],
+      "knowledge": [
+        "Gate schedules",
+        "Bribe rates",
+        "Which prisoners vanished under black-wax warrants"
+      ],
+      "relationships": {
+        "pc.you": 0,
+        "npc.isolde": 5
+      },
+      "factionId": "faction.iron-crown",
+      "age": 48,
+      "stats": {
+        "abilities": {
+          "str": 13,
+          "dex": 11,
+          "con": 14,
+          "int": 10,
+          "wis": 12,
+          "cha": 10
+        },
+        "maxHp": 20,
+        "armorClass": 14,
+        "level": 2,
+        "speed": 30,
+        "proficiencies": [
+          "perception",
+          "intimidation"
+        ],
+        "spells": []
+      },
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "passive"
+      }
+    },
+    {
+      "id": "npc.regent-alaric",
+      "name": "Regent Alaric Morn",
+      "summary": "A war regent who calls famine arithmetic and treason governance.",
+      "persona": "Cold, lucid, and convinced history will forgive winners. Alaric explains atrocities as if balancing a household account.",
+      "appearance": "Mourning velvet, iron signet, one milky eye, and a clerk always three steps behind.",
+      "goals": [
+        "Preserve the regency",
+        "Find the undercrypt leak",
+        "Hang whoever stole the ledgers"
+      ],
+      "knowledge": [
+        "War finances",
+        "Noble succession",
+        "Black-wax warrants",
+        "The hidden royal ossuary"
+      ],
+      "relationships": {
+        "pc.you": -10,
+        "npc.lysandra": -30,
+        "npc.isolde": -20
+      },
+      "factionId": "faction.iron-crown",
+      "age": 55,
+      "stats": {
+        "abilities": {
+          "str": 9,
+          "dex": 10,
+          "con": 11,
+          "int": 17,
+          "wis": 14,
+          "cha": 16
+        },
+        "maxHp": 22,
+        "armorClass": 12,
+        "level": 5,
+        "speed": 30,
+        "proficiencies": [
+          "history",
+          "persuasion",
+          "deception"
+        ],
+        "spells": [
+          "spell.command-oath"
+        ]
+      },
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "passive"
+      }
+    },
+    {
+      "id": "npc.mother-kettryn",
+      "name": "Mother Kettryn",
+      "summary": "An inquisitor whose compassion burned away before the bodies did.",
+      "persona": "Controlled, pious, and frighteningly sincere. Kettryn believes cruelty can be holy when it prevents worse contagion.",
+      "appearance": "Black veil, silver scourge ring, parchment warrant case, and immaculate gloves.",
+      "goals": [
+        "Recover forbidden relics",
+        "Silence false saints",
+        "Break the Ashen Choir"
+      ],
+      "knowledge": [
+        "Inquisition codes",
+        "Crusade secrets",
+        "Names extracted under warrant"
+      ],
+      "relationships": {
+        "pc.you": -20,
+        "npc.severin": -45
+      },
+      "factionId": "faction.vespers",
+      "age": 51,
+      "stats": {
+        "abilities": {
+          "str": 10,
+          "dex": 11,
+          "con": 13,
+          "int": 15,
+          "wis": 15,
+          "cha": 15
+        },
+        "maxHp": 30,
+        "armorClass": 14,
+        "level": 5,
+        "speed": 30,
+        "proficiencies": [
+          "religion",
+          "intimidation",
+          "medicine"
+        ],
+        "spells": [
+          "spell.vesper-light",
+          "spell.command-oath",
+          "spell.salt-circle"
+        ]
+      },
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "passive"
+      }
+    },
+    {
+      "id": "npc.mirelle",
+      "name": "Mirelle of the Scales",
+      "summary": "A famine broker who can find grain, medicine, or a witness for the right ruinous price.",
+      "persona": "Fast-talking, practical, and allergic to sentiment. Mirelle has seen generosity become a death sentence and charges accordingly.",
+      "appearance": "Waxed ledger satchel, merchant scales on a belt chain, and two bodyguards watching her hands.",
+      "goals": [
+        "Control market information",
+        "Stay useful to every faction",
+        "Never be hungry again"
+      ],
+      "knowledge": [
+        "Prices of grain and mercy",
+        "Smuggling routes",
+        "Who buys forged pardons"
+      ],
+      "relationships": {
+        "pc.you": 5,
+        "npc.lysandra": 20
+      },
+      "factionId": "faction.red-mantle",
+      "age": 39,
+      "stats": {
+        "abilities": {
+          "str": 8,
+          "dex": 12,
+          "con": 10,
+          "int": 15,
+          "wis": 13,
+          "cha": 15
+        },
+        "maxHp": 16,
+        "armorClass": 12,
+        "level": 3,
+        "speed": 30,
+        "proficiencies": [
+          "persuasion",
+          "deception",
+          "investigation"
+        ],
+        "spells": []
+      },
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "passive"
+      }
+    },
+    {
+      "id": "npc.jailer-maud",
+      "name": "Jailer Maud Bracken",
+      "summary": "A gaol keeper who knows which prisoners died, which were moved, and which were sold as confessions.",
+      "persona": "Blunt, exhausted, and haunted by arithmetic. Maud does ugly work and hates people who pretend not to benefit from it.",
+      "appearance": "Key rings under a boiled-leather coat, cropped hair, scarred knuckles, and lime dust in every seam.",
+      "goals": [
+        "Keep the gaol from becoming a tomb",
+        "Hide her mercy from the inquisitors",
+        "Expose who ordered the vanished prisoners"
+      ],
+      "knowledge": [
+        "Prisoner ledgers",
+        "Quarantine routes",
+        "The charnel lift into the undercrypt"
+      ],
+      "relationships": {
+        "pc.you": 10,
+        "npc.mother-kettryn": -35
+      },
+      "factionId": "faction.iron-crown",
+      "age": 44,
+      "stats": {
+        "abilities": {
+          "str": 14,
+          "dex": 10,
+          "con": 15,
+          "int": 11,
+          "wis": 13,
+          "cha": 9
+        },
+        "maxHp": 24,
+        "armorClass": 13,
+        "level": 3,
+        "speed": 30,
+        "proficiencies": [
+          "athletics",
+          "medicine",
+          "intimidation"
+        ],
+        "spells": []
+      },
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "passive"
+      }
+    },
+    {
+      "id": "npc.captain-gryth",
+      "name": "Captain Gryth Sable",
+      "summary": "A mercenary captain owed six months of pay and one good reason not to burn the payroll office.",
+      "persona": "Loud, scarred, funny until he is not. Gryth values contracts because without them war is just murder with uniforms.",
+      "appearance": "Split nose, red cloak patched with gravecloth, two swords, and a laugh that makes recruits flinch.",
+      "goals": [
+        "Get the company paid",
+        "Keep deserters from hanging",
+        "Find out why the dead answer old marching songs"
+      ],
+      "knowledge": [
+        "Battlefield routes",
+        "Mercenary contracts",
+        "Crusade songs",
+        "Which officers betrayed the camp"
+      ],
+      "relationships": {
+        "pc.you": 0,
+        "npc.isolde": 25
+      },
+      "factionId": "faction.free-lances",
+      "age": 46,
+      "stats": {
+        "abilities": {
+          "str": 15,
+          "dex": 13,
+          "con": 14,
+          "int": 11,
+          "wis": 12,
+          "cha": 14
+        },
+        "maxHp": 34,
+        "armorClass": 15,
+        "level": 4,
+        "speed": 30,
+        "proficiencies": [
+          "athletics",
+          "intimidation",
+          "survival"
+        ],
+        "spells": []
+      },
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "reactive"
+      }
+    },
+    {
+      "id": "npc.rook",
+      "name": "Rook Underwine",
+      "summary": "A smuggler with a saint's face, a traitor's courage, and a cellar full of everyone else's proof.",
+      "persona": "Cheerful, evasive, and loyal only after the second betrayal. Rook talks quickly when afraid and jokes when cornered.",
+      "appearance": "Patchwork cloak, silver tooth, river boots, and a hat too fine to be honest.",
+      "goals": [
+        "Sell the ledger twice",
+        "Stay alive",
+        "Keep Lysandra impressed enough not to kill him"
+      ],
+      "knowledge": [
+        "Undercrypt routes",
+        "Forgery marks",
+        "Which seal opens which locked door"
+      ],
+      "relationships": {
+        "pc.you": 15,
+        "npc.lysandra": 35
+      },
+      "factionId": "faction.red-mantle",
+      "age": 31,
+      "stats": {
+        "abilities": {
+          "str": 9,
+          "dex": 16,
+          "con": 11,
+          "int": 13,
+          "wis": 12,
+          "cha": 14
+        },
+        "maxHp": 18,
+        "armorClass": 13,
+        "level": 3,
+        "speed": 30,
+        "proficiencies": [
+          "stealth",
+          "sleight",
+          "deception"
+        ],
+        "spells": [
+          "spell.mask-of-ashes"
+        ]
+      },
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "passive"
+      }
+    },
+    {
+      "id": "npc.tax-reeve",
+      "name": "Black-Wax Tax Reeve",
+      "summary": "A regency functionary collecting coin, names, and obedience at spearpoint.",
+      "persona": "Petty, frightened, and officious. The reeve hides behind procedure until procedure fails.",
+      "goals": [
+        "Collect tax",
+        "Avoid blame",
+        "Report sedition"
+      ],
+      "knowledge": [
+        "Tax warrants",
+        "Market fines"
+      ],
+      "relationships": {},
+      "factionId": "faction.iron-crown",
+      "age": 29,
+      "stats": {
+        "abilities": {
+          "str": 9,
+          "dex": 10,
+          "con": 10,
+          "int": 12,
+          "wis": 9,
+          "cha": 10
+        },
+        "maxHp": 9,
+        "armorClass": 11,
+        "level": 1,
+        "speed": 30,
+        "proficiencies": [
+          "investigation"
+        ],
+        "spells": []
+      },
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "passive"
+      }
+    },
+    {
+      "id": "npc.velvet-enforcer",
+      "name": "Velvet-Court Enforcer",
+      "summary": "A debt-enforcer of the Velvet Court who collects what the desperate cannot pay. This demo NPC exercises exploitative opposition and can be moved or removed freely.",
+      "persona": "Exploitative, unhurried, and entitled. Treats a cornered debtor as already owned and reads refusal as a price not yet settled. Backs off only when met with real force, a drawn blade, or a witness.",
+      "appearance": "A broad, well-dressed bravo with a collector's ledger and old knife-scars.",
+      "goals": [
+        "Collect debts by any means",
+        "Corner the isolated",
+        "Answer only to the Velvet Court"
+      ],
+      "knowledge": [
+        "Who owes the Court",
+        "Which rooms have no witnesses"
+      ],
+      "relationships": {},
+      "age": 41,
+      "stats": {
+        "abilities": {
+          "str": 14,
+          "dex": 12,
+          "con": 13,
+          "int": 10,
+          "wis": 11,
+          "cha": 9
+        },
+        "maxHp": 16,
+        "armorClass": 12,
+        "level": 2,
+        "speed": 30,
+        "proficiencies": [
+          "intimidation"
+        ],
+        "spells": []
+      },
+      "exploitative": true,
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "passive"
+      }
+    },
+    {
+      "id": "npc.hungry-crowd",
+      "name": "Hungry Crowd",
+      "summary": "Market folk pushed to the edge by famine, taxes, and rumor.",
+      "persona": "A tense chorus of anger, grief, and survival. They can become witnesses, rioters, or allies depending on what the party does.",
+      "goals": [
+        "Eat",
+        "Keep families alive",
+        "Find someone to blame"
+      ],
+      "knowledge": [
+        "Market rumors",
+        "Missing grain",
+        "Names of hanged debtors"
+      ],
+      "relationships": {},
+      "age": 30,
+      "stats": {
+        "abilities": {
+          "str": 10,
+          "dex": 10,
+          "con": 10,
+          "int": 10,
+          "wis": 10,
+          "cha": 10
+        },
+        "maxHp": 8,
+        "armorClass": 10,
+        "level": 1,
+        "speed": 30,
+        "proficiencies": [],
+        "spells": []
+      },
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "reactive"
+      }
+    }
+  ],
+  "monsters": [
+    {
+      "id": "mon.fevered-dead",
+      "name": "Fevered Dead",
+      "description": "Plague corpses that stand when funeral bells ring, their skin marked with salt circles and old needle scars.",
+      "stats": {
+        "abilities": {
+          "str": 13,
+          "dex": 8,
+          "con": 14,
+          "int": 3,
+          "wis": 8,
+          "cha": 5
+        },
+        "maxHp": 18,
+        "armorClass": 10,
+        "level": 2,
+        "speed": 20,
+        "proficiencies": [
+          "grapple"
+        ],
+        "spells": []
+      }
+    },
+    {
+      "id": "mon.bridge-ghoul",
+      "name": "Bridge Ghoul",
+      "description": "A river-fed corpse eater that learned to mimic toll collectors in the fog.",
+      "stats": {
+        "abilities": {
+          "str": 14,
+          "dex": 14,
+          "con": 12,
+          "int": 7,
+          "wis": 11,
+          "cha": 6
+        },
+        "maxHp": 22,
+        "armorClass": 13,
+        "level": 2,
+        "speed": 30,
+        "proficiencies": [
+          "stealth",
+          "deception"
+        ],
+        "spells": []
+      }
+    },
+    {
+      "id": "mon.hanged-thing",
+      "name": "Hanged Thing",
+      "description": "A punished oathbreaker animated by the sentence it never finished serving.",
+      "stats": {
+        "abilities": {
+          "str": 15,
+          "dex": 10,
+          "con": 15,
+          "int": 8,
+          "wis": 10,
+          "cha": 12
+        },
+        "maxHp": 30,
+        "armorClass": 13,
+        "level": 3,
+        "speed": 25,
+        "proficiencies": [
+          "intimidation"
+        ],
+        "spells": [
+          "spell.command-oath"
+        ]
+      }
+    },
+    {
+      "id": "mon.oathbreaker",
+      "name": "Oathbreaker Knight",
+      "description": "A dead knight in rusted plate, still following the last command that damned the field.",
+      "stats": {
+        "abilities": {
+          "str": 17,
+          "dex": 9,
+          "con": 16,
+          "int": 9,
+          "wis": 11,
+          "cha": 14
+        },
+        "maxHp": 45,
+        "armorClass": 17,
+        "level": 5,
+        "speed": 25,
+        "proficiencies": [
+          "athletics",
+          "intimidation"
+        ],
+        "spells": [
+          "spell.command-oath"
+        ]
+      }
+    },
+    {
+      "id": "mon.choir-dead",
+      "name": "Choir Dead",
+      "description": "An intelligent corpse whose voice carries many dead throats at once, singing clauses from a treaty no living lawyer admits exists.",
+      "stats": {
+        "abilities": {
+          "str": 11,
+          "dex": 12,
+          "con": 13,
+          "int": 15,
+          "wis": 14,
+          "cha": 16
+        },
+        "maxHp": 32,
+        "armorClass": 14,
+        "level": 4,
+        "speed": 30,
+        "proficiencies": [
+          "religion",
+          "deception"
+        ],
+        "spells": [
+          "spell.whisper-bind",
+          "spell.salt-circle"
+        ]
+      }
+    },
+    {
+      "id": "mon.corpse-cart",
+      "name": "Corpse Cart",
+      "description": "A plague wagon that moves when no horse is hitched, creaking toward anyone who owes the dead a name.",
+      "stats": {
+        "abilities": {
+          "str": 16,
+          "dex": 6,
+          "con": 18,
+          "int": 4,
+          "wis": 10,
+          "cha": 8
+        },
+        "maxHp": 28,
+        "armorClass": 15,
+        "level": 3,
+        "speed": 20,
+        "proficiencies": [
+          "resilience"
+        ],
+        "spells": []
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "item.black-writ",
+      "name": "Black-Wax Writ",
+      "description": "A warrant stamped with regency wax, broad enough to open doors and ruin lives.",
+      "kind": "quest",
+      "properties": {
+        "opens": [
+          "loc.regent-hall"
+        ],
+        "legalAuthority": true
+      }
+    },
+    {
+      "id": "item.siege-ledger",
+      "name": "Burned Siege Ledger",
+      "description": "Half-charred accounts naming who sold the postern gate, who bought famine grain, and who paid the Free Lances in prisoners.",
+      "kind": "quest",
+      "properties": {
+        "evidence": true,
+        "dangerous": true
+      }
+    },
+    {
+      "id": "item.reliquary-key",
+      "name": "Reliquary Key",
+      "description": "A black iron key etched with Saint Vesper's eye. It is warm when pointed toward the undercrypt.",
+      "kind": "tool",
+      "properties": {
+        "opens": [
+          "loc.undercrypt"
+        ],
+        "warded": true
+      }
+    },
+    {
+      "id": "item.mercy-draught",
+      "name": "Mercy Draught",
+      "description": "A bitter medicine used by plague confessors when a patient must stay lucid through pain.",
+      "kind": "consumable",
+      "properties": {
+        "healing": "1d6",
+        "removesCondition": "shaken"
+      }
+    },
+    {
+      "id": "item.salt-knife",
+      "name": "Salt-Edged Knife",
+      "description": "A narrow dagger rubbed with blessed salt and river ash, made for cutting grave-cords rather than bread.",
+      "kind": "weapon",
+      "properties": {
+        "damage": "1d4",
+        "material": "salted iron",
+        "vsUndead": true
+      }
+    },
+    {
+      "id": "item.blackened-mail",
+      "name": "Blackened Mail",
+      "description": "Practical battlefield mail, smoke-dark and patched at the ribs.",
+      "kind": "armor",
+      "properties": {
+        "armorClass": 14,
+        "stealthPenalty": true
+      }
+    },
+    {
+      "id": "item.famine-coin",
+      "name": "Famine Coin",
+      "description": "A clipped silver coin stamped during the Red Year, worth less as money than as proof someone survived.",
+      "kind": "treasure",
+      "properties": {
+        "value": 25,
+        "historical": true
+      }
+    },
+    {
+      "id": "item.velvet-mask",
+      "name": "Velvet Mask",
+      "description": "A court mask worn in salons where names are more dangerous than faces.",
+      "kind": "misc",
+      "properties": {
+        "disguise": true,
+        "adultDistrict": true
+      }
+    }
+  ],
+  "spells": [
+    {
+      "id": "spell.vesper-light",
+      "name": "Vesper Light",
+      "level": 0,
+      "description": "Conjure a pale church flame that reveals fever, fresh blood, and hidden ink.",
+      "effect": {
+        "light": true,
+        "reveals": [
+          "disease",
+          "blood",
+          "hiddenInk"
+        ]
+      }
+    },
+    {
+      "id": "spell.absolve-wound",
+      "name": "Absolve Wound",
+      "level": 1,
+      "description": "Close a wound while forcing the injured to speak one true thing aloud.",
+      "effect": {
+        "healing": "1d8",
+        "complication": "truth"
+      }
+    },
+    {
+      "id": "spell.salt-circle",
+      "name": "Salt Circle",
+      "level": 1,
+      "description": "Lay a ring of salt and ash that undead and oathbound spirits must test before crossing.",
+      "effect": {
+        "ward": "undead",
+        "durationMinutes": 10
+      }
+    },
+    {
+      "id": "spell.whisper-bind",
+      "name": "Whisper-Bind",
+      "level": 2,
+      "description": "Bind a spoken secret to a listener's shadow until the secret is traded, confessed, or burned.",
+      "effect": {
+        "condition": "boundSecret",
+        "save": "wis"
+      }
+    },
+    {
+      "id": "spell.mask-of-ashes",
+      "name": "Mask of Ashes",
+      "level": 1,
+      "description": "Smear ash across the face and borrow another person's outline for a few breaths.",
+      "effect": {
+        "disguise": true,
+        "durationMinutes": 5
+      }
+    },
+    {
+      "id": "spell.command-oath",
+      "name": "Command Oath",
+      "level": 2,
+      "description": "Speak the binding words of a vow and pull at the fear of breaking it.",
+      "effect": {
+        "condition": "compelled",
+        "save": "wis"
+      }
+    }
+  ],
+  "houseRules": {
+    "tone": "Historical brutality, court intrigue, famine politics, and supernatural horror.",
+    "resting": "A safe long rest requires food, shelter, and no active pursuit flag.",
+    "ransom": "Named nobles and officers are more valuable alive unless a faction has marked them for exemplary punishment."
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "id": "campaign.casefile",
+  "name": "The Pawnbroker",
+  "worldId": "world.casefile",
+  "synopsis": "The town pawnbroker is dead behind his own counter. The reeve wants an answer, and the answer is not the one the town expects.",
+  "characters": [
+    {
+      "id": "pc.you",
+      "name": "You",
+      "ancestry": "Human",
+      "class": "Investigator",
+      "level": 2,
+      "stats": {
+        "abilities": { "str": 10, "dex": 12, "con": 10, "int": 14, "wis": 12, "cha": 12 },
+        "maxHp": 16,
+        "armorClass": 11,
+        "level": 2,
+        "speed": 30,
+        "proficiencies": ["investigation", "insight"],
+        "spells": []
+      },
+      "inventory": []
+    }
+  ],
+  "quests": [
+    {
+      "id": "quest.the-pawnbroker",
+      "name": "The Pawnbroker's Death",
+      "description": "The pawnbroker is dead behind his counter. Find who killed him, and prove it.",
+      "objectives": [],
+      "state": "active"
+    }
+  ],
+  "events": [
+    {
+      "id": "ev.shop-body",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": { "allOf": [{ "kind": "atLocation", "locationId": "loc.shop" }] },
+      "effects": [
+        { "kind": "narrate", "text": "The broker lies slumped behind his counter, struck once from behind. Nothing here says he fought back." },
+        { "kind": "revealCaseFact", "caseId": "case.the-pawnbroker", "factId": "fact.wound" }
+      ]
+    },
+    {
+      "id": "ev.shop-search",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": { "allOf": [{ "kind": "atLocation", "locationId": "loc.shop" }] },
+      "effects": [
+        {
+          "kind": "check",
+          "ability": "int",
+          "dc": -50,
+          "onSuccess": [
+            { "kind": "narrate", "text": "Under the till you turn up the broker's ledger — a debt owed by Hedwyn, marked overdue in a hard hand." },
+            { "kind": "revealCaseFact", "caseId": "case.the-pawnbroker", "factId": "fact.ledger" }
+          ],
+          "onFail": [{ "kind": "narrate", "text": "You turn the shop over but find nothing more of use." }]
+        }
+      ]
+    },
+    {
+      "id": "ev.tavern-corin",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": { "allOf": [{ "kind": "atLocation", "locationId": "loc.tavern" }] },
+      "effects": [
+        { "kind": "narrate", "text": "Corin, deep in his cups, lets slip what he saw the night of the death." },
+        { "kind": "revealCaseFact", "caseId": "case.the-pawnbroker", "factId": "fact.seen" }
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "case.the-pawnbroker",
+      "name": "The Pawnbroker's Death",
+      "questId": "quest.the-pawnbroker",
+      "truth": {
+        "culpritId": "npc.culprit",
+        "method": "a single blow from behind with a pledged brass candlestick",
+        "motive": "an overdue debt he could not pay and could not let be called in",
+        "summary": "Hedwyn owed the broker more than he had. The night the debt came due, he struck him down and walked out into the dusk."
+      },
+      "facts": [
+        { "id": "fact.wound", "text": "The broker was struck once from behind — no sign of a struggle.", "kind": "physical", "core": true },
+        { "id": "fact.ledger", "text": "The broker's ledger records a large overdue debt owed by Hedwyn.", "kind": "means", "core": true },
+        { "id": "fact.seen", "text": "Corin saw Hedwyn leave the shop at dusk the night of the death.", "kind": "opportunity", "core": true },
+        { "id": "fact.threat", "text": "Hedwyn had been heard cursing the broker's name over his cups.", "kind": "motive", "core": false }
+      ],
+      "redHerrings": [
+        { "id": "herring.rival", "text": "A rival pawnbroker two streets over had long wanted this shop closed.", "refutedBy": ["fact.ledger"] }
+      ],
+      "clues": [
+        { "id": "clue.wound", "revealsFactIds": ["fact.wound"], "via": "event", "sourceId": "ev.shop-body" },
+        { "id": "clue.ledger", "revealsFactIds": ["fact.ledger"], "via": "event", "sourceId": "ev.shop-search" },
+        { "id": "clue.seen", "revealsFactIds": ["fact.seen"], "via": "testimony", "sourceId": "npc.witness" }
+      ],
+      "npcKnowledge": {
+        "npc.reeve": { "knows": ["fact.wound"], "believes": ["herring.rival"] },
+        "npc.witness": { "knows": ["fact.seen"] },
+        "npc.culprit": { "knows": ["fact.threat"], "asserts": ["herring.rival"] }
+      },
+      "accusation": {
+        "requiredCoreFacts": ["fact.wound", "fact.ledger", "fact.seen"],
+        "maxWrongAccusations": 3,
+        "culpritResponse": "surrender"
+      }
+    }
+  ],
+  "startingState": {
+    "locationId": "loc.commons",
+    "party": ["pc.you"],
+    "companions": []
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "pc.arden-vale",
+  "name": "Arden Vale",
+  "sex": "nonbinary",
+  "age": 27,
+  "description": "A newly appointed circuit runner in a blue weather cape, with a salt-marked satchel, a clean route book, and the attentive posture of someone learning a public trust.",
+  "body": {
+    "height": "average",
+    "build": "lean and weather-ready",
+    "hair": "dark, cropped at the jaw",
+    "eyes": "grey-green and observant",
+    "skin": "wind-browned",
+    "face": "open, with a thoughtful brow",
+    "distinguishing": "a faded rope burn across the left palm"
+  },
+  "personality": "Patient, practical, and willing to ask a specialist before turning confidence into action. Arden takes public promises seriously and keeps careful notes.",
+  "knownLore": "The circuit badge authorizes Arden to carry notices and sign public handoffs, while local specialists remain the authority on their own work.",
+  "hiddenLore": "",
+  "appearanceTags": ["weathered", "alert"],
+  "presentationTags": ["careful", "responsible"],
+  "socialTraits": ["patient", "plainspoken"],
+  "ancestry": "islander",
+  "class": "circuit runner",
+  "level": 1,
+  "stats": {
+    "abilities": {
+      "str": 11,
+      "dex": 13,
+      "con": 12,
+      "int": 13,
+      "wis": 14,
+      "cha": 12
+    },
+    "maxHp": 16,
+    "armorClass": 11,
+    "level": 1,
+    "speed": 30,
+    "proficiencies": [
+      "navigation",
+      "records",
+      "public service"
+    ],
+    "spells": []
+  },
+  "inventory": [
+    "item.circuit-badge",
+    "item.route-book"
+  ],
+  "coins": 120,
+  "backstory": "Arden earned an appointment after a season assisting local couriers. The First Circuit is the first route for which their signature will become part of the islands' common record."
+}

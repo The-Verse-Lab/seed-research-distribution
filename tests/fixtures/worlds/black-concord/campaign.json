@@ -1,0 +1,347 @@
+{
+  "id": "campaign.ledger-of-ashes",
+  "name": "Ledger of Ashes",
+  "worldId": "world.black-concord",
+  "synopsis": "A burned siege ledger names the nobles, priests, and mercenaries who turned Veyrstadt's civil war into a profitable atrocity. The party begins at the Black Gate with a black-wax writ, two dangerous companions, and too many factions eager to decide whether truth should be sold, buried, or weaponized.",
+  "characters": [
+    {
+      "id": "pc.you",
+      "name": "You",
+      "ancestry": "Human",
+      "class": "Disgraced Envoy",
+      "level": 4,
+      "age": 34,
+      "stats": {
+        "abilities": { "str": 11, "dex": 13, "con": 12, "int": 14, "wis": 12, "cha": 16 },
+        "maxHp": 30,
+        "armorClass": 13,
+        "level": 4,
+        "speed": 30,
+        "proficiencies": ["persuasion", "deception", "history", "insight"],
+        "spells": ["spell.mask-of-ashes"]
+      },
+      "inventory": [
+        "item.black-writ",
+        "item.salt-knife",
+        "item.mercy-draught",
+        "item.famine-coin",
+        "item.velvet-mask"
+      ],
+      "backstory": "You once carried sealed letters between houses that now deny knowing your name. A dying clerk pushed a burned ledger into your hands and begged you to make the guilty afraid. You are old enough to know that truth has a market price, a blood price, and sometimes no buyer at all."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene.opening",
+      "name": "Rain at the Black Gate",
+      "locationId": "loc.black-gate",
+      "setup": "Rain runs down the black stones of Veyrstadt while the gate cages creak overhead. Your black-wax writ is already drawing eyes. Dame Isolde Varr waits under the barbican with one hand on her sword, Brother Severin counts the hanged names under his breath, and Sergeant Varro Pike watches you all like a man deciding whether treason pays better before lunch.",
+      "npcs": ["npc.isolde", "npc.severin", "npc.varro"]
+    },
+    {
+      "id": "scene.market",
+      "name": "The Famine Auction",
+      "locationId": "loc.tallow-market",
+      "setup": "In Tallow Market, grain, relic splinters, forged pardons, and private griefs are bid on under red awnings. Mirelle of the Scales smiles when she sees your writ, because lawful paper is the easiest kind to sell back to desperate people.",
+      "npcs": ["npc.mirelle"]
+    },
+    {
+      "id": "scene.chapel",
+      "name": "The Sable Confession",
+      "locationId": "loc.sable-chapel",
+      "setup": "The Sable Chapel smells of wax, rain, and polished bone. Mother Kettryn stands before the reliquary with a warrant case in her gloved hands; Brother Severin has stopped breathing evenly.",
+      "npcs": ["npc.severin", "npc.mother-kettryn"]
+    },
+    {
+      "id": "scene.velvet",
+      "name": "Masks in the Velvet Court",
+      "locationId": "loc.velvet-court",
+      "setup": "Behind masks, envoys trade secrets, debt, and treason with the same careful etiquette. Lysandra Noct offers you wine and the kind of smile that makes contracts feel expensive.",
+      "npcs": ["npc.lysandra"]
+    },
+    {
+      "id": "scene.undercrypt",
+      "name": "The True Concord",
+      "locationId": "loc.undercrypt",
+      "setup": "Below the city, the royal dead are arranged like witnesses around a stone table. Every carved name has been crossed out and rewritten in ash. The air hums with a treaty preparing to speak.",
+      "npcs": []
+    }
+  ],
+  "quests": [
+    {
+      "id": "quest.siege-ledger",
+      "name": "The Burned Ledger",
+      "description": "Find the missing pages of the siege ledger and decide whether to expose, sell, or destroy the proof of Veyrstadt's winter betrayal.",
+      "objectives": [
+        { "id": "obj.show-writ", "description": "Use the black-wax writ to get access to people who should know better", "done": false },
+        { "id": "obj.find-market-page", "description": "Find the market page naming who bought famine grain", "done": false },
+        { "id": "obj.find-cellar-page", "description": "Find the cellar page naming who paid the smugglers", "done": false },
+        { "id": "obj.decide-ledger", "description": "Choose what to do with the completed ledger", "done": false }
+      ],
+      "state": "offered"
+    },
+    {
+      "id": "quest.saint-odran",
+      "name": "The False Saint",
+      "description": "Brother Severin believes the official relic of Saint Odran hides a lie from the Red Year. Recover the true record before the Order of Saint Vesper burns it.",
+      "objectives": [
+        { "id": "obj.question-kettryn", "description": "Confront Mother Kettryn at the Sable Chapel", "done": false },
+        { "id": "obj.find-gaol-record", "description": "Find the plague-gaol record of Odran's execution", "done": false },
+        { "id": "obj.spare-or-break-faith", "description": "Decide whether to reveal the false relic", "done": false }
+      ],
+      "state": "offered"
+    },
+    {
+      "id": "quest.choir-debt",
+      "name": "The Choir's Debt",
+      "description": "The dead are rising because an old bargain has come due. Discover who promised the battlefield dead to the Ashen Choir.",
+      "objectives": [
+        { "id": "obj.cross-bridge", "description": "Cross Black Bridge to the field of broken lances", "done": false },
+        { "id": "obj.hear-dead", "description": "Hear what the unpaid dead are singing", "done": false },
+        { "id": "obj.reach-undercrypt", "description": "Reach the royal undercrypt", "done": false },
+        { "id": "obj.break-concord", "description": "Break, honor, or renegotiate the Black Concord", "done": false }
+      ],
+      "state": "hidden"
+    },
+    {
+      "id": "quest.regency-wrath",
+      "name": "The Regency's Wrath",
+      "description": "The Iron Crown learns the party has dangerous papers and begins hunting witnesses.",
+      "objectives": [
+        { "id": "obj.survive-warrant", "description": "Survive the black-wax warrant issued against you", "done": false },
+        { "id": "obj.turn-someone", "description": "Turn one regency agent into a source", "done": false }
+      ],
+      "state": "hidden"
+    }
+  ],
+  "events": [
+    {
+      "id": "ev.market-writ",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.tallow-market" },
+          { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.black-writ" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The market sees the black wax before it sees you. Bids falter, hands hide ledgers, and Mirelle's smile sharpens: official paper can extort truth where kindness would only be laughed out of the mud."
+        },
+        { "kind": "setFlag", "key": "black_writ_shown", "value": true },
+        { "kind": "setObjectiveDone", "questId": "quest.siege-ledger", "objectiveId": "obj.show-writ" },
+        { "kind": "adjustRelationship", "actorId": "npc.mirelle", "targetId": "pc.you", "by": 8 }
+      ]
+    },
+    {
+      "id": "ev.market-page",
+      "when": "onCommand",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.tallow-market" },
+          { "kind": "flag", "key": "black_writ_shown", "equals": true },
+          { "kind": "entityPresent", "entityId": "npc.mirelle", "locationId": "loc.tallow-market" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Mirelle produces a market page from beneath a false scale pan. The ink proves famine grain was purchased with crown coin, then sold back to starving districts through rebel fronts."
+        },
+        { "kind": "setObjectiveDone", "questId": "quest.siege-ledger", "objectiveId": "obj.find-market-page" },
+        { "kind": "setFlag", "key": "market_page_found", "value": true },
+        { "kind": "adjustRelationship", "actorId": "npc.lysandra", "targetId": "pc.you", "by": 5 }
+      ]
+    },
+    {
+      "id": "ev.velvet-offer",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.velvet-court" },
+          { "kind": "relationshipAtLeast", "actorId": "npc.lysandra", "targetId": "pc.you", "value": 40 }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Lysandra dismisses the musicians with two fingers. 'You are now expensive enough to be interesting,' she says, and offers a cellar route, a missing ledger page, and a dangerous bargain dressed as hospitality."
+        },
+        { "kind": "setObjectiveDone", "questId": "quest.siege-ledger", "objectiveId": "obj.find-cellar-page" },
+        { "kind": "setFlag", "key": "cellar_route_named", "value": true },
+        { "kind": "adjustRelationship", "actorId": "npc.lysandra", "targetId": "pc.you", "by": 6 }
+      ]
+    },
+    {
+      "id": "ev.gaol-fever",
+      "when": "onEnterLocation",
+      "once": "visit",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.plague-gaol" },
+          { "kind": "questState", "questId": "quest.saint-odran", "state": "active" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The gaol's limewash cannot hide the Red Year's smell. Names scratched under the confession bench match Severin's forbidden list, and something in the locked infirmary answers with wet knuckles on wood."
+        },
+        { "kind": "setObjectiveDone", "questId": "quest.saint-odran", "objectiveId": "obj.find-gaol-record" },
+        { "kind": "setCondition", "entityId": "pc.you", "condition": "shaken", "active": true },
+        { "kind": "adjustHp", "entityId": "pc.you", "by": -2 },
+        { "kind": "spawn", "templateId": "mon.fevered-dead", "locationId": "loc.plague-gaol", "tier": "tracked" }
+      ]
+    },
+    {
+      "id": "ev.chapel-confrontation",
+      "when": "onCommand",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.sable-chapel" },
+          { "kind": "entityPresent", "entityId": "npc.severin" },
+          { "kind": "entityPresent", "entityId": "npc.mother-kettryn", "locationId": "loc.sable-chapel" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Mother Kettryn opens her warrant case. Severin does not step back. The chapel's candles bend toward the reliquary as if even flame wants to hear which saint was murdered for refusing a lie."
+        },
+        { "kind": "setObjectiveDone", "questId": "quest.saint-odran", "objectiveId": "obj.question-kettryn" },
+        { "kind": "adjustRelationship", "actorId": "npc.severin", "targetId": "pc.you", "by": 10 },
+        { "kind": "setFlag", "key": "kettryn_confronted", "value": true }
+      ]
+    },
+    {
+      "id": "ev.black-bridge-toll",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.black-bridge" },
+          { "kind": "entityPresent", "entityId": "npc.isolde" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The bridge guards demand coin, a name, or a body. Isolde gives them a fourth option: her old war banner, unfolded just enough for veterans on both banks to remember who taught the river to run red."
+        },
+        { "kind": "setQuestState", "questId": "quest.choir-debt", "state": "active" },
+        { "kind": "setObjectiveDone", "questId": "quest.choir-debt", "objectiveId": "obj.cross-bridge" },
+        { "kind": "adjustRelationship", "actorId": "npc.isolde", "targetId": "pc.you", "by": 5 }
+      ]
+    },
+    {
+      "id": "ev.battlefield-singing",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.battlefield" },
+          { "kind": "questState", "questId": "quest.choir-debt", "state": "active" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The carrion bells begin ringing without hands. From the trenches, the dead sing the same line in a dozen drowned accents: paid in prisoners, paid in sons, paid in names."
+        },
+        { "kind": "setObjectiveDone", "questId": "quest.choir-debt", "objectiveId": "obj.hear-dead" },
+        { "kind": "spawn", "templateId": "mon.oathbreaker", "locationId": "loc.battlefield", "tier": "significant" },
+        { "kind": "setFlag", "key": "dead_song_heard", "value": true }
+      ]
+    },
+    {
+      "id": "ev.undercrypt-concord",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.undercrypt" },
+          { "kind": "flag", "key": "dead_song_heard", "equals": true }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The true Black Concord lies carved into the bone table: three claimants promised the war dead to the Ashen Choir in exchange for victory. The contract is still wet where living history keeps bleeding onto it."
+        },
+        { "kind": "setObjectiveDone", "questId": "quest.choir-debt", "objectiveId": "obj.reach-undercrypt" },
+        { "kind": "spawn", "templateId": "mon.choir-dead", "locationId": "loc.undercrypt", "tier": "significant" },
+        { "kind": "setFlag", "key": "true_concord_found", "value": true }
+      ]
+    },
+    {
+      "id": "ev.regency-wrath",
+      "when": "onTick",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "flag", "key": "black_writ_shown", "equals": true },
+          { "kind": "questState", "questId": "quest.siege-ledger", "state": "active" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "By dusk, copies of your face are nailed under black wax at the gate, chapel, and market. The regency has decided that possession of the truth is a capital offense."
+        },
+        { "kind": "setQuestState", "questId": "quest.regency-wrath", "state": "active" },
+        { "kind": "spawn", "templateId": "mon.hanged-thing", "locationId": "loc.gallows-field", "tier": "tracked" }
+      ]
+    },
+    {
+      "id": "ev.hour-of-hunger",
+      "when": "onTick",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "clockAtLeast", "minutes": 60 },
+          { "kind": "entityPresent", "entityId": "npc.isolde" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Hunger settles in for the first time since you entered the Concord — the city gives nothing away for free. Isolde quietly counts your food twice and says nothing about the second total."
+        },
+        { "kind": "setCondition", "entityId": "pc.you", "condition": "hungry", "active": true },
+        { "kind": "adjustRelationship", "actorId": "npc.isolde", "targetId": "pc.you", "by": 1 }
+      ]
+    },
+    {
+      "id": "ev.severin-trust",
+      "when": "onCommand",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "relationshipAtLeast", "actorId": "npc.severin", "targetId": "pc.you", "value": 20 },
+          { "kind": "entityPresent", "entityId": "npc.severin" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Severin presses a copied confession into your palm. 'If faith survives this,' he says, 'it should survive being told the truth.'"
+        },
+        { "kind": "setFlag", "key": "severin_confession_shared", "value": true },
+        { "kind": "adjustRelationship", "actorId": "npc.severin", "targetId": "pc.you", "by": 5 }
+      ]
+    }
+  ],
+  "travelEventChance": 0.3,
+  "travelEventPacks": ["core-ambient", "core-road-danger", "core-fortune"],
+  "startingState": {
+    "locationId": "loc.black-gate",
+    "party": ["pc.you"],
+    "companions": ["npc.isolde", "npc.severin"],
+    "openingSceneId": "scene.opening"
+  }
+}

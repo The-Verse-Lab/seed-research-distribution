@@ -1,0 +1,51 @@
+{
+  "id": "world.casefile",
+  "name": "Casefile Test World",
+  "summary": "A tiny market town used only to exercise the mystery/cases engine. A pawnbroker lies dead in his shop, and the town wants an answer.",
+  "locations": [
+    {
+      "id": "loc.commons",
+      "name": "The Commons",
+      "description": "A muddy square between the pawnshop and the tavern, a stocks and a dry well at its centre.",
+      "connections": ["loc.shop", "loc.tavern"],
+      "npcs": ["npc.reeve", "npc.culprit"]
+    },
+    {
+      "id": "loc.shop",
+      "name": "The Pawnshop",
+      "description": "A cramped room of pledged oddments behind a scarred counter. The broker lies where he fell.",
+      "connections": ["loc.commons"],
+      "npcs": []
+    },
+    {
+      "id": "loc.tavern",
+      "name": "The Sign of the Anchor",
+      "description": "A low, smoke-dark tavern that hears everything the town says and keeps most of it.",
+      "connections": ["loc.commons"],
+      "npcs": ["npc.witness"]
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc.reeve",
+      "name": "Reeve Alda",
+      "summary": "The town reeve, first to reach the body.",
+      "persona": "Plain-spoken, tired, and fair. She wants the thing settled and the town quiet.",
+      "autonomy": { "isPartyMember": false, "level": "passive" }
+    },
+    {
+      "id": "npc.witness",
+      "name": "Corin",
+      "summary": "A tavern regular who was out in the square at dusk.",
+      "persona": "Nervous and reluctant, but honest once pressed.",
+      "autonomy": { "isPartyMember": false, "level": "passive" }
+    },
+    {
+      "id": "npc.culprit",
+      "name": "Hedwyn",
+      "summary": "A cheerful debtor of the dead broker, always ready to point a finger elsewhere.",
+      "persona": "Affable, glib, quick to name the rival two streets over.",
+      "autonomy": { "isPartyMember": false, "level": "passive" }
+    }
+  ]
+}

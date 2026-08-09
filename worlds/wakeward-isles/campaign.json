@@ -1,0 +1,388 @@
+{
+  "id": "camp.wakeward.first-circuit",
+  "name": "The First Circuit",
+  "worldId": "world.wakeward-isles",
+  "synopsis": "A seasonal gale has left the Wakeward Isles' shared ferries, clinics, stores, and beacons working from different pieces of yesterday's plan. You are a newly appointed circuit runner: part courier, part witness, and part keeper of the public record. Veteran routekeeper Mara Venn accompanies you for the first circuit, offering what she knows and lending a hand without taking the route away from you. The work is practical and hopeful. Nobody needs defeating; the islands need reliable handoffs, honest revisions, and enough people willing to finish a shared task.",
+  "characters": [
+    {
+      "id": "pc.you",
+      "name": "You",
+      "sex": "nonbinary",
+      "description": "A new circuit runner in a blue weather cape, carrying a clean route book and the alert expression of someone entrusted with real work on their first morning.",
+      "personality": "Observant, responsible, and free to decide when to ask, when to act, and when to leave a sound plan alone.",
+      "knownLore": "The circuit badge authorizes you to carry notices and sign public handoffs, but local specialists remain the authority on their own work.",
+      "hiddenLore": "",
+      "ancestry": "islander",
+      "class": "circuit runner",
+      "level": 1,
+      "stats": {
+        "abilities": { "str": 11, "dex": 13, "con": 12, "int": 13, "wis": 14, "cha": 12 },
+        "maxHp": 16,
+        "armorClass": 11,
+        "level": 1,
+        "speed": 30,
+        "proficiencies": ["navigation", "records", "public service"],
+        "spells": []
+      },
+      "inventory": ["item.circuit-badge", "item.route-book"],
+      "coins": 120,
+      "backstory": "The island councils appointed you after a season assisting local couriers. This is the first route for which your signature will become part of the common record."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene.first-circuit",
+      "name": "A Route Worth Sharing",
+      "locationId": "loc.bellharbor-quay",
+      "setup": "Morning light returns to Bellharbor after the seasonal gale. Crews have cleared the quay, but the public route board carries six green revision slips: clinic tonic for Lowmere, a changed ferry bell, a lens calibration, a fast-squall warning, a shared-store repair, and one cargo line that no longer agrees with its seal. Mara Venn waits beside the board with a weatherproof satchel. 'First circuit,' she says. 'We check what changed, help where a second pair of hands matters, and leave alone what is already sound.' Pax Lorne is comparing ferry loads while Nia Wren sorts damp manifests at the tally desk.",
+      "npcs": ["npc.mara-venn", "npc.pax-lorne", "npc.nia-wren"]
+    }
+  ],
+  "quests": [
+    {
+      "id": "quest.cold-passage",
+      "name": "Cold Passage",
+      "giver": "npc.sori-ansel",
+      "description": "Protect a crate of blueglass tonic from direct sun and deliver it to Reedbank Clinic before the afternoon heat.",
+      "state": "offered",
+      "rewardCoins": 90,
+      "rewardXp": 80,
+      "deadlineMinutes": 540,
+      "deadlineFailText": "The clinic's safe delivery window closes. Sori arranges a later cooled crossing; nobody is harmed, but this circuit can no longer claim the timely handoff.",
+      "objectives": [
+        { "id": "collect-protected-tonic", "description": "Collect the tonic in an insulated wrap at the Relay House", "done": false },
+        { "id": "deliver-tonic", "description": "Deliver the protected crate to Reedbank Clinic", "done": false }
+      ]
+    },
+    {
+      "id": "quest.second-bell",
+      "name": "Second Bell",
+      "giver": "npc.pax-lorne",
+      "description": "Confirm the gale-day second-bell ferry plan and reach the Cinderhook drydock through the service gate before its repair berth turns over.",
+      "state": "offered",
+      "rewardCoins": 75,
+      "rewardXp": 70,
+      "deadlineMinutes": 600,
+      "deadlineFailText": "The second-bell berth turns over to the next listed repair. Pax reschedules the inspection without penalty, but the expedited window is gone.",
+      "objectives": [
+        { "id": "confirm-second-bell", "description": "Confirm the current second-bell load at the Ferry Yard", "done": false },
+        { "id": "reach-repair-berth", "description": "Reach the Cinderhook drydock repair berth", "done": false }
+      ]
+    },
+    {
+      "id": "quest.clear-glass",
+      "name": "Clear Glass",
+      "giver": "npc.jalen-quill",
+      "description": "Carry the current clear-blue lens pair from Signal Glassworks and verify its spring calibration at Far Beacon.",
+      "state": "offered",
+      "rewardCoins": 110,
+      "rewardXp": 90,
+      "deadlineMinutes": 720,
+      "deadlineFailText": "The daylight calibration interval passes. Ren secures the beacon for tomorrow's test; the network remains on its conservative night signal meanwhile.",
+      "objectives": [
+        { "id": "collect-current-lens", "description": "Collect the current-pattern lens from Signal Glassworks", "done": false },
+        { "id": "calibrate-far-beacon", "description": "Deliver and calibrate the lens at Far Beacon", "done": false }
+      ]
+    },
+    {
+      "id": "quest.true-bearing",
+      "name": "True Bearing",
+      "giver": "npc.edda-marr",
+      "description": "Carry Highwake's signed pressure trace to Bellharbor so ferry crews can use the cove route before the fast squall.",
+      "state": "offered",
+      "rewardCoins": 80,
+      "rewardXp": 75,
+      "deadlineMinutes": 480,
+      "deadlineFailText": "The fast squall reaches the outer lane. Crews wait it out in sheltered water; the warning was still useful, but the early routing window has passed.",
+      "objectives": [
+        { "id": "collect-weather-chart", "description": "Collect the signed weather chart at the Weather House", "done": false },
+        { "id": "post-safe-bearing", "description": "Post the safe cove bearing at Bellharbor Quay", "done": false }
+      ]
+    },
+    {
+      "id": "quest.shared-stores",
+      "name": "Shared Stores",
+      "giver": "npc.aven-dorr",
+      "description": "Carry the correctly measured pump seal from Cinderhook to Highwake so its rain-tank reserve can rejoin the shared allocation.",
+      "state": "offered",
+      "rewardCoins": 95,
+      "rewardXp": 85,
+      "deadlineMinutes": 840,
+      "deadlineFailText": "Highwake keeps its reserve on manual draw for another day. The commons rebalance deliveries; service is slower, not lost.",
+      "objectives": [
+        { "id": "collect-pump-seal", "description": "Collect the measured pump seal from Cinderhook Drydock", "done": false },
+        { "id": "restore-rain-tank", "description": "Deliver the seal to the Highwake Weather House", "done": false }
+      ]
+    },
+    {
+      "id": "quest.missing-manifest",
+      "name": "Missing Manifest",
+      "giver": "npc.ivo-pell",
+      "description": "Reconcile why crate seventeen appears on both the clinic and drydock lists, identify the good-faith copying error, and restore one trustworthy public manifest.",
+      "state": "offered",
+      "rewardCoins": 100,
+      "rewardXp": 100,
+      "deadlineMinutes": 960,
+      "deadlineFailText": "The disputed crate stays sealed while the offices perform a slower joint recount. Supplies remain safe, but today's circuit closes without a reconciled manifest.",
+      "objectives": [
+        { "id": "compare-cargo-records", "description": "Compare the quay, Relay House, and drydock cargo records", "done": false },
+        { "id": "identify-copying-error", "description": "Identify and substantiate the copying error", "done": false },
+        { "id": "publish-corrected-manifest", "description": "Publish the corrected shared manifest", "done": false }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "ev.cold.collect",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.bellharbor-relay" },
+        { "kind": "questState", "questId": "quest.cold-passage", "state": "active" }
+      ] },
+      "effects": [
+        { "kind": "giveItem", "itemId": "item.tonic-crate", "to": "pc.you" },
+        { "kind": "setObjectiveDone", "questId": "quest.cold-passage", "objectiveId": "collect-protected-tonic" },
+        { "kind": "narrate", "text": "Lio checks the tonic seal while Mara fits the insulated wrap. The crate is cool, shaded, and signed into your custody." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.cold.deliver",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.lowmere-clinic" },
+        { "kind": "questState", "questId": "quest.cold-passage", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.tonic-crate" }
+      ] },
+      "effects": [
+        { "kind": "transferItem", "itemId": "item.tonic-crate", "from": "pc.you", "to": "npc.sori-ansel" },
+        { "kind": "setObjectiveDone", "questId": "quest.cold-passage", "objectiveId": "deliver-tonic" },
+        { "kind": "setQuestState", "questId": "quest.cold-passage", "state": "complete" },
+        { "kind": "narrate", "text": "Sori checks the cool seal, signs the clinic receipt, and shelves the tonic. The protected handoff is complete." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.ferry.confirm",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-ferry-yard" },
+        { "kind": "questState", "questId": "quest.second-bell", "state": "active" }
+      ] },
+      "effects": [
+        { "kind": "setObjectiveDone", "questId": "quest.second-bell", "objectiveId": "confirm-second-bell" },
+        { "kind": "narrate", "text": "The live slate confirms Pax's revision: repair crews board at second bell, after the clinic crate and before market freight." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.ferry.berth",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-drydock" },
+        { "kind": "questState", "questId": "quest.second-bell", "state": "active" }
+      ] },
+      "effects": [
+        { "kind": "setObjectiveDone", "questId": "quest.second-bell", "objectiveId": "reach-repair-berth" },
+        { "kind": "setQuestState", "questId": "quest.second-bell", "state": "complete" },
+        { "kind": "narrate", "text": "Bera logs your arrival against the second-bell berth. The repair crew has exactly the access window it expected." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.glass.collect",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-glassworks" },
+        { "kind": "questState", "questId": "quest.clear-glass", "state": "active" }
+      ] },
+      "effects": [
+        { "kind": "giveItem", "itemId": "item.signal-lens", "to": "pc.you" },
+        { "kind": "setObjectiveDone", "questId": "quest.clear-glass", "objectiveId": "collect-current-lens" },
+        { "kind": "narrate", "text": "Jalen lays the clear-blue pair into felt and points out the current spring alignment marks before signing the handoff." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.glass.calibrate",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.highwake-beacon" },
+        { "kind": "questState", "questId": "quest.clear-glass", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.signal-lens" }
+      ] },
+      "effects": [
+        { "kind": "transferItem", "itemId": "item.signal-lens", "from": "pc.you", "to": "npc.ren-hale" },
+        { "kind": "setObjectiveDone", "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon" },
+        { "kind": "setQuestState", "questId": "quest.clear-glass", "state": "complete" },
+        { "kind": "narrate", "text": "Ren seats the lenses in the stamped order. The test flash returns clean and even across the water." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.weather.collect",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.highwake-weather" },
+        { "kind": "questState", "questId": "quest.true-bearing", "state": "active" }
+      ] },
+      "effects": [
+        { "kind": "giveItem", "itemId": "item.weather-chart", "to": "pc.you" },
+        { "kind": "setObjectiveDone", "questId": "quest.true-bearing", "objectiveId": "collect-weather-chart" },
+        { "kind": "narrate", "text": "Edda signs the pressure trace and circles the cove bearing that stays sheltered during the fast squall." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.weather.post",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.bellharbor-quay" },
+        { "kind": "questState", "questId": "quest.true-bearing", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.weather-chart" }
+      ] },
+      "effects": [
+        { "kind": "transferItem", "itemId": "item.weather-chart", "from": "pc.you", "to": "npc.pax-lorne" },
+        { "kind": "setObjectiveDone", "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing" },
+        { "kind": "setQuestState", "questId": "quest.true-bearing", "state": "complete" },
+        { "kind": "narrate", "text": "Pax copies the signed cove bearing onto the live slate. Departing crews acknowledge the safer line." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.stores.collect",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-drydock" },
+        { "kind": "questState", "questId": "quest.shared-stores", "state": "active" }
+      ] },
+      "effects": [
+        { "kind": "giveItem", "itemId": "item.pump-seal", "to": "pc.you" },
+        { "kind": "setObjectiveDone", "questId": "quest.shared-stores", "objectiveId": "collect-pump-seal" },
+        { "kind": "narrate", "text": "Bera checks the ring against the measured card, then wraps the correct copper seal for Highwake's pump." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.stores.restore",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.highwake-weather" },
+        { "kind": "questState", "questId": "quest.shared-stores", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.pump-seal" }
+      ] },
+      "effects": [
+        { "kind": "transferItem", "itemId": "item.pump-seal", "from": "pc.you", "to": "npc.edda-marr" },
+        { "kind": "setObjectiveDone", "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank" },
+        { "kind": "setQuestState", "questId": "quest.shared-stores", "state": "complete" },
+        { "kind": "narrate", "text": "The seal sits flush and the rain-tank pump holds pressure. Highwake's reserve returns to the shared ledger." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.manifest.quay-copy",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-ferry-yard" },
+        { "kind": "questState", "questId": "quest.missing-manifest", "state": "active" }
+      ] },
+      "effects": [
+        { "kind": "revealCaseFact", "caseId": "case.missing-manifest", "factId": "casefact.manifest.old-copy" },
+        { "kind": "giveItem", "itemId": "item.supply-ledger", "to": "pc.you" },
+        { "kind": "setObjectiveDone", "questId": "quest.missing-manifest", "objectiveId": "compare-cargo-records" },
+        { "kind": "narrate", "text": "The Ferry Yard carbon copy places crate seventeen on the drydock line and carries an unrevised morning timestamp." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.manifest.revision-copy",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.bellharbor-relay" },
+        { "kind": "questState", "questId": "quest.missing-manifest", "state": "active" }
+      ] },
+      "effects": [
+        { "kind": "revealCaseFact", "caseId": "case.missing-manifest", "factId": "casefact.manifest.current-copy" },
+        { "kind": "narrate", "text": "The Relay House revision book moves crate seventeen to Reedbank Clinic and bears a later countersignature." }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "ev.manifest.green-ink",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.bellharbor-quay" },
+        { "kind": "questState", "questId": "quest.missing-manifest", "state": "active" }
+      ] },
+      "effects": [
+        { "kind": "revealCaseFact", "caseId": "case.missing-manifest", "factId": "casefact.manifest.green-ink" },
+        { "kind": "giveItem", "itemId": "item.cargo-seal", "to": "pc.you" },
+        { "kind": "setObjectiveDone", "questId": "quest.missing-manifest", "objectiveId": "identify-copying-error" },
+        { "kind": "narrate", "text": "Nia compares the papers without excuse. Her green correction reached the seal after the Ferry Yard copy had already left: a copied old line, not a missing crate." }
+      ],
+      "once": "campaign"
+    }
+  ],
+  "travelEvents": [],
+  "travelEventChance": 0,
+  "roomEvents": [],
+  "roomEventChance": 0,
+  "cases": [
+    {
+      "id": "case.missing-manifest",
+      "name": "The Doubled Crate",
+      "questId": "quest.missing-manifest",
+      "truth": {
+        "culpritId": "npc.nia-wren",
+        "method": "Nia copied the first quay line before the Relay House revision arrived, then corrected the cargo seal without recalling the Ferry Yard carbon copy.",
+        "motive": "She was trying to publish the gale-day load quickly enough to keep essential cargo moving; the mistake was hurried, ordinary, and acknowledged once shown.",
+        "summary": "Crate seventeen was never missing or duplicated. One superseded copy survived beside the corrected seal."
+      },
+      "facts": [
+        { "id": "casefact.manifest.old-copy", "text": "The Ferry Yard carbon copy lists crate seventeen for the drydock and predates the revision.", "kind": "timeline", "core": true },
+        { "id": "casefact.manifest.current-copy", "text": "The later Relay House copy assigns crate seventeen to Reedbank Clinic and is properly countersigned.", "kind": "physical", "core": true },
+        { "id": "casefact.manifest.green-ink", "text": "Nia's green correction appears on the cargo seal but not on the already-dispatched carbon copy.", "kind": "means", "core": true },
+        { "id": "casefact.manifest.stores-intact", "text": "Drydock and clinic custody counts together account for every listed crate.", "kind": "opportunity", "core": false }
+      ],
+      "redHerrings": [
+        { "id": "herring.manifest-tide-loss", "text": "A damp corner suggests the missing line washed away in the gale.", "refutedBy": ["casefact.manifest.old-copy", "casefact.manifest.current-copy"] }
+      ],
+      "clues": [
+        { "id": "clue.manifest.old-copy", "revealsFactIds": ["casefact.manifest.old-copy"], "via": "event", "sourceId": "ev.manifest.quay-copy", "evidenceItemIds": ["item.supply-ledger"] },
+        { "id": "clue.manifest.current-copy", "revealsFactIds": ["casefact.manifest.current-copy"], "via": "event", "sourceId": "ev.manifest.revision-copy" },
+        { "id": "clue.manifest.green-ink", "revealsFactIds": ["casefact.manifest.green-ink"], "via": "event", "sourceId": "ev.manifest.green-ink", "evidenceItemIds": ["item.cargo-seal"] },
+        { "id": "clue.manifest-intact-count", "revealsFactIds": ["casefact.manifest.stores-intact"], "via": "testimony", "sourceId": "npc.bera-coil" }
+      ],
+      "npcKnowledge": {
+        "npc.nia-wren": { "knows": ["casefact.manifest.green-ink"], "believes": [], "asserts": [] },
+        "npc.ivo-pell": { "knows": ["casefact.manifest.current-copy"], "believes": [], "asserts": [] },
+        "npc.bera-coil": { "knows": ["casefact.manifest.stores-intact"], "believes": [], "asserts": [] },
+        "npc.pax-lorne": { "knows": ["casefact.manifest.old-copy"], "believes": ["herring.manifest-tide-loss"], "asserts": [] }
+      },
+      "accusation": {
+        "requiredCoreFacts": ["casefact.manifest.old-copy", "casefact.manifest.current-copy", "casefact.manifest.green-ink"],
+        "maxWrongAccusations": 3,
+        "culpritResponse": "surrender",
+        "successEffects": [
+          { "kind": "setObjectiveDone", "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest" },
+          { "kind": "setQuestState", "questId": "quest.missing-manifest", "state": "complete" },
+          { "kind": "narrate", "text": "Nia signs the correction, and Ivo posts one reconciled manifest for all three services. The error becomes part of the audit trail instead of a secret." }
+        ],
+        "wrongAccusationEffects": [
+          { "kind": "narrate", "text": "The records do not support that account yet. Mara leaves the question open and returns to the documents." }
+        ],
+        "failEffects": [
+          { "kind": "setQuestState", "questId": "quest.missing-manifest", "state": "failed" },
+          { "kind": "narrate", "text": "The group pauses formal findings and sends the manifests to a joint recount. Nothing is lost, though the circuit closes without a same-day answer." }
+        ]
+      }
+    }
+  ],
+  "startingState": {
+    "locationId": "loc.bellharbor-quay",
+    "clock": 480,
+    "party": ["pc.you"],
+    "companions": ["npc.mara-venn"],
+    "openingSceneId": "scene.first-circuit"
+  }
+}

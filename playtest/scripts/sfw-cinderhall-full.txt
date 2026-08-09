@@ -1,0 +1,28 @@
+/sheet
+/who
+Kestrel, lead us up the road — I'll watch our right.
+/go road
+I draw my cold-iron sword and strike the nearest burning thing.
+I attack the nearest foe.
+I attack the nearest foe.
+/go gate
+I attack the nearest foe.
+I attack the nearest foe.
+/go gallery
+I attack the nearest foe.
+I attack the nearest foe.
+I attack the nearest foe.
+/go forge
+I charge the Slag Warden and drive my cold-iron sword into its glowing core.
+I attack the Slag Warden.
+I attack the Slag Warden.
+I attack the Slag Warden.
+I attack the Slag Warden.
+I attack the Slag Warden.
+I attack the Slag Warden.
+I attack the Slag Warden.
+I attack the Slag Warden.
+I attack the Slag Warden.
+I attack the Slag Warden.
+/state
+/quit

@@ -1,0 +1,666 @@
+{
+  "id": "world.duskhollow",
+  "emergentTownChance": 0.3,
+  "name": "Duskhollow",
+  "summary": "A tide-drowned port-city under an endless amber dusk, ruled by masked debt-houses that collect obligations when coin runs dry. Debt-bondage, press-gangs, a drowned-god cult, and dangerous patrons test a solo start, hostile NPC behavior, a deadly danger dial, and a defeat-to-servitude fork.",
+  "constitution": {
+    "danger": 3,
+    "useGenericDefeatOutcomes": true,
+    "defeatOutcomes": []
+  },
+  "lore": [
+    {
+      "id": "lore.long-dusk",
+      "title": "The Long Dusk",
+      "body": "Duskhollow has not seen a true dawn in living memory. The sun hangs drowned below the marsh-line, and the city lives by amber lantern-light and the slow breathing of the tide. Sailors say the Long Dusk is a debt too — that the city sold its morning and never paid it back.",
+      "tags": ["setting"]
+    },
+    {
+      "id": "lore.mercers-masque",
+      "title": "The Mercers' Masque",
+      "body": "The debt-houses rule from behind lacquered masks. They buy any obligation — a loan, a grief, a promise — and collect what is owed in coin, labor, secrets, or seized property. A signed tally is worth more than a life here, because a life is only collateral.",
+      "tags": ["faction", "power"]
+    },
+    {
+      "id": "lore.the-tally",
+      "title": "The Tally",
+      "body": "No one lands in Duskhollow free. The harbor watch brands every newcomer with a tally-mark — a running debt for the air they breathe and the water they cross — and the collectors hunt those who let it grow. A stranger with an unpaid tally is fair game for any house that cares to press the claim.",
+      "tags": ["setting", "debt"]
+    },
+    {
+      "id": "lore.drowned-below",
+      "title": "The Drowned Below",
+      "body": "Under the wharves the old city lies flooded, and something in it still keeps accounts. The Tideborn cult says a god sleeps in the sunk ward and that the dead who owe it walk the drains at slack tide. The Masque tolerates the cult because fear is cheaper than guards.",
+      "tags": ["supernatural", "secret"],
+      "secret": true
+    },
+    {
+      "id": "lore.unbonded",
+      "title": "The Unbonded",
+      "body": "A thin, stubborn league of the debt-free and the escaped shelters in the old almshouse above the tide-line. They forge clean papers, cut tally-brands out of skin, and smuggle the desperate off the isle. The Masque calls them thieves; they call themselves the only mercy left.",
+      "tags": ["faction", "resistance"]
+    }
+  ],
+  "factions": [
+    {
+      "id": "faction.masque",
+      "name": "The Mercers' Masque",
+      "summary": "The masked debt-houses that own the city through obligation. They collect in coin, labor, secrets, or seized goods, and answer only to their own ledgers."
+    },
+    {
+      "id": "faction.unbonded",
+      "name": "The Unbonded League",
+      "summary": "Debt-free outlaws and escapees who forge papers, cut tally-brands, and smuggle the desperate off the isle."
+    },
+    {
+      "id": "faction.tideborn",
+      "name": "The Tideborn",
+      "summary": "A drowned-god cult of the sunk ward that trades in prophecy, corpse-lore, and the debts the living owe the dead."
+    },
+    {
+      "id": "faction.harborwatch",
+      "name": "The Harbor Watch",
+      "summary": "The city's nominal law — underpaid, Masque-bought, and mostly a machine for branding newcomers and looking away."
+    }
+  ],
+  "locations": [
+    {
+      "id": "loc.tidegate",
+      "name": "The Tide Gate",
+      "description": "A barnacled water-gate where the ferries dock and the harbor watch brands the newly arrived. Amber lanterns swing over black water; a tally-post stands slick with old ink and older blood. This is where every debt in Duskhollow begins.",
+      "connections": ["loc.lantern-row", "loc.sunk-ward", "loc.tide-flats"],
+      "exits": [
+        { "to": "loc.lantern-row", "direction": "up", "name": "the lantern stair into the city" },
+        { "to": "loc.sunk-ward", "direction": "down", "name": "the weeping sump-stair", "locked": false },
+        { "to": "loc.tide-flats", "direction": "out", "name": "the causeway to the flats" }
+      ],
+      "region": "region.duskhollow",
+      "spawns": [
+        { "templateId": "npc.hollow-crowd", "tier": "transient", "max": 1 }
+      ],
+      "npcs": ["npc.tally-clerk"]
+    },
+    {
+      "id": "loc.lantern-row",
+      "name": "Lantern Row",
+      "description": "The masked market-quarter, where every stall sells something you will owe for later. Silk booths and pleasure-barges crowd the canal; collectors drift through the crowd reading tally-brands like price tags. Bright, loud, and never quite safe.",
+      "connections": ["loc.tidegate", "loc.gilt-masque", "loc.counting-house", "loc.almshouse"],
+      "exits": [
+        { "to": "loc.tidegate", "direction": "down", "name": "the lantern stair to the gate" },
+        { "to": "loc.gilt-masque", "direction": "east", "name": "the bronze threshold of the Gilt Masque" },
+        { "to": "loc.counting-house", "direction": "north", "name": "the arcade to the counting-house" },
+        { "to": "loc.almshouse", "direction": "up", "name": "the crooked climb to the almshouse" }
+      ],
+      "region": "region.duskhollow",
+      "spawns": [
+        { "templateId": "npc.hollow-crowd", "tier": "transient", "max": 1 },
+        { "templateId": "mon.masque-bravo", "tier": "transient", "max": 1 }
+      ],
+      "npcs": ["npc.collector-vane"],
+      "work": [
+        { "id": "work.haul-barges", "label": "Haul cargo off the pleasure-barges", "ability": "str", "dc": 12, "wageCp": 60, "failWageCp": 10 },
+        { "id": "work.run-tallies", "label": "Run tally-slips for the collectors", "ability": "dex", "skill": "streetwise", "dc": 14, "wageCp": 90 }
+      ]
+    },
+    {
+      "id": "loc.gilt-masque",
+      "name": "The Gilt Masque",
+      "description": "A gaming-and-debt house of curtained booths, mirrored alcoves, and private stairs where a guest can vanish for an hour or forever. The music never stops and the doors lock softly from the outside. Patrons buy loyalty the way they buy everything here — on credit.",
+      "connections": ["loc.lantern-row", "loc.counting-house"],
+      "exits": [
+        { "to": "loc.lantern-row", "direction": "out", "name": "the bronze threshold to the Row" },
+        { "to": "loc.counting-house", "direction": "back", "name": "the discreet back stair to the counting-house" }
+      ],
+      "region": "region.duskhollow",
+      "spawns": [],
+      "npcs": ["npc.patron-sereth"]
+    },
+    {
+      "id": "loc.counting-house",
+      "name": "The Counting House",
+      "description": "The Mercers' Masque keeps its great ledger here, under a dome of debt-scrip and hanging scales. On the block below, obligations are auctioned — a loan, a bond, sometimes the person attached to it. Mercer Quill presides in a mask of gilt teeth.",
+      "connections": ["loc.lantern-row", "loc.gilt-masque", "loc.press-docks"],
+      "exits": [
+        { "to": "loc.lantern-row", "direction": "south", "name": "the arcade to Lantern Row" },
+        { "to": "loc.gilt-masque", "direction": "down", "name": "the discreet stair to the Gilt Masque" },
+        { "to": "loc.press-docks", "direction": "east", "name": "the wet corridor to the press-docks" }
+      ],
+      "region": "region.duskhollow",
+      "spawns": [],
+      "npcs": ["npc.mercer-quill"]
+    },
+    {
+      "id": "loc.press-docks",
+      "name": "The Press-Docks",
+      "description": "Where debtors who cannot pay are pressed into crews and shipped out on the ebb — if they are lucky. Chained gangs load salt-barges under guttering torches, and the pressmaster works the crowd for anyone alone, unbonded, and slow. The only way off the isle starts here.",
+      "connections": ["loc.counting-house", "loc.tide-flats", "loc.sunk-ward"],
+      "exits": [
+        { "to": "loc.counting-house", "direction": "west", "name": "the wet corridor to the counting-house" },
+        { "to": "loc.tide-flats", "direction": "out", "name": "the barge-slip to the flats" },
+        { "to": "loc.sunk-ward", "direction": "down", "name": "the flooded ramp to the sunk ward" }
+      ],
+      "region": "region.duskhollow",
+      "spawns": [
+        { "templateId": "mon.press-thug", "tier": "transient", "max": 2 }
+      ],
+      "npcs": ["npc.pressmaster-orlo"]
+    },
+    {
+      "id": "loc.sunk-ward",
+      "name": "The Sunk Ward",
+      "description": "The drowned undercity, half-flooded and lantern-starved, where the Masque keeps its debt-jail and the Tideborn keep their god. Cells sweat above the waterline; drains breathe at slack tide. A person can scream here and only the drowned will answer.",
+      "connections": ["loc.tidegate", "loc.press-docks", "loc.tide-flats"],
+      "exits": [
+        { "to": "loc.tidegate", "direction": "up", "name": "the weeping sump-stair to the gate" },
+        { "to": "loc.press-docks", "direction": "up", "name": "the flooded ramp to the press-docks" },
+        { "to": "loc.tide-flats", "direction": "out", "name": "the tide-drain to the flats" }
+      ],
+      "region": "region.duskhollow",
+      "spawns": [
+        { "templateId": "mon.drowned-dead", "tier": "transient", "max": 2 },
+        { "templateId": "mon.sump-lurker", "tier": "transient", "max": 1 }
+      ],
+      "npcs": ["npc.jailer-mor"]
+    },
+    {
+      "id": "loc.tide-flats",
+      "name": "The Tide Flats",
+      "description": "The marsh beyond the walls, where the drowned-god's shrine leans in the reeds and the mud gives up bones at low water. The tide comes in fast and blind here. People walk out to be alone, or to be lost, and the flats do not always give them back.",
+      "connections": ["loc.tidegate", "loc.press-docks", "loc.sunk-ward", "loc.almshouse"],
+      "exits": [
+        { "to": "loc.tidegate", "direction": "in", "name": "the causeway back to the gate" },
+        { "to": "loc.press-docks", "direction": "in", "name": "the barge-slip to the press-docks" },
+        { "to": "loc.sunk-ward", "direction": "down", "name": "the tide-drain into the sunk ward" },
+        { "to": "loc.almshouse", "direction": "up", "name": "the reed-path to the almshouse" }
+      ],
+      "region": "region.duskhollow",
+      "spawns": [
+        { "templateId": "mon.drowned-dead", "tier": "transient", "max": 1 },
+        { "templateId": "mon.tide-horror", "tier": "tracked", "max": 1 }
+      ],
+      "npcs": ["npc.marsh-widow"]
+    },
+    {
+      "id": "loc.almshouse",
+      "name": "The Old Almshouse",
+      "description": "A leaning refuge above the tide-line where the Unbonded shelter the escaped and forge clean papers. Washing lines and cook-smoke; a lookout on the roof; the closest thing to safety in Duskhollow. Newcomers who reach it can find allies here — or a knife, if they smell of the Masque.",
+      "connections": ["loc.lantern-row", "loc.tide-flats"],
+      "exits": [
+        { "to": "loc.lantern-row", "direction": "down", "name": "the crooked climb to Lantern Row" },
+        { "to": "loc.tide-flats", "direction": "out", "name": "the reed-path to the flats" }
+      ],
+      "region": "region.duskhollow",
+      "spawns": [],
+      "npcs": ["npc.wren", "npc.brannock"]
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc.tally-clerk",
+      "name": "Sedge the Tally-Clerk",
+      "summary": "A harbor-watch clerk who tallies newcomers and sells them the gear to survive the debt she just gave them.",
+      "persona": "Speaks in the flat, procedural cadence of a lifer bureaucrat — warns you and bills you in the same breath, never at fault, never holding the debt herself. Weary complicity dressed as helpfulness.",
+      "appearance": "A tired woman in an ink-stained watch-coat, brass tally-brand cooling at her belt, ledger chained to her wrist.",
+      "personality": "Bureaucratically kind and entirely complicit. She warns you and bills you in the same breath.",
+      "goals": ["Keep the tally-post ledger balanced", "Sell survival gear at a markup", "Never be the one holding the debt"],
+      "knowledge": ["Who owns which tally", "The going rate of a life", "Which collectors work which quarter"],
+      "relationships": { "pc.you": 5 },
+      "factionId": "faction.harborwatch",
+      "age": 44,
+      "stats": {
+        "abilities": { "str": 9, "dex": 11, "con": 10, "int": 13, "wis": 12, "cha": 12 },
+        "maxHp": 12,
+        "armorClass": 11,
+        "level": 1,
+        "speed": 30,
+        "proficiencies": ["insight", "persuasion"],
+        "spells": []
+      },
+      "inventory": ["item.salt-knife", "item.tide-charm", "item.lantern-oil"],
+      "vendor": { "priceModifier": 1.3 },
+      "alignment": "ln",
+      "personalityTemplate": "survivor",
+      "socialRole": "clerk",
+      "autonomy": { "isPartyMember": false, "level": "reactive" }
+    },
+    {
+      "id": "npc.collector-vane",
+      "name": "Vane the Collector",
+      "summary": "A Masque collector who works Lantern Row for the newly tallied. This seeded threat exercises exploitative opposition and can be moved or removed freely.",
+      "persona": "Silk-voiced and unhurried; addresses debtors like line-items and refusals like haggling. Never raises the voice, never drops the courtesy, always closing the distance. Reads people as balances to be collected, and a cornered stranger as merchandise pending pickup.",
+      "appearance": "A slender figure in a half-mask of green lacquer, gloved to the elbow, a collector's chain of tally-tokens hung like a trophy-cord.",
+      "personality": "Patient, courteous, and exploitative. Reads a person's debts before their face and treats a cornered stranger as merchandise pending collection. Backs off only for real force, a drawn blade, or a witness.",
+      "goals": ["Collect the largest debt for the smallest coin", "Corner the newly-arrived and the alone", "Own something no one can buy back"],
+      "knowledge": ["Every unpaid tally in the Row", "Which booths lock from the outside", "What a person will trade to stay out of the ledger"],
+      "relationships": { "pc.you": -5 },
+      "factionId": "faction.masque",
+      "age": 38,
+      "stats": {
+        "abilities": { "str": 12, "dex": 15, "con": 12, "int": 14, "wis": 12, "cha": 15 },
+        "maxHp": 22,
+        "armorClass": 14,
+        "level": 3,
+        "speed": 30,
+        "proficiencies": ["intimidation", "deception", "stealth"],
+        "spells": []
+      },
+      "inventory": ["item.salt-knife", "item.masque-token"],
+      "alignment": "ne",
+      "personalityTemplate": "schemer",
+      "exploitative": true,
+      "socialRole": "debt-collector",
+      "boundaries": ["Answers to the Masque, not to law", "Will not damage collateral that still has resale value"],
+      "autonomy": { "isPartyMember": false, "level": "proactive", "heartbeatSeconds": 35 }
+    },
+    {
+      "id": "npc.lane-tough",
+      "name": "a dusk-lane tough",
+      "summary": "Masque muscle who works the dusk lanes and extracts a toll from isolated travelers. This roaming threat is spawned by the travel-event system and can be moved or removed freely.",
+      "persona": "Blunt, grabby, and greedy. Treats a stranger alone on his lane as an easy mark — closes the distance fast, demands payment, and only real force gives him pause.",
+      "appearance": "A broad shape in a cheap leather half-mask, knuckles scarred, a Masque token strung at his throat like a licence to take.",
+      "personality": "Brutish and entitled; grabs first and argues later. Reads a lone stranger as a toll waiting to be paid.",
+      "goals": ["Corner anyone walking the lanes alone", "Take his toll in coin or goods"],
+      "knowledge": ["Which lanes have no witnesses", "When the harbor watch looks away"],
+      "relationships": { "pc.you": -8 },
+      "factionId": "faction.masque",
+      "age": 34,
+      "stats": {
+        "abilities": { "str": 16, "dex": 12, "con": 14, "int": 8, "wis": 10, "cha": 9 },
+        "maxHp": 26,
+        "armorClass": 13,
+        "level": 3,
+        "speed": 30,
+        "proficiencies": ["intimidation", "athletics"],
+        "spells": []
+      },
+      "inventory": ["item.salt-knife"],
+      "alignment": "ce",
+      "personalityTemplate": "brute",
+      "exploitative": true,
+      "socialRole": "enforcer",
+      "boundaries": ["Answers to the Masque, not to law"],
+      "autonomy": { "isPartyMember": false, "level": "passive" }
+    },
+    {
+      "id": "npc.patron-sereth",
+      "name": "Sereth Vaux",
+      "summary": "A Masque patron who buys loyalty on credit and considers a debtor's refusal a bargaining position. This seeded threat exercises exploitative opposition and can be moved or removed freely.",
+      "persona": "Wraps every demand in hospitality and every threat in a compliment. Treats a locked door as good manners and refusal as an opening bid. Aristocratic, entitled, and too vain to brawl in the open hall.",
+      "appearance": "A beautiful, overdressed aristocrat in a mask of gilt tears, rings on every finger, a debt-scrip fan folded like a blade.",
+      "personality": "Charming, entitled, and quietly cruel. Treats hospitality and leverage as the same instrument played at different volumes, and enjoys the moment a guest realizes the door is locked.",
+      "goals": ["Own the most interesting person in the room", "Turn hospitality into obligation", "Never hear the word no twice"],
+      "knowledge": ["Which guests are unbonded", "The Masque's private dealings", "The price of every favor in the house"],
+      "relationships": { "pc.you": 0 },
+      "factionId": "faction.masque",
+      "age": 41,
+      "stats": {
+        "abilities": { "str": 11, "dex": 13, "con": 12, "int": 15, "wis": 11, "cha": 17 },
+        "maxHp": 24,
+        "armorClass": 13,
+        "level": 4,
+        "speed": 30,
+        "proficiencies": ["persuasion", "deception", "insight"],
+        "spells": []
+      },
+      "inventory": ["item.masque-token", "item.salt-knife"],
+      "alignment": "le",
+      "personalityTemplate": "schemer",
+      "exploitative": true,
+      "socialRole": "patron",
+      "boundaries": ["Prefers bargains and leverage over open force", "Reputation matters — will not brawl in the open hall"],
+      "autonomy": { "isPartyMember": false, "level": "proactive", "heartbeatSeconds": 40 }
+    },
+    {
+      "id": "npc.pressmaster-orlo",
+      "name": "Pressmaster Orlo",
+      "summary": "A press-gang captain who crews the salt-barges with anyone alone and slow. This seeded threat exercises exploitative opposition and can be moved or removed freely.",
+      "persona": "Loud, blunt, physical. Talks over people, grabs first and argues later, calls a stranger 'body' before he learns a name. Casual brutality with a crew-boss's grin; only real force or a Masque writ shortens him.",
+      "appearance": "A brawny brute in an oilskin coat, jaw scarred white, a gaff-hook through his belt and a crew's worth of tally-chains over one shoulder.",
+      "personality": "Loud, grasping, and casually brutal. Sees every unbonded stranger as a body he already owns and settles arguments with the hook. Only real force or a Masque writ makes him let go.",
+      "goals": ["Fill the barge crews by any means", "Take his signing fee in coin or seized goods", "Never lose a recruit he has hold of"],
+      "knowledge": ["Which ships take no questions", "How to break a person into a crew", "The tide tables and the escape routes"],
+      "relationships": { "pc.you": -5 },
+      "factionId": "faction.masque",
+      "age": 47,
+      "stats": {
+        "abilities": { "str": 17, "dex": 11, "con": 15, "int": 8, "wis": 10, "cha": 10 },
+        "maxHp": 32,
+        "armorClass": 14,
+        "level": 4,
+        "speed": 30,
+        "proficiencies": ["intimidation", "athletics"],
+        "spells": []
+      },
+      "inventory": ["item.gaff-hook"],
+      "alignment": "ce",
+      "personalityTemplate": "brute",
+      "exploitative": true,
+      "socialRole": "pressmaster",
+      "boundaries": ["Backs down from a Masque writ or a real blade", "Values a working body over a broken one"],
+      "autonomy": { "isPartyMember": false, "level": "proactive", "heartbeatSeconds": 35 }
+    },
+    {
+      "id": "npc.jailer-mor",
+      "name": "Jailer Mor",
+      "summary": "A keeper of the Sunk Ward debt-jail who rules whoever the tide brings down and answers to no witness. This seeded threat exercises exploitative opposition and can be moved or removed freely.",
+      "persona": "Soft-spoken and territorial — the calm of a man who knows there are no witnesses this far down. Speaks like everything in his ward already belongs to him. Unhurried, entitled, patient as standing water; only a stronger arm gives him pause.",
+      "appearance": "A heavy, soft-spoken keeper with lantern-burnt eyes, a ring of drowned keys, and hands that have learned every kind of grip.",
+      "personality": "Territorial, unhurried, and entitled to everything in his cells. In the sunk ward there are no witnesses, and he has built his manners around that fact. A drawn blade or a stronger arm is the only thing he respects.",
+      "goals": ["Keep the cells full and quiet", "Take what the drowned can't", "Be the last account anyone settles"],
+      "knowledge": ["Who the Masque has forgotten in the cells", "The drains that flood at slack tide", "What the Tideborn keep below"],
+      "relationships": { "pc.you": -5 },
+      "factionId": "faction.masque",
+      "age": 50,
+      "stats": {
+        "abilities": { "str": 16, "dex": 10, "con": 15, "int": 10, "wis": 11, "cha": 9 },
+        "maxHp": 30,
+        "armorClass": 13,
+        "level": 4,
+        "speed": 30,
+        "proficiencies": ["intimidation", "athletics", "perception"],
+        "spells": []
+      },
+      "inventory": ["item.gaff-hook"],
+      "alignment": "le",
+      "personalityTemplate": "brute",
+      "exploitative": true,
+      "socialRole": "jailer",
+      "boundaries": ["Rules the ward absolutely, but fears a Masque reckoning above", "Backs off from real force"],
+      "autonomy": { "isPartyMember": false, "level": "proactive", "heartbeatSeconds": 35 }
+    },
+    {
+      "id": "npc.mercer-quill",
+      "name": "Mercer Quill",
+      "summary": "A debt-boss of the Mercers' Masque who auctions obligations from behind a mask of gilt teeth — the hand that owns your tally, and the antagonist you must reckon with.",
+      "persona": "Precise, cold, and courteous; speaks in prices and precedents, never in threats — the threat is the arithmetic. Owns rather than preys. Everything is negotiable if you can pay the number.",
+      "appearance": "A precise, ageless figure in a mask of gilt teeth and a coat sewn from cancelled debt-scrip, quill and great ledger always to hand.",
+      "personality": "Cold, fair by his own arithmetic, and utterly without mercy that isn't priced. He does not prey; he owns. Everything is negotiable if you can pay the number.",
+      "goals": ["Balance the great ledger", "Own the most valuable debts in the city", "Turn every rebellion back into an obligation"],
+      "knowledge": ["Who holds your tally and why", "The true price of leaving the isle", "Every secret the Masque has bought"],
+      "relationships": { "pc.you": 0 },
+      "factionId": "faction.masque",
+      "age": 55,
+      "stats": {
+        "abilities": { "str": 9, "dex": 11, "con": 11, "int": 17, "wis": 15, "cha": 16 },
+        "maxHp": 26,
+        "armorClass": 13,
+        "level": 5,
+        "speed": 30,
+        "proficiencies": ["persuasion", "deception", "insight", "history"],
+        "spells": []
+      },
+      "inventory": ["item.debt-ledger", "item.forged-writ"],
+      "vendor": { "priceModifier": 1.6 },
+      "alignment": "le",
+      "personalityTemplate": "schemer",
+      "socialRole": "debt-boss",
+      "autonomy": { "isPartyMember": false, "level": "reactive", "heartbeatSeconds": 45, "canLead": false }
+    },
+    {
+      "id": "npc.marsh-widow",
+      "name": "The Marsh Widow",
+      "summary": "A Tideborn priestess of the drowned god who reads debts owed to the dead and trades prophecy for grief.",
+      "persona": "Speaks in tide and omen, calm and a little too knowing; names your debts before you do. Neither warm nor cruel — an accountant for the drowned who expects you'll join the ledger eventually.",
+      "appearance": "A gaunt woman crowned with tide-wrack and drowned pearls, her shawl heavy with the small bones the flats give up.",
+      "personality": "Serene, unsettling, and honest in a way the city is not. She owes the dead and expects you do too. Neither ally nor threat until you choose.",
+      "goals": ["Keep the drowned god's accounts", "Warn the marked and gather the lost", "See the Masque's ledger drowned with the rest"],
+      "knowledge": ["What walks the drains at slack tide", "Whose bones the flats keep", "The old debt the city owes the sea"],
+      "relationships": { "pc.you": 5 },
+      "factionId": "faction.tideborn",
+      "age": 58,
+      "stats": {
+        "abilities": { "str": 8, "dex": 10, "con": 11, "int": 14, "wis": 17, "cha": 13 },
+        "maxHp": 16,
+        "armorClass": 11,
+        "level": 3,
+        "speed": 30,
+        "proficiencies": ["insight", "medicine", "religion"],
+        "spells": ["spell.tideward", "spell.drowned-sight"]
+      },
+      "inventory": ["item.tide-charm"],
+      "alignment": "tn",
+      "personalityTemplate": "sage",
+      "socialRole": "priestess",
+      "autonomy": { "isPartyMember": false, "level": "reactive" }
+    },
+    {
+      "id": "npc.wren",
+      "name": "Wren",
+      "sex": "female",
+      "summary": "An Unbonded fixer who cuts tally-brands and smuggles the desperate off the isle — a recruitable companion who can lead a party.",
+      "persona": "Quick, wry, street-smart; tests newcomers with barbed questions and warms fast once they prove clean. Practical hatred of the Masque, fierce loyalty to the freed. Talks like someone always half-planning an escape route — and can take point when asked.",
+      "appearance": "A wiry, sharp-eyed smuggler in a patched watch-coat turned inside out, lockpicks braided into their hair, a healed brand-scar on the wrist.",
+      "personality": "Quick, wry, and loyal once earned. Hates the Masque with a clean, practical hatred. Will follow a stranger who proves they aren't a collector's plant — and can take point when asked.",
+      "goals": ["Get the marked off the isle alive", "Bleed the Masque's ledgers", "Find the ones the Masque disappeared"],
+      "knowledge": ["The clean routes off the isle", "Which papers the watch actually reads", "Where the Masque hides its cut brands"],
+      "relationships": { "pc.you": 10, "npc.mercer-quill": -40 },
+      "factionId": "faction.unbonded",
+      "age": 29,
+      "stats": {
+        "abilities": { "str": 11, "dex": 16, "con": 12, "int": 14, "wis": 13, "cha": 13 },
+        "maxHp": 24,
+        "armorClass": 14,
+        "level": 3,
+        "speed": 30,
+        "proficiencies": ["stealth", "sleight-of-hand", "investigation", "persuasion"],
+        "spells": []
+      },
+      "inventory": ["item.salt-knife", "item.forged-writ"],
+      "alignment": "cg",
+      "personalityTemplate": "survivor",
+      "socialRole": "fixer",
+      "autonomy": { "isPartyMember": false, "level": "proactive", "canLead": true, "heartbeatSeconds": 45 }
+    },
+    {
+      "id": "npc.brannock",
+      "name": "Brannock",
+      "summary": "A freed debt-slave turned Unbonded bodyguard — a recruitable companion who fights and shields.",
+      "persona": "Few words, chosen with care; gentle with the frightened, immovable with slavers. The careful strength of the once-owned. Lets silence do most of the talking, then acts decisively.",
+      "appearance": "A big, scarred man with a cut tally-brand on his throat and a salvaged press-cudgel, careful with his strength the way only the once-owned learn to be.",
+      "personality": "Slow to speak, immovable once decided, gentle with the frightened and terrible with slavers. Owes the Unbonded his freedom and pays it forward in muscle.",
+      "goals": ["Protect the ones the Masque would press", "Break every chain he finds", "Never be owned again"],
+      "knowledge": ["How the press-gangs work from the inside", "Which guards can be bought", "The blind spots of the sunk ward"],
+      "relationships": { "pc.you": 8, "npc.pressmaster-orlo": -50 },
+      "factionId": "faction.unbonded",
+      "age": 40,
+      "stats": {
+        "abilities": { "str": 16, "dex": 11, "con": 15, "int": 9, "wis": 12, "cha": 10 },
+        "maxHp": 34,
+        "armorClass": 15,
+        "level": 4,
+        "speed": 30,
+        "proficiencies": ["athletics", "intimidation"],
+        "spells": []
+      },
+      "inventory": ["item.press-cudgel"],
+      "alignment": "ng",
+      "personalityTemplate": "stoic-guardian",
+      "socialRole": "bodyguard",
+      "autonomy": { "isPartyMember": false, "level": "reactive", "canLead": false }
+    },
+    {
+      "id": "npc.hollow-crowd",
+      "name": "The Hollow Crowd",
+      "summary": "Debtors and dock-folk worn thin by the Masque — a chorus of the owing who can become witnesses, marks, or a mob.",
+      "persona": "A low tide of the indebted: eyes down, tallies growing, always watching for someone worse off to sell out.",
+      "appearance": "Masked and unmasked poor in tide-stained coats, tally-brands half-hidden, hands quick and hungry.",
+      "personality": "Frightened, transactional, and dangerous in numbers. Will witness, rob, or riot depending on what the party gives them.",
+      "goals": ["Pay down the tally", "Stay off the block", "Find someone to blame"],
+      "knowledge": ["Row rumor", "Who got pressed last ebb", "Which collector to avoid tonight"],
+      "relationships": {},
+      "age": 33,
+      "stats": {
+        "abilities": { "str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10 },
+        "maxHp": 8,
+        "armorClass": 10,
+        "level": 1,
+        "speed": 30,
+        "proficiencies": [],
+        "spells": []
+      },
+      "alignment": "tn",
+      "socialRole": "crowd",
+      "autonomy": { "isPartyMember": false, "level": "reactive" }
+    }
+  ],
+  "monsters": [
+    {
+      "id": "mon.masque-bravo",
+      "name": "Masque Bravo",
+      "description": "Lacquer-masked muscle the collectors keep on a short chain — quick with a knife and quicker to swarm a debtor who runs.",
+      "stats": {
+        "abilities": { "str": 13, "dex": 14, "con": 12, "int": 9, "wis": 10, "cha": 8 },
+        "maxHp": 14,
+        "armorClass": 13,
+        "level": 1,
+        "speed": 30,
+        "proficiencies": ["intimidation"],
+        "spells": []
+      },
+      "inventory": ["item.salt-knife"]
+    },
+    {
+      "id": "mon.press-thug",
+      "name": "Press-Gang Thug",
+      "description": "A club-handed crimp who takes bodies for the barges. Fights to subdue, not to kill — a live debtor is worth more than a dead one.",
+      "stats": {
+        "abilities": { "str": 15, "dex": 11, "con": 13, "int": 8, "wis": 9, "cha": 8 },
+        "maxHp": 16,
+        "armorClass": 12,
+        "level": 2,
+        "speed": 30,
+        "proficiencies": ["athletics", "grapple"],
+        "spells": []
+      },
+      "inventory": ["item.press-cudgel"]
+    },
+    {
+      "id": "mon.drowned-dead",
+      "name": "The Drowned Dead",
+      "description": "Debtors the tide took, walking the drains at slack water to collect what the living still owe. Cold, patient, and impossibly strong at the wrist.",
+      "stats": {
+        "abilities": { "str": 14, "dex": 7, "con": 15, "int": 3, "wis": 8, "cha": 4 },
+        "maxHp": 19,
+        "armorClass": 10,
+        "level": 2,
+        "speed": 20,
+        "proficiencies": ["grapple"],
+        "spells": []
+      }
+    },
+    {
+      "id": "mon.sump-lurker",
+      "name": "Sump-Lurker",
+      "description": "A pale, eel-limbed thing that lives in the flooded ward and drags the careless under by the ankle.",
+      "stats": {
+        "abilities": { "str": 13, "dex": 15, "con": 12, "int": 4, "wis": 11, "cha": 5 },
+        "maxHp": 15,
+        "armorClass": 13,
+        "level": 2,
+        "speed": 30,
+        "proficiencies": ["stealth"],
+        "spells": []
+      }
+    },
+    {
+      "id": "mon.tide-horror",
+      "name": "Tide-Horror",
+      "description": "A drowned-god thing of knotted kelp, bone, and old debt that surfaces on the flats at high water. It does not hunt for meat — it collects.",
+      "stats": {
+        "abilities": { "str": 18, "dex": 9, "con": 17, "int": 6, "wis": 13, "cha": 10 },
+        "maxHp": 42,
+        "armorClass": 14,
+        "level": 5,
+        "speed": 25,
+        "proficiencies": ["grapple", "intimidation"],
+        "spells": []
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "item.salt-knife",
+      "name": "Salt-Knife",
+      "description": "A short blade pitted by brine, the common tool and weapon of the tide-quarter.",
+      "kind": "weapon",
+      "properties": { "damage": "1d4", "damageType": "piercing", "finesse": true }
+    },
+    {
+      "id": "item.gaff-hook",
+      "name": "Gaff-Hook",
+      "description": "A boat-hook filed to a point — a fisherman's tool and a pressmaster's argument.",
+      "kind": "weapon",
+      "properties": { "damage": "1d6", "damageType": "piercing" }
+    },
+    {
+      "id": "item.press-cudgel",
+      "name": "Press-Cudgel",
+      "description": "A weighted club made for taking a body down without killing it.",
+      "kind": "weapon",
+      "properties": { "damage": "1d6", "damageType": "bludgeoning" }
+    },
+    {
+      "id": "item.tally-brand",
+      "name": "Your Tally-Brand",
+      "description": "The debt burned into your skin at the Tide Gate — a running obligation to the city itself, growing with every hour it goes unpaid. It marks you as fair game to any house that presses the claim.",
+      "kind": "quest",
+      "properties": { "debt": true, "growsOverTime": true, "marksBearer": true }
+    },
+    {
+      "id": "item.masque-token",
+      "name": "Masque Token",
+      "description": "A lacquered chit of debt-scrip that passes for coin in the Row — a small favor owed, or owned.",
+      "kind": "treasure",
+      "properties": { "currencyValueCp": 25 }
+    },
+    {
+      "id": "item.tide-charm",
+      "name": "Tide-Charm",
+      "description": "A knot of drowned-pearl and reed the Tideborn sell against the things that walk the drains.",
+      "kind": "consumable",
+      "properties": { "wardsUndead": true }
+    },
+    {
+      "id": "item.lantern-oil",
+      "name": "Flask of Lantern-Oil",
+      "description": "Cheap amber oil that keeps the dark and the drowned an arm's length back.",
+      "kind": "consumable",
+      "properties": { "light": true }
+    },
+    {
+      "id": "item.forged-writ",
+      "name": "Forged Masque Writ",
+      "description": "Clean papers that lie — enough gilt and cancelled scrip to pass a bought watchman or free a bonded soul, once.",
+      "kind": "quest",
+      "properties": { "forgesFreedom": true, "singleUse": true }
+    },
+    {
+      "id": "item.debt-ledger",
+      "name": "The Great Ledger's Page",
+      "description": "A torn leaf of the Mercers' great ledger — the entry that names who bought your tally, and what they mean to collect.",
+      "kind": "quest",
+      "properties": { "evidence": true, "dangerous": true }
+    }
+  ],
+  "spells": [
+    {
+      "id": "spell.tideward",
+      "name": "Tideward",
+      "level": 1,
+      "description": "A murmured Tideborn ward that turns the drowned dead aside for a breath.",
+      "effect": { "school": "abjuration", "wardsUndead": true }
+    },
+    {
+      "id": "spell.drowned-sight",
+      "name": "Drowned Sight",
+      "level": 2,
+      "description": "The caster borrows a dead debtor's memory of who owed them, and how they came to drown.",
+      "effect": { "school": "divination", "revealsDebt": true }
+    }
+  ],
+  "houseRules": {
+    "tone": "Tide-noir debt bondage, masked intrigue, and drowned-god horror.",
+    "resting": "A safe long rest requires shelter above the tide-line (the almshouse) and no active pursuit flag; resting in the open flats or the sunk ward invites the drowned.",
+    "debt": "An unpaid tally grows each cycle and marks the bearer as fair game to the Masque; clearing it (paid, forged, or cut) removes the collectors' claim."
+  }
+}

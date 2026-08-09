@@ -1,0 +1,288 @@
+[
+  {
+    "id": "core-ambient",
+    "events": [
+      {
+        "id": "tev.core.wildflowers",
+        "weight": 3,
+        "cooldownMoves": 3,
+        "effects": [{ "kind": "narrate", "text": "A bank of wildflowers brightens the road, and the party carries the color with them for a while." }]
+      },
+      {
+        "id": "tev.core.old-milestone",
+        "weight": 3,
+        "cooldownMoves": 3,
+        "effects": [{ "kind": "narrate", "text": "An old milestone leans from the verge, its weathered arrow pointing true enough to steady the journey." }]
+      },
+      {
+        "id": "tev.core.roadside-spring",
+        "weight": 2,
+        "cooldownMoves": 4,
+        "effects": [
+          { "kind": "narrate", "text": "Clear water bubbles from a roadside spring, cold enough to put strength back into tired legs." },
+          { "kind": "adjustEnergy", "by": 5 }
+        ]
+      },
+      {
+        "id": "tev.core.hermit-tea",
+        "weight": 2,
+        "cooldownMoves": 5,
+        "effects": [
+          { "kind": "narrate", "text": "A quiet hermit shares bitter trail tea and a practical warning about the road ahead." },
+          { "kind": "adjustEnergy", "by": 3 }
+        ]
+      },
+      {
+        "id": "tev.core.footsore",
+        "weight": 2,
+        "cooldownMoves": 3,
+        "effects": [
+          { "kind": "narrate", "text": "Loose stones and bad footing turn the next stretch into a grinding, footsore slog." },
+          { "kind": "adjustEnergy", "by": -3 }
+        ]
+      },
+      {
+        "id": "tev.core.beggar",
+        "weight": 1,
+        "cooldownMoves": 5,
+        "effects": [
+          { "kind": "narrate", "text": "A hungry traveler asks for enough coin to buy bread before the next gate closes." },
+          { "kind": "adjustCoins", "by": -3 }
+        ]
+      },
+      {
+        "id": "tev.core.lucky-coin",
+        "weight": 1,
+        "cooldownMoves": 6,
+        "effects": [
+          { "kind": "narrate", "text": "A glint in the dust turns out to be a coin missed by every cartwheel before you." },
+          { "kind": "adjustCoins", "by": 5 }
+        ]
+      },
+      {
+        "id": "tev.core.wounded-traveler",
+        "weight": 1,
+        "cooldownMoves": 8,
+        "once": "campaign",
+        "effects": [
+          { "kind": "narrate", "text": "A wounded traveler is helped to safer ground, leaving behind a grateful name and a debt that may matter later." },
+          { "kind": "setFlag", "key": "road.helped_wounded_traveler" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core-road-danger",
+    "events": [
+      {
+        "id": "tev.core.bandit-toll",
+        "weight": 2,
+        "cooldownMoves": 6,
+        "effects": [
+          {
+            "kind": "check",
+            "ability": "dex",
+            "dc": 12,
+            "onSuccess": [{ "kind": "narrate", "text": "A crude toll rope snaps up across the road, but quick feet carry you around the trap before the collectors can close in." }],
+            "onFail": [
+              { "kind": "narrate", "text": "A crude toll rope snaps up across the road, and the collectors vanish only after taking a hard payment." },
+              { "kind": "adjustCoins", "by": -25 }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tev.core.cutpurse",
+        "weight": 2,
+        "cooldownMoves": 5,
+        "effects": [
+          {
+            "kind": "check",
+            "ability": "wis",
+            "dc": 13,
+            "onSuccess": [{ "kind": "narrate", "text": "A hand brushes too close to your purse, and a sharp glance sends the cutpurse melting back into the crowd." }],
+            "onFail": [
+              { "kind": "narrate", "text": "The road crowd closes and opens again; only afterward does the lighter purse tell the story." },
+              { "kind": "adjustCoins", "by": -15 }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tev.core.rockslide-hazard",
+        "weight": 2,
+        "cooldownMoves": 4,
+        "effects": [
+          {
+            "kind": "check",
+            "ability": "dex",
+            "dc": 12,
+            "onSuccess": [{ "kind": "narrate", "text": "Pebbles tick down the slope, and a fast scramble gets everyone clear before the larger stones follow." }],
+            "onFail": [
+              { "kind": "narrate", "text": "A scatter of falling stones forces a bruising detour over broken ground." },
+              { "kind": "adjustEnergy", "by": -5 }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tev.core.ambush-bandit",
+        "weight": 1,
+        "cooldownMoves": 8,
+        "effects": [
+          { "kind": "narrate", "text": "A masked bandit steps from cover with steel already drawn." },
+          { "kind": "ambush", "templateId": "foe.roadside-bandit", "name": "Roadside Bandit", "hp": 12 }
+        ]
+      },
+      {
+        "id": "tev.core.ambush-wolves",
+        "weight": 1,
+        "cooldownMoves": 8,
+        "effects": [
+          { "kind": "narrate", "text": "Lean shapes pace the roadside brush, then one hungry wolf breaks into a charge." },
+          { "kind": "ambush", "templateId": "foe.wild-wolf", "name": "Wild Wolf", "hp": 10 }
+        ]
+      },
+      {
+        "id": "tev.core.bandit-or-fight",
+        "weight": 1,
+        "cooldownMoves": 8,
+        "effects": [
+          {
+            "kind": "check",
+            "ability": "cha",
+            "dc": 14,
+            "onSuccess": [{ "kind": "narrate", "text": "A tense exchange at the roadside ends with the bandits deciding easier prey must be somewhere else." }],
+            "onFail": [
+              { "kind": "narrate", "text": "The roadside argument curdles into violence." },
+              { "kind": "ambush", "templateId": "foe.roadside-bandit", "name": "Roadside Bandit", "hp": 12 }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tev.core.washed-track",
+        "weight": 2,
+        "cooldownMoves": 4,
+        "effects": [
+          {
+            "kind": "check",
+            "ability": "dex",
+            "dc": 12,
+            "onSuccess": [{ "kind": "narrate", "text": "A stretch of track has slumped into mud, but you pick a dry line across and lose no time." }],
+            "onFail": [
+              { "kind": "narrate", "text": "The track has washed out, and the long slog around it leaves you soaked and spent." },
+              { "kind": "adjustEnergy", "by": -4 }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tev.core.roadside-shakedown",
+        "weight": 1,
+        "cooldownMoves": 6,
+        "effects": [
+          {
+            "kind": "check",
+            "ability": "cha",
+            "dc": 13,
+            "onSuccess": [{ "kind": "narrate", "text": "A self-appointed road-warden demands a passage fee; a few flat words and a steady stare send him looking for easier coin." }],
+            "onFail": [
+              { "kind": "narrate", "text": "A self-appointed road-warden demands a passage fee, and it is cheaper to pay than to argue with the cudgel behind him." },
+              { "kind": "adjustCoins", "by": -20 }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "core-fortune",
+    "events": [
+      {
+        "id": "tev.core.wayshrine",
+        "weight": 2,
+        "cooldownMoves": 6,
+        "effects": [
+          { "kind": "narrate", "text": "A wayshrine waits under a bent tree. A small offering leaves the road feeling kinder underfoot." },
+          { "kind": "adjustCoins", "by": -5 },
+          { "kind": "adjustEnergy", "by": 5 },
+          { "kind": "setFlag", "key": "road.honored_wayshrine" }
+        ]
+      },
+      {
+        "id": "tev.core.treasure-cache",
+        "weight": 1,
+        "cooldownMoves": 10,
+        "once": "campaign",
+        "effects": [
+          { "kind": "narrate", "text": "A loose stone hides a small traveler's cache, forgotten long enough that no owner is coming back for it." },
+          { "kind": "adjustCoins", "by": 30 }
+        ]
+      },
+      {
+        "id": "tev.core.hidden-cache",
+        "weight": 1,
+        "cooldownMoves": 8,
+        "effects": [
+          {
+            "kind": "check",
+            "ability": "int",
+            "dc": 12,
+            "onSuccess": [
+              { "kind": "narrate", "text": "A strange notch in an old marker reveals a hidden cache tucked behind the stone." },
+              { "kind": "adjustCoins", "by": 40 }
+            ],
+            "onFail": [{ "kind": "narrate", "text": "The old marker looks meaningful for a moment, but whatever secret it held stays sealed." }]
+          }
+        ]
+      },
+      {
+        "id": "tev.core.rival-adventurers",
+        "weight": 2,
+        "cooldownMoves": 6,
+        "effects": [
+          { "kind": "narrate", "text": "Rival adventurers trade a useful shortcut for a story from the road, and leave behind a share of their find." },
+          { "kind": "adjustCoins", "by": 12 }
+        ]
+      },
+      {
+        "id": "tev.core.hermit-blessing",
+        "weight": 1,
+        "cooldownMoves": 8,
+        "effects": [
+          { "kind": "narrate", "text": "An old hermit marks the dust with a blessing and sends you onward with lighter steps." },
+          { "kind": "adjustEnergy", "by": 6 },
+          { "kind": "setFlag", "key": "road.received_hermit_blessing" }
+        ]
+      },
+      {
+        "id": "tev.core.abandoned-camp",
+        "weight": 1,
+        "cooldownMoves": 8,
+        "effects": [
+          {
+            "kind": "check",
+            "ability": "int",
+            "dc": 12,
+            "onSuccess": [
+              { "kind": "narrate", "text": "A cold campsite left in a hurry still hides good gear for anyone who reads the signs — you leave richer than you came." },
+              { "kind": "adjustCoins", "by": 25 }
+            ],
+            "onFail": [{ "kind": "narrate", "text": "A cold campsite offers nothing but ash and the sense that its owners left in a hurry." }]
+          }
+        ]
+      },
+      {
+        "id": "tev.core.grateful-carter",
+        "weight": 2,
+        "cooldownMoves": 6,
+        "effects": [
+          { "kind": "narrate", "text": "A carter with a shed wheel is glad of a hand, and pays the favor forward with coin and a bag of road-bread." },
+          { "kind": "adjustCoins", "by": 10 },
+          { "kind": "setFlag", "key": "road.helped_carter" }
+        ]
+      }
+    ]
+  }
+]

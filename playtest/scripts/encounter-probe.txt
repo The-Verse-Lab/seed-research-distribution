@@ -1,0 +1,10 @@
+/go road
+/advance
+/advance
+/advance
+/advance
+/advance
+/advance
+/advance
+/advance
+/quit

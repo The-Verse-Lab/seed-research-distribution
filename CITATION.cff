@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software or its measurements in academic work, please cite it.
+  Citation is requested, not required by the license.
+title: "Seed — a research instrument for measuring agent initiative"
+abstract: >-
+  A generative-TTRPG engine repurposed as a measurement instrument for the
+  question "when should an agent act without being asked?". World state is a
+  fold over a typed delta log under a single writer with seeded RNG, which
+  yields machine-checkable ground-truth belief state, information asymmetry as
+  a tunable parameter, and exact counterfactual replay — forking a turn into
+  agent-acts and agent-stays-silent branches and reading the outcome difference
+  off the world model.
+authors:
+  - family-names: Zhang
+    given-names: Runkai
+license: Apache-2.0
+type: software
+# version, date-released, doi and repository-code are filled in at the first
+# tagged release of the public distribution.

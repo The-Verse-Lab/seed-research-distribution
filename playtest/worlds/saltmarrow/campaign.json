@@ -1,0 +1,58 @@
+{
+  "id": "campaign.a-night-on-the-row",
+  "name": "A Night on the Row",
+  "worldId": "world.saltmarrow",
+  "synopsis": "You came ashore in Saltmarrow with a name to find and coin to spend, and the only person who can point you at either holds court in a velvet booth at the Drowned Gull. Vesper Calloway trades in secrets, and tonight she has decided you may be useful.",
+  "characters": [
+    {
+      "id": "pc.you",
+      "name": "You",
+      "ancestry": "Human",
+      "class": "Privateer",
+      "level": 3,
+      "stats": {
+        "abilities": { "str": 12, "dex": 14, "con": 12, "int": 13, "wis": 12, "cha": 15 },
+        "maxHp": 24,
+        "armorClass": 13,
+        "level": 3,
+        "speed": 30,
+        "proficiencies": ["persuasion", "deception", "perception"],
+        "spells": []
+      },
+      "inventory": ["item.purse"],
+      "appearance": "Sea-weathered good looks, a coat cut for shore leave, a slow smile that has talked its way out of worse ports than this.",
+      "age": 30,
+      "personality": "charmer",
+      "persona": "You read people fast and let them come to you, trading charm for what you need and never showing your whole hand. Comfortable with danger and careful about the bargains you make.",
+      "backstory": "You sailed into Saltmarrow chasing a name out of your past, and the only thread leading to it runs through Vesper Calloway's booth at the Drowned Gull."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene.opening",
+      "name": "The Velvet Booth",
+      "locationId": "loc.gull",
+      "setup": "The Drowned Gull is warm and gold and loud, full of wine, music, and easy laughter. At the far end of the room, a woman in a wine-dark gown watches you over the rim of a glass as if she has been expecting you. Maren sets down a drink you did not order and tips her head toward the velvet booth. 'On the house,' the barkeep says, 'which means it is from her. Vesper does not buy drinks for people she finds boring.' Vesper lifts her glass a careful inch — an invitation to talk business.",
+      "npcs": ["npc.vesper", "npc.maren"]
+    }
+  ],
+  "quests": [
+    {
+      "id": "quest.the-name",
+      "name": "A Name to Find",
+      "description": "The thread that brought you to Saltmarrow runs through Vesper's secret-trade. Win her interest at the Gull, then follow the night where she leads — out onto the Row and down to the quay.",
+      "objectives": [
+        { "id": "obj.charm-vesper", "description": "Earn Vesper's interest in the Drowned Gull", "done": false, "locationId": "loc.gull" },
+        { "id": "obj.walk-the-row", "description": "Walk Lantern Row with her", "done": false, "locationId": "loc.row" },
+        { "id": "obj.the-quay", "description": "Make the deep-water quay rendezvous", "done": false, "locationId": "loc.quay" }
+      ],
+      "state": "active"
+    }
+  ],
+  "startingState": {
+    "locationId": "loc.gull",
+    "party": ["pc.you"],
+    "companions": ["npc.vesper", "npc.cutter"],
+    "openingSceneId": "scene.opening"
+  }
+}

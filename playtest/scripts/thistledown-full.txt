@@ -1,0 +1,27 @@
+/who
+Maelle, lead us out — the mill first, then on toward the barrow.
+/go green
+/go mill
+I attack the nearest foe.
+I attack the nearest foe.
+/go ford
+I attack the nearest foe.
+I attack the nearest foe.
+/go woods
+I attack the nearest foe.
+I attack the nearest foe.
+/go barrow
+I drive my iron knife into the Barrow Wight.
+I attack the Barrow Wight.
+I attack the Barrow Wight.
+I attack the Barrow Wight.
+I attack the Barrow Wight.
+I attack the Barrow Wight.
+I attack the Barrow Wight.
+I attack the Barrow Wight.
+I attack the Barrow Wight.
+I attack the Barrow Wight.
+I attack the Barrow Wight.
+I attack the Barrow Wight.
+/state
+/quit

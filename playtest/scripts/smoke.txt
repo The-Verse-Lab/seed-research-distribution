@@ -1,0 +1,4 @@
+/state
+/who
+/look
+/quit

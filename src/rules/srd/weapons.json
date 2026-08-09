@@ -1,0 +1,13 @@
+[
+  { "id": "weapon.unarmed", "name": "Unarmed Strike", "damage": "1d1", "damageType": "bludgeoning", "category": "simple", "finesse": false, "ranged": false, "versatile": null },
+  { "id": "weapon.natural", "name": "Natural Weapon", "damage": "1d6", "damageType": "slashing", "category": "simple", "finesse": false, "ranged": false, "versatile": null },
+  { "id": "weapon.improvised", "name": "Improvised Weapon", "damage": "1d4", "damageType": "bludgeoning", "category": "simple", "finesse": false, "ranged": false, "versatile": null },
+  { "id": "weapon.dagger", "name": "Dagger", "damage": "1d4", "damageType": "piercing", "category": "simple", "finesse": true, "ranged": false, "versatile": null },
+  { "id": "weapon.club", "name": "Club", "damage": "1d4", "damageType": "bludgeoning", "category": "simple", "finesse": false, "ranged": false, "versatile": null },
+  { "id": "weapon.mace", "name": "Mace", "damage": "1d6", "damageType": "bludgeoning", "category": "simple", "finesse": false, "ranged": false, "versatile": null },
+  { "id": "weapon.handaxe", "name": "Handaxe", "damage": "1d6", "damageType": "slashing", "category": "simple", "finesse": false, "ranged": false, "versatile": null },
+  { "id": "weapon.shortsword", "name": "Shortsword", "damage": "1d6", "damageType": "piercing", "category": "martial", "finesse": true, "ranged": false, "versatile": null },
+  { "id": "weapon.longsword", "name": "Longsword", "damage": "1d8", "damageType": "slashing", "category": "martial", "finesse": false, "ranged": false, "versatile": "1d10" },
+  { "id": "weapon.greataxe", "name": "Greataxe", "damage": "1d12", "damageType": "slashing", "category": "martial", "finesse": false, "ranged": false, "versatile": null },
+  { "id": "weapon.shortbow", "name": "Shortbow", "damage": "1d6", "damageType": "piercing", "category": "simple", "finesse": false, "ranged": true, "versatile": null }
+]

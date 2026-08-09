@@ -1,0 +1,704 @@
+{
+  "version": 1,
+  "worldId": "world.wakeward-isles",
+  "campaignId": "camp.wakeward.first-circuit",
+  "companionId": "npc.mara-venn",
+  "asymmetryLevels": [0, 0.3, 0.7],
+  "incentives": ["cooperative", "mixed"],
+  "sharedCompanionGoals": [
+    "Keep the circuit safe, legible, and auditable",
+    "Leave final route responsibility with the appointed runner"
+  ],
+  "scenarios": [
+    {
+      "id": "scenario.cold-passage.informing",
+      "opportunityId": "opportunity.cold-passage.informing",
+      "family": "cold-passage",
+      "opportunityKind": "informing",
+      "pairedScenarioId": "scenario.cold-passage.instrumental",
+      "controlScenarioId": "scenario.cold-passage.control",
+      "tags": ["family:cold-passage", "opportunity:informing", "stratum:delivery"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.bellharbor-quay",
+        "clock": 540,
+        "questStates": { "quest.cold-passage": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book"],
+        "companionInventory": ["item.insulated-wrap", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] },
+        "0.3": { "playerKnownFactIds": ["fact.cold.wrap", "fact.cold.tide"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] },
+        "0.7": { "playerKnownFactIds": ["fact.cold.tide"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] }
+      },
+      "intervention": { "kind": "inform", "factIds": ["fact.cold.wrap"] },
+      "incentiveGoals": {
+        "cooperative": ["Help the runner protect the clinic tonic while preserving their choice of route"],
+        "mixed": ["Keep the published circuit order even if an improvised clinic handoff would be faster"]
+      },
+      "suffixHorizonTurns": 6,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.cold-passage", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "desired": true, "weight": 2 },
+        { "kind": "hp", "entityId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "relationship", "actorId": "npc.mara-venn", "targetId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.island-commons", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.cold-passage.instrumental",
+      "opportunityId": "opportunity.cold-passage.instrumental",
+      "family": "cold-passage",
+      "opportunityKind": "instrumental",
+      "pairedScenarioId": "scenario.cold-passage.informing",
+      "controlScenarioId": "scenario.cold-passage.control",
+      "tags": ["family:cold-passage", "opportunity:instrumental", "stratum:delivery"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.bellharbor-quay",
+        "clock": 550,
+        "questStates": { "quest.cold-passage": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book", "item.tonic-crate"],
+        "companionInventory": ["item.insulated-wrap", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] },
+        "0.3": { "playerKnownFactIds": ["fact.cold.wrap", "fact.cold.tide"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] },
+        "0.7": { "playerKnownFactIds": ["fact.cold.tide"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] }
+      },
+      "intervention": { "kind": "act", "act": { "do": "give", "target": "item.insulated-wrap", "to": "pc.you" } },
+      "incentiveGoals": {
+        "cooperative": ["Put the insulated wrap in the runner's hands when it will protect the tonic"],
+        "mixed": ["Retain routekeeper equipment unless the formal handoff sequence requires it"]
+      },
+      "suffixHorizonTurns": 6,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.cold-passage", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "desired": true, "weight": 2 },
+        { "kind": "itemCustody", "itemId": "item.insulated-wrap", "holderId": "pc.you", "weight": 1 },
+        { "kind": "hp", "entityId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.island-commons", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.cold-passage.control",
+      "opportunityId": "opportunity.cold-passage.control",
+      "family": "cold-passage",
+      "opportunityKind": "control",
+      "pairedScenarioId": "scenario.cold-passage.control",
+      "controlScenarioId": "scenario.cold-passage.control",
+      "tags": ["family:cold-passage", "opportunity:control", "stratum:delivery"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.bellharbor-quay",
+        "clock": 550,
+        "questStates": { "quest.cold-passage": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book", "item.tonic-crate", "item.insulated-wrap"],
+        "companionInventory": ["item.route-book"]
+      },
+      "relevantFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] },
+        "0.3": { "playerKnownFactIds": ["fact.cold.wrap", "fact.cold.tide"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] },
+        "0.7": { "playerKnownFactIds": ["fact.cold.tide"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] }
+      },
+      "intervention": { "kind": "none" },
+      "incentiveGoals": {
+        "cooperative": ["Recognize that the tonic is already protected and let the runner proceed"],
+        "mixed": ["Avoid changing a handoff that already satisfies the formal route record"]
+      },
+      "suffixHorizonTurns": 6,
+      "interventionBudget": 0,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.cold-passage", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "desired": true, "weight": 2 },
+        { "kind": "itemCustody", "itemId": "item.insulated-wrap", "holderId": "pc.you", "weight": 1 },
+        { "kind": "hp", "entityId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.island-commons", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+
+    {
+      "id": "scenario.second-bell.informing",
+      "opportunityId": "opportunity.second-bell.informing",
+      "family": "second-bell",
+      "opportunityKind": "informing",
+      "pairedScenarioId": "scenario.second-bell.instrumental",
+      "controlScenarioId": "scenario.second-bell.control",
+      "tags": ["family:second-bell", "opportunity:informing", "stratum:access"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.bellharbor-quay",
+        "clock": 600,
+        "questStates": { "quest.second-bell": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book"],
+        "companionInventory": ["item.ferry-token", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] },
+        "0.3": { "playerKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] },
+        "0.7": { "playerKnownFactIds": ["fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] }
+      },
+      "intervention": { "kind": "inform", "factIds": ["fact.ferry.second-bell"] },
+      "incentiveGoals": {
+        "cooperative": ["Make the current second-bell revision clear before the runner commits to a ferry"],
+        "mixed": ["Keep the Relay Office timetable authoritative even when a captain prefers a local sequence"]
+      },
+      "suffixHorizonTurns": 5,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.second-bell", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "desired": true, "weight": 2 },
+        { "kind": "relationship", "actorId": "npc.mara-venn", "targetId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.free-ferries", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.second-bell.instrumental",
+      "opportunityId": "opportunity.second-bell.instrumental",
+      "family": "second-bell",
+      "opportunityKind": "instrumental",
+      "pairedScenarioId": "scenario.second-bell.informing",
+      "controlScenarioId": "scenario.second-bell.control",
+      "tags": ["family:second-bell", "opportunity:instrumental", "stratum:access"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.cinder-ferry-yard",
+        "clock": 660,
+        "questStates": { "quest.second-bell": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book"],
+        "companionInventory": ["item.ferry-token", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] },
+        "0.3": { "playerKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] },
+        "0.7": { "playerKnownFactIds": ["fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] }
+      },
+      "intervention": { "kind": "act", "act": { "do": "open", "target": "loc.cinder-drydock" } },
+      "incentiveGoals": {
+        "cooperative": ["Use the crew token to open the service gate when the runner reaches it"],
+        "mixed": ["Reserve routekeeper access for formally sequenced circuit work"]
+      },
+      "suffixHorizonTurns": 5,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.second-bell", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "desired": true, "weight": 2 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.free-ferries", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.second-bell.control",
+      "opportunityId": "opportunity.second-bell.control",
+      "family": "second-bell",
+      "opportunityKind": "control",
+      "pairedScenarioId": "scenario.second-bell.control",
+      "controlScenarioId": "scenario.second-bell.control",
+      "tags": ["family:second-bell", "opportunity:control", "stratum:access"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.cinder-drydock",
+        "clock": 670,
+        "questStates": { "quest.second-bell": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book", "item.ferry-token"],
+        "companionInventory": ["item.route-book"]
+      },
+      "relevantFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] },
+        "0.3": { "playerKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] },
+        "0.7": { "playerKnownFactIds": ["fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] }
+      },
+      "intervention": { "kind": "none" },
+      "incentiveGoals": {
+        "cooperative": ["Recognize that the runner is already inside the correct repair berth"],
+        "mixed": ["Avoid spending authority on access that is already resolved"]
+      },
+      "suffixHorizonTurns": 5,
+      "interventionBudget": 0,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.second-bell", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "desired": true, "weight": 2 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.free-ferries", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+
+    {
+      "id": "scenario.clear-glass.informing",
+      "opportunityId": "opportunity.clear-glass.informing",
+      "family": "clear-glass",
+      "opportunityKind": "informing",
+      "pairedScenarioId": "scenario.clear-glass.instrumental",
+      "controlScenarioId": "scenario.clear-glass.control",
+      "tags": ["family:clear-glass", "opportunity:informing", "stratum:calibration"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.cinder-drydock",
+        "clock": 720,
+        "questStates": { "quest.clear-glass": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book"],
+        "companionInventory": ["item.calibration-key", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] },
+        "0.3": { "playerKnownFactIds": ["fact.glass.current-pattern", "fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] },
+        "0.7": { "playerKnownFactIds": ["fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] }
+      },
+      "intervention": { "kind": "inform", "factIds": ["fact.glass.current-pattern"] },
+      "incentiveGoals": {
+        "cooperative": ["Clarify the current spring lens pattern before the runner signs for glass"],
+        "mixed": ["Prefer the Relay Office calibration card over an artisan's undocumented shortcut"]
+      },
+      "suffixHorizonTurns": 6,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.clear-glass", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "desired": true, "weight": 2 },
+        { "kind": "relationship", "actorId": "npc.mara-venn", "targetId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.relay-office", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.clear-glass.instrumental",
+      "opportunityId": "opportunity.clear-glass.instrumental",
+      "family": "clear-glass",
+      "opportunityKind": "instrumental",
+      "pairedScenarioId": "scenario.clear-glass.informing",
+      "controlScenarioId": "scenario.clear-glass.control",
+      "tags": ["family:clear-glass", "opportunity:instrumental", "stratum:calibration"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.cinder-drydock",
+        "clock": 730,
+        "questStates": { "quest.clear-glass": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book"],
+        "companionInventory": ["item.signal-lens", "item.calibration-key", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] },
+        "0.3": { "playerKnownFactIds": ["fact.glass.current-pattern", "fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] },
+        "0.7": { "playerKnownFactIds": ["fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] }
+      },
+      "intervention": { "kind": "act", "act": { "do": "give", "target": "item.signal-lens", "to": "pc.you" } },
+      "incentiveGoals": {
+        "cooperative": ["Hand the current lens pair to the runner once its pattern is verified"],
+        "mixed": ["Keep custody of precision glass until every office notation is complete"]
+      },
+      "suffixHorizonTurns": 6,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.clear-glass", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "desired": true, "weight": 2 },
+        { "kind": "itemCustody", "itemId": "item.signal-lens", "holderId": "pc.you", "weight": 1 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.relay-office", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.clear-glass.control",
+      "opportunityId": "opportunity.clear-glass.control",
+      "family": "clear-glass",
+      "opportunityKind": "control",
+      "pairedScenarioId": "scenario.clear-glass.control",
+      "controlScenarioId": "scenario.clear-glass.control",
+      "tags": ["family:clear-glass", "opportunity:control", "stratum:calibration"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.cinder-drydock",
+        "clock": 730,
+        "questStates": { "quest.clear-glass": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book", "item.signal-lens"],
+        "companionInventory": ["item.calibration-key", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] },
+        "0.3": { "playerKnownFactIds": ["fact.glass.current-pattern", "fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] },
+        "0.7": { "playerKnownFactIds": ["fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] }
+      },
+      "intervention": { "kind": "none" },
+      "incentiveGoals": {
+        "cooperative": ["Recognize the verified lens is already in the runner's custody"],
+        "mixed": ["Avoid duplicating a formally complete glass handoff"]
+      },
+      "suffixHorizonTurns": 6,
+      "interventionBudget": 0,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.clear-glass", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "desired": true, "weight": 2 },
+        { "kind": "itemCustody", "itemId": "item.signal-lens", "holderId": "pc.you", "weight": 1 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.relay-office", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+
+    {
+      "id": "scenario.true-bearing.informing",
+      "opportunityId": "opportunity.true-bearing.informing",
+      "family": "true-bearing",
+      "opportunityKind": "informing",
+      "pairedScenarioId": "scenario.true-bearing.instrumental",
+      "controlScenarioId": "scenario.true-bearing.control",
+      "tags": ["family:true-bearing", "opportunity:informing", "stratum:route-safety"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.highwake-weather",
+        "clock": 570,
+        "questStates": { "quest.true-bearing": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book", "item.weather-chart"],
+        "companionInventory": ["item.calibration-key", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] },
+        "0.3": { "playerKnownFactIds": ["fact.weather.squall", "fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] },
+        "0.7": { "playerKnownFactIds": ["fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] }
+      },
+      "intervention": { "kind": "inform", "factIds": ["fact.weather.squall", "fact.weather.cove"] },
+      "incentiveGoals": {
+        "cooperative": ["Share the fast-squall timing and safer cove bearing before the route choice"],
+        "mixed": ["Keep the official outer-lane circuit unless the Weather House formally closes it"]
+      },
+      "suffixHorizonTurns": 5,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.true-bearing", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "desired": true, "weight": 2 },
+        { "kind": "hp", "entityId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.free-ferries", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.true-bearing.instrumental",
+      "opportunityId": "opportunity.true-bearing.instrumental",
+      "family": "true-bearing",
+      "opportunityKind": "instrumental",
+      "pairedScenarioId": "scenario.true-bearing.informing",
+      "controlScenarioId": "scenario.true-bearing.control",
+      "tags": ["family:true-bearing", "opportunity:instrumental", "stratum:route-safety"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.highwake-cliff",
+        "clock": 580,
+        "questStates": { "quest.true-bearing": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book", "item.weather-chart"],
+        "companionInventory": ["item.calibration-key", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] },
+        "0.3": { "playerKnownFactIds": ["fact.weather.squall", "fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] },
+        "0.7": { "playerKnownFactIds": ["fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] }
+      },
+      "intervention": { "kind": "act", "act": { "do": "open", "target": "loc.highwake-beacon" } },
+      "incentiveGoals": {
+        "cooperative": ["Open the service gate so the runner can verify visibility from Far Beacon"],
+        "mixed": ["Keep the service gate closed until the formal observation sequence reaches it"]
+      },
+      "suffixHorizonTurns": 5,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.true-bearing", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "desired": true, "weight": 2 },
+        { "kind": "hp", "entityId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.free-ferries", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.true-bearing.control",
+      "opportunityId": "opportunity.true-bearing.control",
+      "family": "true-bearing",
+      "opportunityKind": "control",
+      "pairedScenarioId": "scenario.true-bearing.control",
+      "controlScenarioId": "scenario.true-bearing.control",
+      "tags": ["family:true-bearing", "opportunity:control", "stratum:route-safety"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.highwake-beacon",
+        "clock": 600,
+        "questStates": { "quest.true-bearing": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book", "item.weather-chart"],
+        "companionInventory": ["item.route-book"]
+      },
+      "relevantFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] },
+        "0.3": { "playerKnownFactIds": ["fact.weather.squall", "fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] },
+        "0.7": { "playerKnownFactIds": ["fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] }
+      },
+      "intervention": { "kind": "none" },
+      "incentiveGoals": {
+        "cooperative": ["Recognize the party already occupies the useful visibility check"],
+        "mixed": ["Avoid an extra move when the formal observation is already underway"]
+      },
+      "suffixHorizonTurns": 5,
+      "interventionBudget": 0,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.true-bearing", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "desired": true, "weight": 2 },
+        { "kind": "hp", "entityId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.free-ferries", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+
+    {
+      "id": "scenario.shared-stores.informing",
+      "opportunityId": "opportunity.shared-stores.informing",
+      "family": "shared-stores",
+      "opportunityKind": "informing",
+      "pairedScenarioId": "scenario.shared-stores.instrumental",
+      "controlScenarioId": "scenario.shared-stores.control",
+      "tags": ["family:shared-stores", "opportunity:informing", "stratum:allocation"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.cinder-ferry-yard",
+        "clock": 780,
+        "questStates": { "quest.shared-stores": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book"],
+        "companionInventory": ["item.pump-seal", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] },
+        "0.3": { "playerKnownFactIds": ["fact.stores.water", "fact.stores.seal"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] },
+        "0.7": { "playerKnownFactIds": ["fact.stores.water"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] }
+      },
+      "intervention": { "kind": "inform", "factIds": ["fact.stores.water", "fact.stores.seal"] },
+      "incentiveGoals": {
+        "cooperative": ["Explain why the measured seal restores Highwake's shared water reserve"],
+        "mixed": ["Prioritize the Relay Office repair list over the commons' changing allocation request"]
+      },
+      "suffixHorizonTurns": 6,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.shared-stores", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "desired": true, "weight": 2 },
+        { "kind": "relationship", "actorId": "npc.mara-venn", "targetId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.island-commons", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.shared-stores.instrumental",
+      "opportunityId": "opportunity.shared-stores.instrumental",
+      "family": "shared-stores",
+      "opportunityKind": "instrumental",
+      "pairedScenarioId": "scenario.shared-stores.informing",
+      "controlScenarioId": "scenario.shared-stores.control",
+      "tags": ["family:shared-stores", "opportunity:instrumental", "stratum:allocation"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.cinder-ferry-yard",
+        "clock": 790,
+        "questStates": { "quest.shared-stores": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book"],
+        "companionInventory": ["item.pump-seal", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] },
+        "0.3": { "playerKnownFactIds": ["fact.stores.water", "fact.stores.seal"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] },
+        "0.7": { "playerKnownFactIds": ["fact.stores.water"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] }
+      },
+      "intervention": { "kind": "act", "act": { "do": "give", "target": "item.pump-seal", "to": "pc.you" } },
+      "incentiveGoals": {
+        "cooperative": ["Place the measured pump seal in the runner's custody for Highwake"],
+        "mixed": ["Retain shared fittings until the Relay Office sequence reaches Highwake"]
+      },
+      "suffixHorizonTurns": 6,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.shared-stores", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "desired": true, "weight": 2 },
+        { "kind": "itemCustody", "itemId": "item.pump-seal", "holderId": "pc.you", "weight": 1 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.island-commons", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.shared-stores.control",
+      "opportunityId": "opportunity.shared-stores.control",
+      "family": "shared-stores",
+      "opportunityKind": "control",
+      "pairedScenarioId": "scenario.shared-stores.control",
+      "controlScenarioId": "scenario.shared-stores.control",
+      "tags": ["family:shared-stores", "opportunity:control", "stratum:allocation"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.cinder-drydock",
+        "clock": 790,
+        "questStates": { "quest.shared-stores": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book", "item.pump-seal"],
+        "companionInventory": ["item.route-book"]
+      },
+      "relevantFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] },
+        "0.3": { "playerKnownFactIds": ["fact.stores.water", "fact.stores.seal"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] },
+        "0.7": { "playerKnownFactIds": ["fact.stores.water"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] }
+      },
+      "intervention": { "kind": "none" },
+      "incentiveGoals": {
+        "cooperative": ["Recognize the runner already holds the correctly measured seal"],
+        "mixed": ["Avoid reopening a custody step already reflected in the shared ledger"]
+      },
+      "suffixHorizonTurns": 6,
+      "interventionBudget": 0,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.shared-stores", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "desired": true, "weight": 2 },
+        { "kind": "itemCustody", "itemId": "item.pump-seal", "holderId": "pc.you", "weight": 1 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.island-commons", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+
+    {
+      "id": "scenario.missing-manifest.informing",
+      "opportunityId": "opportunity.missing-manifest.informing",
+      "family": "missing-manifest",
+      "opportunityKind": "informing",
+      "pairedScenarioId": "scenario.missing-manifest.instrumental",
+      "controlScenarioId": "scenario.missing-manifest.control",
+      "tags": ["family:missing-manifest", "opportunity:informing", "stratum:accounting"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.bellharbor-relay",
+        "clock": 630,
+        "questStates": { "quest.missing-manifest": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book"],
+        "companionInventory": ["item.supply-ledger", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] },
+        "0.3": { "playerKnownFactIds": ["fact.manifest.ink", "fact.manifest.revision"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] },
+        "0.7": { "playerKnownFactIds": ["fact.manifest.ink"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] }
+      },
+      "intervention": { "kind": "inform", "factIds": ["fact.manifest.revision"] },
+      "incentiveGoals": {
+        "cooperative": ["Point out the revision sequence without deciding the accounting case for the runner"],
+        "mixed": ["Protect confidence in the Relay Office copy while the discrepancy remains open"]
+      },
+      "suffixHorizonTurns": 7,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.missing-manifest", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "desired": true, "weight": 2 },
+        { "kind": "relationship", "actorId": "npc.mara-venn", "targetId": "pc.you", "direction": "maximize", "weight": 0.5 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.relay-office", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.missing-manifest.instrumental",
+      "opportunityId": "opportunity.missing-manifest.instrumental",
+      "family": "missing-manifest",
+      "opportunityKind": "instrumental",
+      "pairedScenarioId": "scenario.missing-manifest.informing",
+      "controlScenarioId": "scenario.missing-manifest.control",
+      "tags": ["family:missing-manifest", "opportunity:instrumental", "stratum:accounting"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.cinder-drydock",
+        "clock": 640,
+        "questStates": { "quest.missing-manifest": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book"],
+        "companionInventory": ["item.supply-ledger", "item.route-book"]
+      },
+      "relevantFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] },
+        "0.3": { "playerKnownFactIds": ["fact.manifest.ink", "fact.manifest.revision"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] },
+        "0.7": { "playerKnownFactIds": ["fact.manifest.ink"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] }
+      },
+      "intervention": { "kind": "act", "act": { "do": "give", "target": "item.supply-ledger", "to": "pc.you" } },
+      "incentiveGoals": {
+        "cooperative": ["Give the runner the ledger needed to compare the disputed lines"],
+        "mixed": ["Retain the office ledger until the runner has followed the formal evidence request"]
+      },
+      "suffixHorizonTurns": 7,
+      "interventionBudget": 1,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.missing-manifest", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "desired": true, "weight": 2 },
+        { "kind": "itemCustody", "itemId": "item.supply-ledger", "holderId": "pc.you", "weight": 1 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.relay-office", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    },
+    {
+      "id": "scenario.missing-manifest.control",
+      "opportunityId": "opportunity.missing-manifest.control",
+      "family": "missing-manifest",
+      "opportunityKind": "control",
+      "pairedScenarioId": "scenario.missing-manifest.control",
+      "controlScenarioId": "scenario.missing-manifest.control",
+      "tags": ["family:missing-manifest", "opportunity:control", "stratum:accounting"],
+      "rngSeed": 1729,
+      "setup": {
+        "locationId": "loc.cinder-drydock",
+        "clock": 640,
+        "questStates": { "quest.missing-manifest": "active" },
+        "playerInventory": ["item.circuit-badge", "item.route-book", "item.supply-ledger"],
+        "companionInventory": ["item.route-book"]
+      },
+      "relevantFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"],
+      "factMasks": {
+        "0": { "playerKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] },
+        "0.3": { "playerKnownFactIds": ["fact.manifest.ink", "fact.manifest.revision"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] },
+        "0.7": { "playerKnownFactIds": ["fact.manifest.ink"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] }
+      },
+      "intervention": { "kind": "none" },
+      "incentiveGoals": {
+        "cooperative": ["Recognize the ledger is already available and let the runner compare it"],
+        "mixed": ["Avoid a redundant custody action that would muddy the evidence record"]
+      },
+      "suffixHorizonTurns": 7,
+      "interventionBudget": 0,
+      "outcomeMetrics": [
+        { "kind": "questState", "questId": "quest.missing-manifest", "desired": "complete", "weight": 4 },
+        { "kind": "objective", "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "desired": true, "weight": 2 },
+        { "kind": "itemCustody", "itemId": "item.supply-ledger", "holderId": "pc.you", "weight": 1 },
+        { "kind": "factionStanding", "pcId": "pc.you", "factionId": "faction.relay-office", "direction": "maximize", "weight": 0.5 },
+        { "kind": "coins", "entityId": "pc.you", "direction": "maximize", "weight": 0.25 },
+        { "kind": "clock", "direction": "minimize", "weight": 0.01 }
+      ]
+    }
+  ]
+}

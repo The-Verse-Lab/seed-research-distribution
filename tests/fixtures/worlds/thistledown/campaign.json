@@ -1,0 +1,206 @@
+{
+  "id": "campaign.souring-ward",
+  "name": "The Souring Ward",
+  "worldId": "world.thistledown",
+  "synopsis": "A Warden Stone has cracked, and the Whistling Woods are leaning closer to Brackenford. The mill-wheel has stopped, the new flour smells of nothing good, and the miller walked out toward the ford three nights ago and never came back. The Reeve's moot wants to wait for spring. Maelle Ashfield does not.",
+  "characters": [
+    {
+      "id": "pc.you",
+      "name": "You",
+      "ancestry": "Human",
+      "class": "Tinker",
+      "level": 2,
+      "stats": {
+        "abilities": { "str": 11, "dex": 13, "con": 12, "int": 13, "wis": 12, "cha": 13 },
+        "maxHp": 20,
+        "armorClass": 12,
+        "level": 2,
+        "speed": 30,
+        "proficiencies": ["tinkering", "sleight", "persuasion"],
+        "spells": []
+      },
+      "inventory": ["item.wardlantern", "item.charmcord", "item.ironknife", "item.huntingbow", "item.sealedmissive"],
+      "backstory": "You drifted into the vale ahead of the cold, a traveling tinker with a quick hand for broken things and a quicker word for wary folk. You meant to winter in Brackenford and move on. The vale has other ideas."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene.opening",
+      "name": "A Seat at the Gilded Hart",
+      "locationId": "loc.hart",
+      "setup": "Rain ticks against the shutters of the Gilded Hart, and you are two sips into Bett's good ale when a grey-eyed woman in a green shawl sets her cup down across from you, uninvited. A young man with a bow hovers at her shoulder. 'You mend things,' Maelle Ashfield says — not a question. 'And you've no roots here to keep you cautious. Good. A Warden cracked three nights back, the same night the miller walked into the dark and didn't walk out. The moot means to wait for spring. I mean to leave at first light, and I'd sooner not take only Dorran here.' Behind the bar, Bett has gone very still, listening.",
+      "npcs": ["npc.maelle", "npc.dorran", "npc.bett"]
+    },
+    {
+      "id": "scene.mill",
+      "name": "The Silent Mill",
+      "locationId": "loc.mill",
+      "setup": "The great wheel hangs motionless, dripping, and the dark inside the mill smells faintly sour. Wren stands among the slumped flour-sacks in her father's too-large coat, hands raw, daring you to offer pity.",
+      "npcs": ["npc.wren"]
+    },
+    {
+      "id": "scene.barrow",
+      "name": "The Broken Warden",
+      "locationId": "loc.barrow",
+      "setup": "Seven moss-furred stones ring the low mound, and one is split top to base, its ward-signs broken across the crack. Cold breathes from the dark seam — a cold the summer cannot touch — and somewhere under the grass, something old turns over in its sleep.",
+      "npcs": []
+    }
+  ],
+  "quests": [
+    {
+      "id": "quest.souring-ward",
+      "name": "The Souring Ward",
+      "description": "A Warden Stone has cracked and the wards are broken across it. Discover what split the stone, and seal the Warden before the woods come all the way in.",
+      "objectives": [
+        { "id": "obj.reach-barrow", "description": "Reach the Warden Barrow past the Whistling Woods", "done": false },
+        { "id": "obj.assess", "description": "Discover why the Warden cracked", "done": false },
+        { "id": "obj.reseal", "description": "Seal the broken Warden", "done": false }
+      ],
+      "state": "active"
+    },
+    {
+      "id": "quest.missing-miller",
+      "name": "The Miller's Road",
+      "description": "Wren's father walked out toward the ford the night the Warden cracked and never returned. Find out what became of him.",
+      "objectives": [
+        { "id": "obj.search-mill", "description": "Search the Bracken Mill for what happened that night", "done": false },
+        { "id": "obj.follow-trail", "description": "Follow the miller's trail toward the woods", "done": false }
+      ],
+      "state": "active"
+    },
+    {
+      "id": "quest.bett-honey",
+      "name": "A Comb of Woods-Honey",
+      "description": "Bett will trade warm cakes and warmer gossip for a comb of honey from the wild hives at the eaves of the Whistling Woods — if you can gather it without waking what guards it.",
+      "objectives": [
+        { "id": "obj.honey", "description": "Gather woods-honey from the eaves of the Whistling Woods", "done": false }
+      ],
+      "state": "hidden"
+    },
+    {
+      "id": "quest.kiln-summons",
+      "name": "The Sealed Summons",
+      "description": "A sealed missive names the old kiln above Brackenford before the next dark of the moon — and says to come alone, with your tools. Someone knows your hands, and will not sign their name.",
+      "objectives": [
+        { "id": "obj.reach-kiln", "description": "Go to the old kiln above Brackenford, alone", "done": false },
+        { "id": "obj.learn-sender", "description": "Learn who sent the missive, and what they need mended", "done": false }
+      ],
+      "state": "hidden"
+    },
+    {
+      "id": "quest.wren-tally",
+      "name": "The Miller's Tally-Book",
+      "description": "Wren asks, without quite asking, that you bring back her father's tally-book — a battered ledger he carried everywhere — from wherever his road ended.",
+      "objectives": [
+        { "id": "obj.find-tally", "description": "Recover the miller's tally-book", "done": false }
+      ],
+      "state": "hidden"
+    },
+    {
+      "id": "quest.gorse-plea",
+      "name": "The Plea from Gorse Hill",
+      "description": "A road-courier's letter carries a plea from Gorse Hill over the ridge: their well has soured and two of their folk vanished on the miller's road. They beg the vale for anyone who dares the crossing.",
+      "objectives": [
+        { "id": "obj.reach-gorse", "description": "Travel the ford-road to Gorse Hill and hear the elder out", "done": false }
+      ],
+      "state": "hidden"
+    }
+  ],
+  "events": [
+    {
+      "id": "ev.ford-coat",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": { "allOf": [{ "kind": "atLocation", "locationId": "loc.ford" }] },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Half-sunk in the reeds at the ford's edge lies the miller's coat — sodden, torn at one shoulder, and unmistakably his. The water runs on, indifferent."
+        },
+        { "kind": "setObjectiveDone", "questId": "quest.missing-miller", "objectiveId": "obj.follow-trail" },
+        { "kind": "setFlag", "key": "found_millers_coat", "value": true }
+      ]
+    },
+    {
+      "id": "ev.barrow-open",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": { "allOf": [{ "kind": "atLocation", "locationId": "loc.barrow" }] },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The Warden Barrow stands open. Its ward-stone is split clean down the middle, the old binding-marks dark and dead. Cold air breathes out of the dark below, smelling of turned earth and something older."
+        },
+        { "kind": "setObjectiveDone", "questId": "quest.souring-ward", "objectiveId": "obj.reach-barrow" },
+        {
+          "kind": "narrate",
+          "text": "Then the dark at the seam stirs. A barrow-wight drags itself up out of the broken mound — grave-wrapped and grave-cold, its eye-sockets lit with a low corpse-glow — and turns its hollow gaze on you."
+        },
+        { "kind": "spawn", "templateId": "mon.barrowwight", "locationId": "loc.barrow", "tier": "tracked" }
+      ]
+    },
+    {
+      "id": "ev.woods-hives",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": { "allOf": [{ "kind": "atLocation", "locationId": "loc.woods" }] },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Wild bees drone in the hollow of a lightning-split oak at the wood's edge — Bett's woods-honey, for anyone fool enough or deft enough to take it."
+        },
+        { "kind": "setQuestState", "questId": "quest.bett-honey", "state": "active" }
+      ]
+    },
+    {
+      "id": "ev.wren-tally",
+      "when": "onEnterLocation",
+      "once": "visit",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.mill" },
+          { "kind": "questState", "questId": "quest.wren-tally", "state": "hidden" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Wren watches you a moment, then looks away. 'He kept a tally-book,' she says, too evenly. 'Cheap thing, cover held on with waxed thread. Went everywhere with him.' She does not ask. 'If you find it — out there — I'd want it back.'"
+        },
+        { "kind": "setQuestState", "questId": "quest.wren-tally", "state": "offered" }
+      ]
+    }
+  ],
+  "travelEventChance": 0.4,
+  "travelEventPacks": ["core-ambient", "core-road-danger", "core-fortune"],
+  "travelEvents": [
+    {
+      "id": "tev.courier",
+      "weight": 2,
+      "once": "campaign",
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Hooves splash the ford behind you and a mud-spattered rider reins in — a road-courier, satchel flapping. 'You'll be the tinker Ashfield took on?' Not really a question. She presses a green-sealed letter into your hand, wheels her horse, and is gone toward the ridge before you can answer."
+        },
+        { "kind": "giveItem", "itemId": "item.roadside-letter" }
+      ]
+    },
+    {
+      "id": "tev.quiet-road",
+      "weight": 3,
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The road is quiet a while — a lark bolts from the hedgerow, and the wet green smell of the vale settles around you as you walk."
+        }
+      ]
+    }
+  ],
+  "startingState": {
+    "locationId": "loc.hart",
+    "party": ["pc.you"],
+    "companions": ["npc.maelle", "npc.dorran"],
+    "openingSceneId": "scene.opening"
+  }
+}

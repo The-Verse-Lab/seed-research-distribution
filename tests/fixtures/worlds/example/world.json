@@ -1,0 +1,115 @@
+{
+  "id": "world.emberford",
+  "name": "Emberford",
+  "summary": "A soot-stained frontier town at the edge of the Ashlands, where caravans vanish on the dusk roads and the old gods are spoken of only in whispers.",
+  "lore": [
+    {
+      "id": "lore.ashlands",
+      "title": "The Ashlands",
+      "body": "East of Emberford the green dies. The Ashlands are a grey waste of cinder-dunes and petrified forest, lit at night by embers no one can explain. The roads through it are kept lit by the Lantern Watch — where the lanterns go dark, things move.",
+      "tags": ["geography", "danger"]
+    }
+  ],
+  "factions": [
+    {
+      "id": "faction.lanterns",
+      "name": "The Lantern Watch",
+      "description": "An undermanned order that keeps the Ashland roads lit and escorts what caravans still dare the crossing.",
+      "goals": ["Keep the roads lit", "Find out why the lanterns are failing"],
+      "relationships": {}
+    }
+  ],
+  "locations": [
+    {
+      "id": "loc.tavern",
+      "name": "The Ashen Tankard",
+      "description": "Low-beamed and smoke-dark, the only warm room in Emberford after sundown.",
+      "connections": ["loc.square"],
+      "npcs": ["npc.brann"]
+    },
+    {
+      "id": "loc.square",
+      "name": "Emberford Square",
+      "description": "A muddy crossroads ringed by shuttered stalls, a dry fountain, and the town's tallest lantern-post.",
+      "connections": ["loc.tavern"],
+      "npcs": []
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc.lyra",
+      "name": "Lyra Vane",
+      "summary": "A sharp-eyed ranger-captain of the Lantern Watch who has buried too many friends to wait for permission.",
+      "persona": "Decisive, dry-humored, fiercely protective of those she travels with. Speaks plainly, acts first, apologizes never. She would rather be wrong and moving than right and waiting.",
+      "appearance": "Weathered Watch greatcoat, a longbow worn smooth at the grip, a burn scar along one jaw.",
+      "goals": ["Find the missing caravan", "Keep the party alive", "Learn why the lanterns are failing"],
+      "knowledge": ["The Ashland roads", "Lantern Watch hand-signals", "Which townsfolk owe the Watch favors"],
+      "relationships": { "pc.you": 20 },
+      "factionId": "faction.lanterns",
+      "stats": {
+        "abilities": { "str": 14, "dex": 16, "con": 13, "int": 12, "wis": 15, "cha": 11 },
+        "maxHp": 28,
+        "armorClass": 15,
+        "level": 4,
+        "speed": 30,
+        "proficiencies": ["survival", "perception", "stealth"],
+        "spells": []
+      },
+      "autonomy": {
+        "isPartyMember": true,
+        "level": "leader",
+        "canLead": true,
+        "heartbeatSeconds": 40,
+        "replyDecayAlpha": 0.2
+      }
+    },
+    {
+      "id": "npc.brann",
+      "name": "Brann",
+      "summary": "The Ashen Tankard's one-armed barkeep, who hears everything and forgets nothing.",
+      "persona": "Gruff, observant, slow to speak and slower to trust. Knows everyone's business in Emberford.",
+      "goals": ["Keep the peace in his tavern"],
+      "knowledge": ["Town gossip", "Who left town and never came back"],
+      "relationships": {},
+      "autonomy": {
+        "isPartyMember": false,
+        "level": "passive"
+      }
+    }
+  ],
+  "monsters": [
+    {
+      "id": "mon.ashstalker",
+      "name": "Ash Stalker",
+      "description": "A lean, soot-grey hunter that stalks the road at dusk, near-invisible against the cinder until it moves.",
+      "stats": {
+        "abilities": { "str": 14, "dex": 16, "con": 12, "int": 3, "wis": 12, "cha": 6 },
+        "maxHp": 22,
+        "armorClass": 13,
+        "level": 2,
+        "speed": 40,
+        "proficiencies": ["stealth"],
+        "spells": []
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "item.lantern",
+      "name": "Warded Lantern",
+      "description": "Its flame never gutters, even in Ashland wind. The Watch issues them to those they expect to see again.",
+      "kind": "tool",
+      "properties": { "lightRadius": 30 }
+    }
+  ],
+  "spells": [
+    {
+      "id": "spell.emberbolt",
+      "name": "Ember Bolt",
+      "level": 0,
+      "description": "A darting mote of cinder that scorches what it strikes.",
+      "effect": { "damage": "1d10", "type": "fire", "range": 120 }
+    }
+  ],
+  "houseRules": {}
+}

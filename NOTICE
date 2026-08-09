@@ -1,0 +1,42 @@
+Seed — research distribution
+Copyright 2026 Runkai Zhang
+
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+================================================================================
+Third-party content — NOT covered by the Apache License
+================================================================================
+
+System Reference Document 5.1
+-----------------------------
+Files: src/rules/srd/items.json
+
+This data file is a hand-curated derivative of the System Reference Document 5.1
+and is licensed under the Creative Commons Attribution 4.0 International License,
+not under the Apache License. Entry descriptions accompanying the data are
+original project prose and are Apache-licensed with the rest of the work.
+
+Required attribution:
+
+    This work includes material taken from the System Reference Document 5.1
+    ("SRD 5.1") by Wizards of the Coast LLC and available at
+    https://dnd.wizards.com/resources/systems-reference-document. The SRD 5.1
+    is licensed under the Creative Commons Attribution 4.0 International
+    License, available at https://creativecommons.org/licenses/by/4.0/legalcode.
+
+See src/rules/srd/CC-BY-4.0.md for the notice that must travel with this data.
+
+Files: src/rules/srd/weapons.json
+       src/rules/srd/conditions.json
+
+These SRD-derived game-rule data files are distributed as Open Game Content under
+the Open Game License Version 1.0a, not under the Apache License or CC BY 4.0.
+See src/rules/srd/OGL.md for the full license, identification of Open Game Content,
+and Section 15 copyright notice. That file must travel with these data.
+
+================================================================================
+Citation
+================================================================================
+
+The license does not require academic citation; it is requested separately.
+See CITATION.cff.

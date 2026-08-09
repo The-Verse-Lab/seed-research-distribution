@@ -1,0 +1,260 @@
+{
+  "id": "campaign.the-owing",
+  "name": "The Owing",
+  "worldId": "world.duskhollow",
+  "synopsis": "You come ashore at slack tide with a debt already burned into your skin and no memory of who signed it. Alone in Duskhollow, tallied and hunted, you must learn who bought your obligation and what they mean to collect — before a collector, a patron, a pressmaster, or a jailer settles the account their own way. Every door here locks from the outside, and every mercy has a price.",
+  "characters": [
+    {
+      "id": "pc.you",
+      "name": "You",
+      "ancestry": "Human",
+      "class": "Marked Stranger",
+      "level": 3,
+      "age": 31,
+      "sex": "",
+      "description": "A newcomer washed up alone, still salt-wet, a fresh tally-brand aching on the skin.",
+      "appearanceTags": ["striking", "weathered"],
+      "presentationTags": ["guarded"],
+      "socialTraits": ["magnetic", "desperate"],
+      "stats": {
+        "abilities": { "str": 11, "dex": 14, "con": 12, "int": 13, "wis": 12, "cha": 15 },
+        "maxHp": 26,
+        "armorClass": 13,
+        "level": 3,
+        "speed": 30,
+        "proficiencies": ["persuasion", "deception", "stealth", "insight"],
+        "spells": []
+      },
+      "coins": 15,
+      "inventory": ["item.salt-knife", "item.tally-brand", "item.tide-charm", "item.masque-token"],
+      "backstory": "You woke on the tide-stair with no memory of the crossing and a debt already burned into your skin — a tally you never signed, in a city that owns you until you can prove otherwise. Someone paid for you before you arrived. You mean to find out who, and why, before they come to collect."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene.arrival",
+      "name": "Slack Tide at the Gate",
+      "locationId": "loc.tidegate",
+      "setup": "You come to on the wet stone of the Tide Gate, alone, the brand at your wrist still smoking. Amber lanterns swing over black water. Sedge the tally-clerk doesn't look up from her chained ledger. 'Welcome to the Owing,' she says. 'You landed in debt, same as everyone. Gear's for sale if you want to survive it — on credit, naturally.'",
+      "npcs": ["npc.tally-clerk"]
+    },
+    {
+      "id": "scene.row",
+      "name": "The Masked Row",
+      "locationId": "loc.lantern-row",
+      "setup": "Lantern Row roars with masked commerce, and a collector in green lacquer is already reading the fresh brand at your wrist like a price tag. Vane smiles the way a scale smiles.",
+      "npcs": ["npc.collector-vane"]
+    },
+    {
+      "id": "scene.masque",
+      "name": "Behind the Bronze Threshold",
+      "locationId": "loc.gilt-masque",
+      "setup": "No one crosses the Gilt Masque's bronze threshold free of charge. Behind the curtains, masked patrons buy loyalty on credit, and Sereth Vaux watches you with the interest of someone deciding what your debts are worth.",
+      "npcs": ["npc.patron-sereth"]
+    },
+    {
+      "id": "scene.counting",
+      "name": "The Great Ledger",
+      "locationId": "loc.counting-house",
+      "setup": "Under the dome of hanging scales, Mercer Quill turns a page of the great ledger and does not hurry. Somewhere in that book is the entry that owns you. 'You're on offer or you're a buyer,' the gilt mask says. 'Which page shall we open?'",
+      "npcs": ["npc.mercer-quill"]
+    },
+    {
+      "id": "scene.almshouse",
+      "name": "Above the Tide-Line",
+      "locationId": "loc.almshouse",
+      "setup": "The old almshouse smells of cook-smoke and clean paper — the first safe air you've breathed since you landed. Wren looks up from a forged writ, weighing whether you're a runaway or a collector's plant. Brannock stands by the door, quiet as a wall.",
+      "npcs": ["npc.wren", "npc.brannock"]
+    }
+  ],
+  "quests": [
+    {
+      "id": "quest.your-tally",
+      "name": "Who Owns the Owing",
+      "description": "Learn who bought your tally before you ever set foot ashore, and what they mean to collect.",
+      "objectives": [
+        { "id": "obj.read-brand", "description": "Have someone read the mark burned into your skin", "done": false },
+        { "id": "obj.find-ledger-page", "description": "Find the page of the great ledger that names your buyer", "done": false },
+        { "id": "obj.face-buyer", "description": "Confront the one who signed for you", "done": false }
+      ],
+      "state": "offered"
+    },
+    {
+      "id": "quest.the-taken",
+      "name": "The Taken",
+      "description": "The Unbonded say the Masque disappeared someone into the press-crews or the sunk ward. Find them before the tide does.",
+      "objectives": [
+        { "id": "obj.hear-rumor", "description": "Hear who was taken, and where", "done": false },
+        { "id": "obj.search-below", "description": "Search the press-docks or the sunk ward", "done": false },
+        { "id": "obj.decide-taken", "description": "Free them, ransom them, or leave them", "done": false }
+      ],
+      "state": "offered",
+      "rewardCoins": 500,
+      "rewardItems": ["item.tide-charm"]
+    },
+    {
+      "id": "quest.cut-the-brand",
+      "name": "Cut the Brand",
+      "description": "The Unbonded League can cut a tally-brand out of skin and forge you off the isle — for a price, and a loyalty.",
+      "objectives": [
+        { "id": "obj.reach-almshouse", "description": "Reach the Unbonded almshouse alive", "done": false },
+        { "id": "obj.earn-wren", "description": "Earn Wren's trust", "done": false },
+        { "id": "obj.take-the-knife", "description": "Choose whether to have the brand cut out", "done": false }
+      ],
+      "state": "hidden"
+    },
+    {
+      "id": "quest.drowned-pact",
+      "name": "The Drowned Pact",
+      "description": "The Tideborn say the city owes the sea an older debt than any on the block, and that the drowned mean to collect.",
+      "objectives": [
+        { "id": "obj.hear-widow", "description": "Hear the Marsh Widow's account of the drowned", "done": false },
+        { "id": "obj.reach-sunk-god", "description": "Reach whatever keeps accounts in the sunk ward", "done": false }
+      ],
+      "state": "hidden"
+    }
+  ],
+  "events": [
+    {
+      "id": "ev.tallied",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.tidegate" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The brand at your wrist throbs in time with the tide. Sedge stamps her ledger without looking up: your tally is running, and in Duskhollow a running debt is an open door for anyone with the nerve to walk through it."
+        },
+        { "kind": "setFlag", "key": "tallied", "value": true },
+        { "kind": "setCondition", "entityId": "pc.you", "condition": "indebted", "active": true }
+      ]
+    },
+    {
+      "id": "ev.first-collector",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.lantern-row" },
+          { "kind": "flag", "key": "tallied", "equals": true }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Vane the collector falls into step at your shoulder, reading your fresh brand like a bill of sale. 'New-tallied, unbonded, and walking alone,' the green mask murmurs, pleased. 'The Row does love an easy account.'"
+        },
+        { "kind": "setObjectiveDone", "questId": "quest.your-tally", "objectiveId": "obj.read-brand" },
+        { "kind": "adjustRelationship", "actorId": "npc.collector-vane", "targetId": "pc.you", "by": -3 }
+      ]
+    },
+    {
+      "id": "ev.press-eyes",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.press-docks" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The chained crews shuffle aboard the salt-barge, and Pressmaster Orlo turns his scarred jaw your way, counting you as a body before he counts you as a person. 'Alone, are you,' he says. It is not a question."
+        },
+        { "kind": "adjustRelationship", "actorId": "npc.pressmaster-orlo", "targetId": "pc.you", "by": -3 }
+      ]
+    },
+    {
+      "id": "ev.almshouse-welcome",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.almshouse" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The lookout whistles you in. Wren sets down a half-forged writ and studies you — runaway or collector's plant, the only two kinds that climb this far. 'If you're marked and you're done being owned,' Wren says, 'we can talk. If you're the Masque's, you won't like the walk down.'"
+        },
+        { "kind": "setQuestState", "questId": "quest.cut-the-brand", "state": "offered" },
+        { "kind": "setObjectiveDone", "questId": "quest.cut-the-brand", "objectiveId": "obj.reach-almshouse" },
+        { "kind": "adjustRelationship", "actorId": "npc.wren", "targetId": "pc.you", "by": 8 }
+      ]
+    },
+    {
+      "id": "ev.widow-omen",
+      "when": "onEnterLocation",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "atLocation", "locationId": "loc.tide-flats" }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "Out on the flats the Marsh Widow lifts her bone-heavy shawl and names your debt before you speak it. 'You owe the city,' she says, 'but the city owes the sea, and the sea keeps better accounts. Mind which ledger you end up in.'"
+        },
+        { "kind": "setQuestState", "questId": "quest.drowned-pact", "state": "offered" },
+        { "kind": "setObjectiveDone", "questId": "quest.drowned-pact", "objectiveId": "obj.hear-widow" }
+      ]
+    },
+    {
+      "id": "ev.tally-grows",
+      "when": "onTick",
+      "once": "campaign",
+      "trigger": {
+        "allOf": [
+          { "kind": "flag", "key": "tallied", "equals": true },
+          { "kind": "clockAtLeast", "minutes": 120 }
+        ]
+      },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "A cycle of the Long Dusk turns, and the brand deepens — your tally has grown while you weren't paying, the way it always does. The collectors can smell an older debt, and they price it accordingly."
+        },
+        { "kind": "setCondition", "entityId": "pc.you", "condition": "hunted", "active": true }
+      ]
+    }
+  ],
+  "travelEventChance": 0.4,
+  "travelEventPacks": ["core-ambient", "core-road-danger", "core-fortune"],
+  "travelEvents": [
+    {
+      "id": "tev.lane-threat",
+      "weight": 3,
+      "cooldownMoves": 3,
+      "trigger": { "allOf": [{ "kind": "flag", "key": "tallied", "equals": true }] },
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "The lantern-light thins between the tall houses, and a broad shape peels off a doorway to block the alley. 'Walking alone, and freshly tallied,' he says. 'That's a toll on my lane.' A gloved hand reaches for your purse as two more figures close the far exit."
+        }
+      ]
+    },
+    {
+      "id": "tev.dusk-quiet",
+      "weight": 2,
+      "effects": [
+        {
+          "kind": "narrate",
+          "text": "A cutpurse drifts close, reads the set of your shoulders, and thinks better of it — melting back into the amber crowd. The lane lets you pass, this time."
+        }
+      ]
+    }
+  ],
+  "startingState": {
+    "locationId": "loc.tidegate",
+    "party": ["pc.you"],
+    "companions": [],
+    "openingSceneId": "scene.arrival"
+  }
+}

@@ -1,0 +1,7 @@
+/sheet
+/rest
+/save
+/advance
+/save
+/state
+/quit

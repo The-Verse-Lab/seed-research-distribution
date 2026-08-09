@@ -1,0 +1,194 @@
+{
+  "id": "world.saltmarrow",
+  "name": "Saltmarrow",
+  "summary": "A rain-slick free port where harbor law ends at the waterline and Lantern Row trades wine, cargo, and whispered secrets by lamplight. A setting of intrigue, espionage, and dockside violence.",
+  "lore": [
+    {
+      "id": "lore.row",
+      "title": "Lantern Row",
+      "body": "The lantern-lit mile between the customs gate and the deep-water quays, where Saltmarrow keeps its bargains. The Houses pay no tax and keep no names, and a secret bought on the Row is worth more than any cargo in the hold. Vesper hears nearly all of them."
+    }
+  ],
+  "factions": [
+    {
+      "id": "faction.houses",
+      "name": "The Lantern Houses",
+      "description": "The loose guild of taverns, gaming rooms, and information brokers that actually runs Lantern Row, far more effectively than the harbormaster pretends to.",
+      "goals": ["Keep the Row independent of harbor law", "Trade in secrets and information", "Protect their own"],
+      "relationships": {}
+    }
+  ],
+  "locations": [
+    {
+      "id": "loc.gull",
+      "name": "The Drowned Gull",
+      "description": "The Row's most notorious tavern: warm, candle-gold, and thick with wine and rumor, where Maren pours and Vesper holds court in a private booth.",
+      "connections": ["loc.row"],
+      "npcs": ["npc.maren"],
+      "encounterChance": 0
+    },
+    {
+      "id": "loc.row",
+      "name": "Lantern Row",
+      "description": "A rain-bright mile of red lamps and open doors, music spilling from every threshold, hawkers and house-runners working the crowd of just-landed sailors. The harbormaster's writ does not reach here.",
+      "connections": ["loc.gull", "loc.quay", "loc.harbormaster"],
+      "npcs": [],
+      "encounterChance": 0.2,
+      "encounters": [
+        { "kind": "combat", "weight": 1, "monsters": ["mon.tough"], "seed": "Two of a rival house's leg-breakers peel out of a doorway to lean on you over a debt that isn't yours — a Dockside Tough on each side." },
+        { "kind": "event", "weight": 3, "seed": "A house-runner presses a perfumed note into your hand, winks, and vanishes into the crowd before you can ask who it's from." }
+      ]
+    },
+    {
+      "id": "loc.quay",
+      "name": "The Deep-Water Quay",
+      "description": "Where the real cargo comes ashore after dark, well past the customs lanterns. Rope, brine, and quiet deals; a good place to meet someone who doesn't want to be seen.",
+      "connections": ["loc.row"],
+      "npcs": [],
+      "encounterChance": 0.3,
+      "encounters": [
+        { "kind": "combat", "weight": 2, "monsters": ["mon.tough"], "aggressive": true, "seed": "A figure steps from behind a cargo-crane with a cosh already swinging — a Dockside Tough who'd rather you hadn't seen the unloading." },
+        { "kind": "event", "weight": 2, "seed": "A skiff bumps the pilings and someone aboard murmurs your name, once, like a question." }
+      ]
+    },
+    {
+      "id": "loc.harbormaster",
+      "name": "The Harbormaster's Office",
+      "description": "A draughty stone office pretending to govern a port that governs itself. The harbormaster keeps the manifests, takes the bribes, and looks the other way at exactly the agreed times.",
+      "connections": ["loc.row"],
+      "npcs": [],
+      "encounterChance": 0
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc.vesper",
+      "name": "Vesper Calloway",
+      "summary": "A broker turned spymaster who runs the Row's secret trade from a velvet booth in the Drowned Gull and decides who in this port gets to know what.",
+      "persona": "Silk over steel — warm, knowing, and never off-balance. She bargains as easily as she calculates and treats favors and information as the same currency. She leads by deciding what the next move will be and inviting you to keep up.",
+      "appearance": "A wine-dark gown that costs more than a ship's boat, a knife-thin smile, rings on every finger.",
+      "gender": "woman",
+      "sex": "female",
+      "age": 33,
+      "personality": "schemer",
+      "morality": "cn",
+      "background": "She bought her way out of indenture with a single well-kept secret and has been collecting them ever since. The one secret she has never sold is her real name.",
+      "todos": [
+        { "goal": "Learn what the player is really in Saltmarrow for", "horizon": "short" },
+        { "goal": "Keep the Row's secret-trade in her own hands", "horizon": "long" }
+      ],
+      "goals": ["Trade the right secret to the right buyer", "Keep her people safe", "Stay three moves ahead"],
+      "knowledge": ["Who came ashore tonight and what they're hiding", "Every back door on Lantern Row", "The price of every secret in Saltmarrow"],
+      "relationships": { "pc.you": 10, "npc.cutter": 30, "npc.maren": 40 },
+      "factionId": "faction.houses",
+      "stats": {
+        "abilities": { "str": 9, "dex": 14, "con": 11, "int": 16, "wis": 15, "cha": 17 },
+        "maxHp": 18,
+        "armorClass": 12,
+        "level": 3,
+        "speed": 30,
+        "proficiencies": ["deception", "insight", "persuasion"],
+        "spells": []
+      },
+      "inventory": ["item.stiletto"],
+      "autonomy": {
+        "isPartyMember": true,
+        "level": "leader",
+        "canLead": true,
+        "heartbeatSeconds": 45,
+        "replyDecayAlpha": 0.2
+      }
+    },
+    {
+      "id": "npc.cutter",
+      "name": "Cutter",
+      "summary": "Vesper's bodyguard, a quiet ex-sailor who settles trouble before it becomes trouble and says almost nothing while doing it.",
+      "persona": "Laconic, watchful, and utterly loyal to Vesper. He speaks in short sentences, steps between her and any threat without being asked, and warms by a single degree to people who earn it. Looks to Vesper for the read and to the player for the go-ahead in a fight.",
+      "appearance": "A salt-stiff coat, a boarding cutlass worn easy, knuckles like a dropped anchor.",
+      "gender": "man",
+      "sex": "male",
+      "age": 35,
+      "personality": "stoic-guardian",
+      "morality": "ln",
+      "goals": ["Keep Vesper alive", "Keep the Gull's peace", "Owe no one anything"],
+      "knowledge": ["Who's carrying steel in the room", "The fastest way out of any house on the Row", "How to end a fight in one move"],
+      "relationships": { "pc.you": 5, "npc.vesper": 50 },
+      "factionId": "faction.houses",
+      "stats": {
+        "abilities": { "str": 16, "dex": 14, "con": 15, "int": 10, "wis": 12, "cha": 9 },
+        "maxHp": 30,
+        "armorClass": 15,
+        "level": 4,
+        "speed": 30,
+        "proficiencies": ["athletics", "intimidation"],
+        "spells": []
+      },
+      "inventory": ["item.cutlass"],
+      "autonomy": {
+        "isPartyMember": true,
+        "level": "reactive",
+        "canLead": false,
+        "heartbeatSeconds": 40,
+        "replyDecayAlpha": 0.2
+      }
+    },
+    {
+      "id": "npc.maren",
+      "name": "Maren",
+      "summary": "The Drowned Gull's barkeep, a warm, boisterous woman who runs the tavern like a family and remembers every regular's order and every regular's lie.",
+      "persona": "Boisterous, generous, and sharp as a gaff-hook under the laughter. She makes everyone feel at home, misses nothing, trades in friendly gossip, and is fiercely protective of her people. Tabs are paid up front, no exceptions.",
+      "appearance": "A loud silk wrap, a laugh that carries over the music, an account-book she never seems to consult and never gets wrong.",
+      "gender": "woman",
+      "sex": "female",
+      "age": 47,
+      "personality": "hedonist",
+      "morality": "cg",
+      "goals": ["Keep the Gull warm, full, and safe", "Look after her house", "Hear every story worth hearing"],
+      "knowledge": ["Every regular's name, order, and secret", "Who's good for their tab and who isn't", "The Gull's house rules, which are few but absolute"],
+      "relationships": { "pc.you": 5, "npc.vesper": 40 },
+      "factionId": "faction.houses",
+      "autonomy": { "isPartyMember": false, "level": "passive" }
+    }
+  ],
+  "monsters": [
+    {
+      "id": "mon.tough",
+      "name": "Dockside Tough",
+      "description": "A rival house's hired muscle — a grown brawler with a cosh and a grudge for rent. Dangerous in a pair, cheap to replace.",
+      "stats": {
+        "abilities": { "str": 14, "dex": 12, "con": 13, "int": 8, "wis": 10, "cha": 8 },
+        "maxHp": 13,
+        "armorClass": 12,
+        "level": 1,
+        "speed": 30,
+        "proficiencies": ["intimidation"],
+        "spells": []
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "item.stiletto",
+      "name": "Vesper's Stiletto",
+      "description": "A needle-thin blade that lives in a wrist-sheath. Vesper would always rather talk, but she is never unarmed.",
+      "kind": "weapon",
+      "properties": { "damage": "1d4", "damageType": "piercing", "finesse": true, "concealed": true }
+    },
+    {
+      "id": "item.cutlass",
+      "name": "Cutter's Cutlass",
+      "description": "A heavy boarding cutlass, salt-pitted and razor-kept. It has settled more arguments than the harbormaster ever has.",
+      "kind": "weapon",
+      "properties": { "damage": "1d8", "damageType": "slashing" }
+    },
+    {
+      "id": "item.purse",
+      "name": "A Heavy Purse",
+      "description": "Coin enough to buy a night, a secret, or a way out of one. Saltmarrow runs on it.",
+      "kind": "treasure",
+      "properties": {}
+    }
+  ],
+  "spells": [],
+  "houseRules": {}
+}
