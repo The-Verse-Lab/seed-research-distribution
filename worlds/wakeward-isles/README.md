@@ -37,8 +37,8 @@ before a condition is instantiated.
 
 Scenario tags are experimental strata, not answer labels. Diagnostic records contain stable IDs,
 fact masks, the proposed fact or closed action, grounding status, reason codes, and a mechanical
-outcome vector. They intentionally contain no hidden reasoning. The broader branch/suffix sweep is
-not part of this content package.
+outcome vector. They intentionally contain no hidden reasoning. Each scenario also declares the
+bounded scripted suffix used by the model-free counterfactual runner.
 
 ## Loading
 
@@ -57,6 +57,14 @@ const condition = instantiateResearchScenario(
   { asymmetry: 0.7, incentive: "cooperative", seed: 1729 }, // fixed by the scenario
 );
 ```
+
+To enumerate every validated condition and planned intervention/silence suffix without contacting a
+model or running an episode, use `bun run research:prepare`. The checksummed output is generated under
+ignored `research-artifacts/` and remains explicitly marked `not-run`.
+
+Pass that package's `experiment-plan.json` to `bun run research:run -- --plan <file>` to execute the
+matched branches locally. The result package records deterministic state hashes, grounded actions,
+mechanical outcomes, resolved comparisons, censored branches, and zero external model calls.
 
 All authored material in this directory is original and distributed under the repository's
 Apache-2.0 license.

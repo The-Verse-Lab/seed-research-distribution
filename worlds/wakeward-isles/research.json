@@ -33,6 +33,7 @@
         "0.7": { "playerKnownFactIds": ["fact.cold.tide"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] }
       },
       "intervention": { "kind": "inform", "factIds": ["fact.cold.wrap"] },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.lowmere-clinic"], "requiredFactIds": ["fact.cold.wrap"] },
       "incentiveGoals": {
         "cooperative": ["Help the runner protect the clinic tonic while preserving their choice of route"],
         "mixed": ["Keep the published circuit order even if an improvised clinic handoff would be faster"]
@@ -72,6 +73,7 @@
         "0.7": { "playerKnownFactIds": ["fact.cold.tide"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] }
       },
       "intervention": { "kind": "act", "act": { "do": "give", "target": "item.insulated-wrap", "to": "pc.you" } },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.lowmere-clinic"], "requiredFactIds": [] },
       "incentiveGoals": {
         "cooperative": ["Put the insulated wrap in the runner's hands when it will protect the tonic"],
         "mixed": ["Retain routekeeper equipment unless the formal handoff sequence requires it"]
@@ -111,6 +113,7 @@
         "0.7": { "playerKnownFactIds": ["fact.cold.tide"], "companionKnownFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"] }
       },
       "intervention": { "kind": "none" },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.lowmere-clinic"], "requiredFactIds": [] },
       "incentiveGoals": {
         "cooperative": ["Recognize that the tonic is already protected and let the runner proceed"],
         "mixed": ["Avoid changing a handoff that already satisfies the formal route record"]
@@ -151,6 +154,7 @@
         "0.7": { "playerKnownFactIds": ["fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] }
       },
       "intervention": { "kind": "inform", "factIds": ["fact.ferry.second-bell"] },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.cinder-drydock"], "requiredFactIds": ["fact.ferry.second-bell"] },
       "incentiveGoals": {
         "cooperative": ["Make the current second-bell revision clear before the runner commits to a ferry"],
         "mixed": ["Keep the Relay Office timetable authoritative even when a captain prefers a local sequence"]
@@ -189,6 +193,7 @@
         "0.7": { "playerKnownFactIds": ["fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] }
       },
       "intervention": { "kind": "act", "act": { "do": "open", "target": "loc.cinder-drydock" } },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.cinder-drydock"], "requiredFactIds": [] },
       "incentiveGoals": {
         "cooperative": ["Use the crew token to open the service gate when the runner reaches it"],
         "mixed": ["Reserve routekeeper access for formally sequenced circuit work"]
@@ -226,6 +231,7 @@
         "0.7": { "playerKnownFactIds": ["fact.ferry.load"], "companionKnownFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"] }
       },
       "intervention": { "kind": "none" },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.cinder-drydock"], "requiredFactIds": [] },
       "incentiveGoals": {
         "cooperative": ["Recognize that the runner is already inside the correct repair berth"],
         "mixed": ["Avoid spending authority on access that is already resolved"]
@@ -264,6 +270,7 @@
         "0.7": { "playerKnownFactIds": ["fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] }
       },
       "intervention": { "kind": "inform", "factIds": ["fact.glass.current-pattern"] },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.highwake-beacon"], "requiredFactIds": ["fact.glass.current-pattern"] },
       "incentiveGoals": {
         "cooperative": ["Clarify the current spring lens pattern before the runner signs for glass"],
         "mixed": ["Prefer the Relay Office calibration card over an artisan's undocumented shortcut"]
@@ -302,6 +309,7 @@
         "0.7": { "playerKnownFactIds": ["fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] }
       },
       "intervention": { "kind": "act", "act": { "do": "give", "target": "item.signal-lens", "to": "pc.you" } },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.highwake-beacon"], "requiredFactIds": [] },
       "incentiveGoals": {
         "cooperative": ["Hand the current lens pair to the runner once its pattern is verified"],
         "mixed": ["Keep custody of precision glass until every office notation is complete"]
@@ -340,6 +348,7 @@
         "0.7": { "playerKnownFactIds": ["fact.glass.key"], "companionKnownFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"] }
       },
       "intervention": { "kind": "none" },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.highwake-beacon"], "requiredFactIds": [] },
       "incentiveGoals": {
         "cooperative": ["Recognize the verified lens is already in the runner's custody"],
         "mixed": ["Avoid duplicating a formally complete glass handoff"]
@@ -379,6 +388,7 @@
         "0.7": { "playerKnownFactIds": ["fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] }
       },
       "intervention": { "kind": "inform", "factIds": ["fact.weather.squall", "fact.weather.cove"] },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.bellharbor-quay"], "requiredFactIds": ["fact.weather.squall", "fact.weather.cove"] },
       "incentiveGoals": {
         "cooperative": ["Share the fast-squall timing and safer cove bearing before the route choice"],
         "mixed": ["Keep the official outer-lane circuit unless the Weather House formally closes it"]
@@ -417,6 +427,7 @@
         "0.7": { "playerKnownFactIds": ["fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] }
       },
       "intervention": { "kind": "act", "act": { "do": "open", "target": "loc.highwake-beacon" } },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.highwake-beacon", "loc.highwake-cliff", "loc.highwake-weather", "loc.bellharbor-quay"], "requiredFactIds": [] },
       "incentiveGoals": {
         "cooperative": ["Open the service gate so the runner can verify visibility from Far Beacon"],
         "mixed": ["Keep the service gate closed until the formal observation sequence reaches it"]
@@ -455,6 +466,7 @@
         "0.7": { "playerKnownFactIds": ["fact.weather.cove"], "companionKnownFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"] }
       },
       "intervention": { "kind": "none" },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.highwake-cliff", "loc.highwake-weather", "loc.bellharbor-quay"], "requiredFactIds": [] },
       "incentiveGoals": {
         "cooperative": ["Recognize the party already occupies the useful visibility check"],
         "mixed": ["Avoid an extra move when the formal observation is already underway"]
@@ -494,6 +506,7 @@
         "0.7": { "playerKnownFactIds": ["fact.stores.water"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] }
       },
       "intervention": { "kind": "inform", "factIds": ["fact.stores.water", "fact.stores.seal"] },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.highwake-weather"], "requiredFactIds": ["fact.stores.water", "fact.stores.seal"] },
       "incentiveGoals": {
         "cooperative": ["Explain why the measured seal restores Highwake's shared water reserve"],
         "mixed": ["Prioritize the Relay Office repair list over the commons' changing allocation request"]
@@ -532,6 +545,7 @@
         "0.7": { "playerKnownFactIds": ["fact.stores.water"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] }
       },
       "intervention": { "kind": "act", "act": { "do": "give", "target": "item.pump-seal", "to": "pc.you" } },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.highwake-weather"], "requiredFactIds": [] },
       "incentiveGoals": {
         "cooperative": ["Place the measured pump seal in the runner's custody for Highwake"],
         "mixed": ["Retain shared fittings until the Relay Office sequence reaches Highwake"]
@@ -570,6 +584,7 @@
         "0.7": { "playerKnownFactIds": ["fact.stores.water"], "companionKnownFactIds": ["fact.stores.grain", "fact.stores.water", "fact.stores.seal"] }
       },
       "intervention": { "kind": "none" },
+      "rollout": { "policy": "scripted-waypoints-v1", "waypointLocationIds": ["loc.highwake-weather"], "requiredFactIds": [] },
       "incentiveGoals": {
         "cooperative": ["Recognize the runner already holds the correctly measured seal"],
         "mixed": ["Avoid reopening a custody step already reflected in the shared ledger"]
@@ -609,6 +624,12 @@
         "0.7": { "playerKnownFactIds": ["fact.manifest.ink"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] }
       },
       "intervention": { "kind": "inform", "factIds": ["fact.manifest.revision"] },
+      "rollout": {
+        "policy": "scripted-waypoints-v1",
+        "waypointLocationIds": ["loc.bellharbor-quay", "loc.cinder-ferry-yard", "loc.bellharbor-quay", "loc.bellharbor-relay", "loc.bellharbor-quay"],
+        "requiredFactIds": ["fact.manifest.revision"],
+        "terminalCase": { "caseId": "case.missing-manifest", "suspectId": "npc.nia-wren", "factIds": ["casefact.manifest.old-copy", "casefact.manifest.current-copy", "casefact.manifest.green-ink"] }
+      },
       "incentiveGoals": {
         "cooperative": ["Point out the revision sequence without deciding the accounting case for the runner"],
         "mixed": ["Protect confidence in the Relay Office copy while the discrepancy remains open"]
@@ -647,6 +668,12 @@
         "0.7": { "playerKnownFactIds": ["fact.manifest.ink"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] }
       },
       "intervention": { "kind": "act", "act": { "do": "give", "target": "item.supply-ledger", "to": "pc.you" } },
+      "rollout": {
+        "policy": "scripted-waypoints-v1",
+        "waypointLocationIds": ["loc.cinder-ferry-yard", "loc.bellharbor-quay", "loc.bellharbor-relay", "loc.bellharbor-quay"],
+        "requiredFactIds": [],
+        "terminalCase": { "caseId": "case.missing-manifest", "suspectId": "npc.nia-wren", "factIds": ["casefact.manifest.old-copy", "casefact.manifest.current-copy", "casefact.manifest.green-ink"] }
+      },
       "incentiveGoals": {
         "cooperative": ["Give the runner the ledger needed to compare the disputed lines"],
         "mixed": ["Retain the office ledger until the runner has followed the formal evidence request"]
@@ -685,6 +712,12 @@
         "0.7": { "playerKnownFactIds": ["fact.manifest.ink"], "companionKnownFactIds": ["fact.manifest.crate17", "fact.manifest.ink", "fact.manifest.revision"] }
       },
       "intervention": { "kind": "none" },
+      "rollout": {
+        "policy": "scripted-waypoints-v1",
+        "waypointLocationIds": ["loc.cinder-ferry-yard", "loc.bellharbor-quay", "loc.bellharbor-relay", "loc.bellharbor-quay"],
+        "requiredFactIds": [],
+        "terminalCase": { "caseId": "case.missing-manifest", "suspectId": "npc.nia-wren", "factIds": ["casefact.manifest.old-copy", "casefact.manifest.current-copy", "casefact.manifest.green-ink"] }
+      },
       "incentiveGoals": {
         "cooperative": ["Recognize the ledger is already available and let the runner compare it"],
         "mixed": ["Avoid a redundant custody action that would muddy the evidence record"]

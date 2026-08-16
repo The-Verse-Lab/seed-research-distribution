@@ -48,8 +48,26 @@ state, and per-turn traces.
 This clean-history distribution is the public research surface of Seed. **The Wakeward Isles** is
 the only bundled playset and the CLI default. Its optional, validated `research.json` defines
 controlled companion-information, action, and no-op scenarios without changing the standard
-campaign loader. The general counterfactual sweep and signal-detection analysis remain future work;
-see [RESEARCH.md](RESEARCH.md) for the exact implementation boundary.
+campaign loader. A bounded model-free runner can now execute the authored intervention/silence
+counterfactuals; live-agent evaluation and signal-detection analysis remain future work. See
+[RESEARCH.md](RESEARCH.md) for the exact implementation boundary.
+
+Prepare a model-free, checksummed run plan without contacting an LLM:
+
+```sh
+bun run research:prepare
+```
+
+Then execute the plan with the deterministic scripted-waypoint policy:
+
+```sh
+bun run research:run -- --plan research-artifacts/<plan>/experiment-plan.json
+```
+
+Both commands write ignored, checksummed packages under `research-artifacts/`. Preparation remains
+explicitly `not-run`. Execution reports resolved and censored matched pairs, state hashes, grounded
+interventions, mechanical outcomes, and zero external model calls. These are substrate/oracle-policy
+results, not live-agent performance.
 
 ## Documentation
 

@@ -5,6 +5,7 @@ export {
   ResearchIncentiveSchema,
   ResearchInterventionSchema,
   ResearchOutcomeMetricSchema,
+  ResearchRolloutSchema,
   ResearchScenarioSchema,
   ResearchSetupSchema,
   ResearchSuiteSchema,
@@ -18,6 +19,46 @@ export {
   type ResearchDecisionDiagnostic,
   type ResearchIntervention,
   type ResearchOutcomeMetric,
+  type ResearchRollout,
   type ResearchScenario,
   type ResearchSuite,
 } from "./scenario.ts";
+
+export {
+  RESEARCH_PREPARATION_SCHEMA_VERSION,
+  buildResearchPreparation,
+  canonicalJson,
+  renderResearchPreparationMarkdown,
+  researchEpisodesJsonl,
+  researchPreparationJson,
+  researchSourceFile,
+  writeResearchPreparationArtifacts,
+  type BuildResearchPreparationOptions,
+  type PlannedResearchEpisode,
+  type ResearchBranchKind,
+  type ResearchConditionCell,
+  type ResearchPreparationArtifact,
+  type ResearchPreparationPaths,
+  type ResearchRepositoryProvenance,
+  type ResearchRuntimeProvenance,
+  type ResearchSourceFile,
+} from "./artifacts.ts";
+
+export {
+  MODEL_FREE_RUNNER_ID,
+  RESEARCH_RESULTS_SCHEMA_VERSION,
+  buildResearchResultsArtifact,
+  renderResearchResultsMarkdown,
+  researchStateHash,
+  writeResearchResultsArtifacts,
+  type ResearchEpisodeResult,
+  type ResearchMetricObservation,
+  type ResearchPairResult,
+  type ResearchResultsArtifact,
+  type ResearchResultsPaths,
+} from "./results.ts";
+
+export {
+  executeResearchPlan,
+  type ExecuteResearchPlanOptions,
+} from "./runner.ts";

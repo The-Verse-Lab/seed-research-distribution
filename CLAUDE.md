@@ -11,6 +11,8 @@ bun run check
 bun run dev                         # defaults to worlds/wakeward-isles
 bun run dev worlds/<playset>
 bun run viewer                      # read-only Observatory
+bun run research:prepare           # model-free plan artifacts; no LLM spend
+bun run research:run -- --plan <experiment-plan.json>  # model-free scripted results
 bun run playtest:sweep              # live-model run; spends tokens
 bun run playtest:triage
 ```
@@ -40,6 +42,7 @@ Read `docs/ARCHITECTURE.md`, `docs/PROACTIVE-NPCS.md`, and `docs/OBSERVABILITY.m
 - Companion action, consent, coercion, combat, and minor-safety gates remain non-bypassable.
 - Structured diagnostics record inputs, candidate IDs, reason codes, grounding, and outcomes. They do
   not record hidden chain-of-thought.
+- Generated `research-artifacts/` are ignored run inputs/outputs, not source files or research evidence.
 - World-specific behavior belongs in validated data, never an engine branch.
 - Preserve user changes and secrets. Credentials stay in ignored `.env` files.
 - Attribute repository file headers to Runkai Zhang.

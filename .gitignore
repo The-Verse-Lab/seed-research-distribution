@@ -33,3 +33,6 @@ data.*/
 # Auto-playtest reports (harness output, per-run)
 playtest/auto/reports/
 playtest/transcripts/
+
+# Model-free research plans and result packages (generated, provenance-bearing)
+research-artifacts/

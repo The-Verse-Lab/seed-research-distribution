@@ -20,6 +20,8 @@
     "viewer": "bun run src/viewer/main.ts",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
+    "research:prepare": "bun run src/research/prepare.ts",
+    "research:run": "bun run src/research/run.ts",
     "playtest:sweep": "bun run playtest/auto/run.ts",
     "playtest:triage": "bun run playtest/auto/triage.ts",
     "playtest:loop": "bash playtest/auto/loop.sh"

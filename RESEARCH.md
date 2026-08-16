@@ -55,15 +55,18 @@ architectural difference is the whole methodological claim.
 
 ## Status — what exists and what does not
 
-**Honest as of 2026-08-09: the controlled substrate exists; the experimental sweep does not.**
+**Honest as of 2026-08-16: the controlled substrate and a bounded model-free oracle sweep exist;
+the live-agent experiment does not.**
 
 | | |
 | --- | --- |
-| ✅ Built | reducer + typed deltas + replay fold · forkable seeded RNG · epistemic packet + disclosure ledger · proactive-NPC Director under deterministic eligibility and grounding gates · headless episode runner (`playtest/auto/`) · The Wakeward Isles research playset · validated paired scenario manifests and model-free invariant checks |
-| 🔴 Not built | the general fork/intervene/rollout/outcome harness · aggregate scenario sweep · `d′` / criterion estimator · optimal-stopping baseline · live-model experimental validation |
+| ✅ Built | reducer + typed deltas + replay fold · seeded mechanics · epistemic packet + disclosure ledger · proactive-NPC Director under deterministic eligibility and grounding gates · headless episode runner (`playtest/auto/`) · The Wakeward Isles research playset · validated paired scenario manifests and model-free invariant checks · checksummed preparation packages · exact shared-prefix intervention/silence forks · bounded scripted suffix execution · mechanical outcome and aggregate result artifacts |
+| 🔴 Not built | live-agent counterfactual sweep · `d′` / criterion estimator · optimal-stopping baseline · live-model experimental validation |
 
-If someone asks whether the experiment has been run: **no**. The current evidence is model-free
-validation of the engine and authored scenario contract, not a research result.
+If someone asks whether the experiment has been run: **the model-free scripted oracle sweep can be
+run; the live-agent experiment has not been run.** The generated result is evidence about the
+engine, authored scenarios, intervention grounding, and mechanical counterfactual value. It is not
+evidence that a model chooses the intervention.
 
 ---
 
@@ -84,9 +87,37 @@ The experimental conditions obey a narrow contract:
 - diagnostics record proposed facts/actions, grounding, and mechanical outcomes, including correct
   no-op decisions, without collecting hidden reasoning.
 
-Intervention value is intended to be measured as the mechanical state difference between matched
-intervention and silence branches. The current code validates and instantiates the substrate; it
-does not yet execute that general branch-and-sweep protocol.
+Intervention value is measured as the mechanical state difference between matched intervention and
+silence branches. The bounded runner forks both branches from one instantiated shared prefix, applies
+the authored intervention or no-op, reuses the condition seed, and drives both suffixes with the same
+explicit waypoint policy. A blocked, horizon-exhausted, or errored branch censors its pair instead of
+being reported as an ordinary positive or negative comparison.
+
+### Preparation artifacts
+
+`bun run research:prepare` expands the validated suite into a versioned, model-free package under
+ignored `research-artifacts/`. It records exact source-file hashes, repository/runtime provenance,
+108 scenario × asymmetry × incentive cells, and 180 planned episodes. Informing and instrumental
+cells contain matched intervention/silence suffixes with one shared-prefix ID; control cells schedule
+silence only. The package contains `experiment-plan.json`, scheduler-friendly `episodes.jsonl`, a
+human README, and `SHA256SUMS`.
+
+Every generated preparation package says `not-run`, zero model calls, and zero outcomes while
+advertising the available model-free runner. Preparing one is not running an experiment.
+
+### Model-free result artifacts
+
+`bun run research:run -- --plan <experiment-plan.json>` reloads and validates the current suite,
+rejects a plan whose hash or canonical cells no longer match, and executes all selected episodes by
+default. The runner uses the engine and reducer for authoritative movement, barriers, events, quests,
+case actions, and closed-table instrumental grounding. Its local gateway emits fixed placeholder
+narration and never contacts an external model or network endpoint.
+
+The result package contains `experiment-results.json`, `episode-results.jsonl`, a human README, and
+`SHA256SUMS`. Episode records include shared-prefix, branch-start, action, and end-state hashes;
+intervention receipts; visible fact masks; runner status; and mechanical outcome observations. The
+aggregate separates resolved pairs from censored comparisons and reports strata only over resolved
+pairs. It records observable decision evidence, never hidden reasoning.
 
 ## Distribution scope
 
@@ -96,8 +127,8 @@ travel and room events, procedural map expansion, mandatory combat, and generic 
 disabled in the bundled campaign so they cannot compete with the intervention under study.
 
 `tests/research-firewall.test.ts` enforces the distribution boundary, bundled-playset identity, and
-active-surface vocabulary. Generated saves, model transcripts, reports, local configuration,
-dependencies, and graph output are ignored and do not belong in releases.
+active-surface vocabulary. Generated saves, model transcripts, reports, research artifacts, local
+configuration, dependencies, and graph output are ignored and do not belong in releases.
 
 ---
 
@@ -125,6 +156,11 @@ date, and repository URL will be filled in at the first tagged release.
 - `docs/PROACTIVE-NPCS.md` — the bounded-autonomy contract; the Director is the object of study
 - `worlds/wakeward-isles/research.json` — the controlled scenario manifest
 - `src/research/scenario.ts` — schema, loading, instantiation, and diagnostic helpers
-- `playtest/auto/` — the existing headless episode runner, closest thing to an experiment harness
+- `src/research/artifacts.ts` — deterministic preparation plan, provenance, and artifact writers
+- `src/research/prepare.ts` — model-free preparation CLI
+- `src/research/runner.ts` — bounded shared-prefix counterfactual executor
+- `src/research/results.ts` — checksummed episode, pair, aggregate, and diagnostic artifacts
+- `src/research/run.ts` — model-free result CLI
+- `playtest/auto/` — separate live-model headless playtest runner
 - `src/knowledge/`, `src/memory/disclosure-store.ts` — the epistemic surface the ablation manipulates
-- `src/rules/dice.ts` — `ForkableRng`, the seeded stream a counterfactual branch resumes from
+- `src/rules/dice.ts` — seeded mechanical RNG

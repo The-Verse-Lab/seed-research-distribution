@@ -60,6 +60,21 @@ export const ResearchInterventionSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("none") }),
 ]);
 
+/** Explicit, model-free suffix policy used by the research execution harness. */
+export const ResearchRolloutSchema = z.object({
+  policy: z.literal("scripted-waypoints-v1"),
+  /** Ordered destinations. The runner computes each shortest authored path at execution time. */
+  waypointLocationIds: z.array(z.string()).min(1),
+  /** The scripted policy waits unless these facts are present after the branch intervention. */
+  requiredFactIds: z.array(z.string()).default([]),
+  /** Optional deterministic case-resolution action after the final waypoint. */
+  terminalCase: z.object({
+    caseId: z.string(),
+    suspectId: z.string(),
+    factIds: z.array(z.string()).min(1),
+  }).optional(),
+});
+
 export const ResearchOutcomeMetricSchema = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("questState"),
@@ -113,6 +128,7 @@ export const ResearchScenarioSchema = z.object({
     "0.7": ResearchFactMaskSchema,
   }),
   intervention: ResearchInterventionSchema,
+  rollout: ResearchRolloutSchema,
   incentiveGoals: z.object({
     cooperative: z.array(z.string()).min(1),
     mixed: z.array(z.string()).min(1),
@@ -136,6 +152,7 @@ export const ResearchSuiteSchema = z.object({
 export type ResearchCondition = z.infer<typeof ResearchConditionSchema>;
 export type ResearchIntervention = z.infer<typeof ResearchInterventionSchema>;
 export type ResearchOutcomeMetric = z.infer<typeof ResearchOutcomeMetricSchema>;
+export type ResearchRollout = z.infer<typeof ResearchRolloutSchema>;
 export type ResearchScenario = z.infer<typeof ResearchScenarioSchema>;
 export type ResearchSuite = z.infer<typeof ResearchSuiteSchema>;
 
@@ -188,6 +205,7 @@ export function validateResearchSuite(playset: PlaySet, manifest: ResearchSuite)
   const entityIds = new Set([...npcIds, ...pcIds]);
   const factionIds = new Set(playset.world.factions.map((row) => row.id));
   const questById = new Map(playset.campaign.quests.map((row) => [row.id, row] as const));
+  const caseById = new Map((playset.campaign.cases ?? []).map((row) => [row.id, row] as const));
   const scenarioById = new Map<string, ResearchScenario>();
   const opportunityIds = new Set<string>();
 
@@ -211,6 +229,12 @@ export function validateResearchSuite(playset: PlaySet, manifest: ResearchSuite)
     }
     if (!scenarioById.has(scenario.pairedScenarioId)) fail(`${where} names unknown pair "${scenario.pairedScenarioId}"`);
     if (!scenarioById.has(scenario.controlScenarioId)) fail(`${where} names unknown control "${scenario.controlScenarioId}"`);
+    for (const locationId of scenario.rollout.waypointLocationIds) {
+      if (!locationIds.has(locationId)) fail(`${where} rollout names unknown location "${locationId}"`);
+    }
+    if (!subset(scenario.rollout.requiredFactIds, scenario.relevantFactIds)) {
+      fail(`${where} rollout requires an unrelated fact`);
+    }
 
     for (const factId of scenario.relevantFactIds) {
       if (!factIds.has(factId)) fail(`${where} references unknown fact "${factId}"`);
@@ -232,6 +256,9 @@ export function validateResearchSuite(playset: PlaySet, manifest: ResearchSuite)
     if (scenario.intervention.kind === "inform") {
       if (scenario.opportunityKind !== "informing") fail(`${where} uses an inform intervention outside an informing row`);
       if (!subset(scenario.intervention.factIds, scenario.relevantFactIds)) fail(`${where} informs with an unrelated fact`);
+      if (!equalSets(scenario.rollout.requiredFactIds, scenario.intervention.factIds)) {
+        fail(`${where} scripted informing policy must require exactly the informed facts`);
+      }
     } else if (scenario.intervention.kind === "act") {
       if (scenario.opportunityKind !== "instrumental") fail(`${where} uses an act intervention outside an instrumental row`);
       const { do: verb, target, to } = scenario.intervention.act;
@@ -270,6 +297,20 @@ export function validateResearchSuite(playset: PlaySet, manifest: ResearchSuite)
       if (to && !entityIds.has(to)) fail(`${where} act recipient "${to}" is not an entity`);
     } else if (scenario.opportunityKind !== "control") {
       fail(`${where} uses none outside a control row`);
+    }
+    if (scenario.opportunityKind !== "informing" && scenario.rollout.requiredFactIds.length > 0) {
+      fail(`${where} non-informing rollout cannot add a knowledge gate`);
+    }
+
+    if (scenario.rollout.terminalCase) {
+      const terminal = scenario.rollout.terminalCase;
+      const caseFile = caseById.get(terminal.caseId)
+        ?? fail(`${where} rollout names unknown case "${terminal.caseId}"`);
+      if (!entityIds.has(terminal.suspectId)) fail(`${where} rollout names unknown suspect "${terminal.suspectId}"`);
+      const caseFactIds = new Set(caseFile.facts.map((row) => row.id));
+      for (const factId of terminal.factIds) {
+        if (!caseFactIds.has(factId)) fail(`${where} rollout names unknown case fact "${factId}"`);
+      }
     }
 
     for (const metric of scenario.outcomeMetrics) {
