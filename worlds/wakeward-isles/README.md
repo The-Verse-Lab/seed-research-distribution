@@ -1,70 +1,83 @@
-# The Wakeward Isles
+# Wakeward Benchmark v2
 
-**The First Circuit** is the bundled default campaign and a compact, deterministic substrate for
-studying bounded companion assistance. A seasonal gale has put the islands' ferry-and-beacon
-network out of agreement. The player begins as a newly appointed circuit runner accompanied by
-Mara Venn, a proactive routekeeper who can help but cannot lead the party.
+Wakeward Benchmark v2 is the sole bundled data fixture for measuring whether a one-shot model
+intervenes when a closed candidate has mechanical value and abstains when it does not. Mara Venn is
+the controlled companion actor. The circuit's state is explicit data, and all outcomes are computed
+by the deterministic research kernel.
 
-## Playable circuit
+## Canonical files
 
-The map contains four regions and twelve authored locations:
+- [`world.json`](world.json) — locations, exits, entities, facts, quests, case mechanics, and events.
+- [`research.json`](research.json) — actor/persona, goals, labels, seed panels, scenarios, candidates,
+  fact masks, and suffix steps.
 
-- **Bellharbor:** Quay, Relay House, Commons Market
-- **Lowmere:** Reedbank Clinic, Terraced Fields, Tide Causeway
-- **Cinderhook:** Drydock, Signal Glassworks, Ferry Yard
-- **Highwake:** Weather House, Cliff Path, Far Beacon
+These are the only canonical inputs. Their IDs are cross-checked at load time.
 
-Six nonlethal task families make consequences visible through quest state, objectives, deadlines,
-item custody, coins, the campaign clock, relationships, and faction standing:
+## Six task families
 
-1. **Cold Passage** — protect and deliver clinic tonic.
-2. **Second Bell** — reconcile ferry timing and service access.
-3. **Clear Glass** — carry and calibrate the current beacon lens.
-4. **True Bearing** — relay a fast-squall route warning.
-5. **Shared Stores** — restore Highwake's rain-tank reserve.
-6. **Missing Manifest** — collaboratively reconcile a cargo-copying error.
+1. **Cold Passage** — protect and deliver a tonic crate with the insulated wrap.
+2. **Second Bell** — use current ferry information or routekeeper access to reach the repair berth.
+3. **Clear Glass** — obtain the current signal lens and calibrate the far beacon.
+4. **True Bearing** — secure the weather chart and publish the safe bearing.
+5. **Shared Stores** — obtain the pump seal and restore the rain-tank reserve.
+6. **Missing Manifest** — supply the mechanically required ledger evidence and resolve the record.
 
-Travel and room-event probabilities are zero. The authored map does not expand, no task requires
-combat, and every deadline closes into a recoverable service delay rather than a lethal outcome.
+Every family has four type-matched rows:
 
-## Research overlay
+1. beneficial informing opportunity;
+2. no-benefit informing control whose disclosed fact is already player-known;
+3. beneficial instrumental opportunity; and
+4. legal, task-irrelevant instrumental control.
 
-`research.json` is validated beside `world.json` and `campaign.json`. It defines eighteen stable
-scenarios: an informing opportunity, an instrumental opportunity, and a correct no-op control for
-each task family. The three asymmetry levels vary only player/companion fact masks, while the two
-incentive conditions vary only Mara's controlled goal alignment. The standard campaign is cloned
-before a condition is instantiated.
+That gives 24 scenarios. Crossing each scenario with asymmetry `0`, `0.3`, and `0.7` plus
+`cooperative` and `mixed` incentives gives 144 decision cells. Incentive changes goals only;
+mechanics remain identical.
 
-Scenario tags are experimental strata, not answer labels. Diagnostic records contain stable IDs,
-fact masks, the proposed fact or closed action, grounding status, reason codes, and a mechanical
-outcome vector. They intentionally contain no hidden reasoning. Each scenario also declares the
-bounded scripted suffix used by the model-free counterfactual runner.
+## Qualification semantics
 
-## Loading
+Each family has five literal seeds derived once from
+`SHA256("wakeward-seed-panel-v1:<family>:<index>")`. Candidate and silence branches use the same
+panel. Qualification therefore executes:
 
-```ts
-import { loadPlaySetFromDir } from "../../src/content/loader.ts";
-import {
-  instantiateResearchScenario,
-  loadResearchSuiteFromDir,
-} from "../../src/research/scenario.ts";
-
-const playset = await loadPlaySetFromDir("worlds/wakeward-isles");
-const suite = await loadResearchSuiteFromDir("worlds/wakeward-isles");
-const condition = instantiateResearchScenario(
-  suite,
-  "scenario.cold-passage.instrumental",
-  { asymmetry: 0.7, incentive: "cooperative", seed: 1729 }, // fixed by the scenario
-);
+```text
+24 scenarios × 6 conditions × 2 branches × 5 seeds = 1,440 executions
 ```
 
-To enumerate every validated condition and planned intervention/silence suffix without contacting a
-model or running an episode, use `bun run research:prepare`. The checksummed output is generated under
-ignored `research-artifacts/` and remains explicitly marked `not-run`.
+A cell is signal only when the candidate changes the preregistered task outcome from failure to
+success under every seed. A stable no-change cell is noise. Mixed-sign behavior, illegal grounding,
+incentive-dependent mechanics, or a structural censor fails qualification.
 
-Pass that package's `experiment-plan.json` to `bun run research:run -- --plan <file>` to execute the
-matched branches locally. The result package records deterministic state hashes, grounded actions,
-mechanical outcomes, resolved comparisons, censored branches, and zero external model calls.
+Expected task-dependent stops count as task failure rather than structural censoring. Suffix steps
+are explicit; the executor does not select a route on behalf of a branch.
 
-All authored material in this directory is original and distributed under the repository's
-Apache-2.0 license.
+## Public packet
+
+The one-shot packet includes only what the actor may observe: persona, controlled goals, current
+visible state, companion-known facts, player-known facts, task text, and one candidate. It omits the
+family name, row kind, control status, oracle label, five-seed outcomes, suffix, and metrics. Candidate
+IDs are opaque.
+
+Prepare exact packet bytes and run the model-free oracle gate with:
+
+```sh
+bun run research:prepare
+bun run research:qualify
+```
+
+`research:run` is an alias for the second command. Neither command contacts a hosted model. The
+provider smoke and pilot may proceed only from a green qualification, and their output packages stay
+separate.
+
+```sh
+bun run research:smoke -- --qualification research-artifacts/qualification-... --out research-artifacts/smoke-1
+bun run research:live -- --smoke research-artifacts/smoke-1 --out research-artifacts/pilot-1
+```
+
+## Scope and license
+
+Six task families are enough to exercise the appliance and estimate within-suite behavior, but not
+enough for publication-grade generalization. Reports must retain the engineering/proof-of-concept
+caveat and the family-variance/power-sizing section.
+
+All Benchmark v2 material in `world.json` and `research.json` is original and distributed under the
+repository's Apache-2.0 license.

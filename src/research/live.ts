@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 /** Verify a separate immutable smoke package before running and freezing the full pilot. */
-import { readFile, stat } from "node:fs/promises";
-import { isAbsolute, join, relative, resolve } from "node:path";
+import { readFile, realpath, stat } from "node:fs/promises";
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import {
   expandResearchBenchmarkCells,
   loadResearchBenchmarkV2FromDir,
@@ -19,6 +19,8 @@ import {
   portablePath,
   readJson,
   repositoryProvenance,
+  requireCleanRepositoryProvenance,
+  type CleanRepositoryProvenance,
   valueAfter,
 } from "./cli-support.ts";
 import {
@@ -30,7 +32,15 @@ import {
   finalizeResearchLivePackage,
   type FinalizedResearchLivePackage,
 } from "./live/finalize.ts";
-import { evaluateProviderSmoke } from "./live/gates.ts";
+import { ResearchBudget, sumUsd } from "./live/budget.ts";
+import {
+  assertResearchPhaseTrialIntegrity,
+  evaluateSmokeGate,
+} from "./live/gates.ts";
+import {
+  assertStoredResearchContentIntegrity,
+  assertStoredResearchCostAccounting,
+} from "./live/integrity.ts";
 import {
   buildResearchRunManifestV1,
   ResearchRunManifestV1Schema,
@@ -53,6 +63,7 @@ import {
   assertMutablePackageDirectory,
   configuredResearchModels,
 } from "./smoke.ts";
+import { assertCurrentOracleQualification } from "./qualification.ts";
 
 export interface ResearchLiveCliArgs {
   smokePackageDir?: string;
@@ -216,8 +227,10 @@ function returnedModelFor(
 export async function verifyResearchSmokePackage(
   directoryValue: string,
   loaded: LoadedResearchBenchmarkV2,
+  provenance: ReturnType<typeof repositoryProvenance> = repositoryProvenance(),
 ): Promise<VerifiedResearchSmokePackageV1> {
-  const directory = resolve(directoryValue);
+  const git = requireCleanRepositoryProvenance(provenance);
+  const directory = await realpath(resolve(directoryValue));
   const info = await stat(directory);
   if (!info.isDirectory()) throw new Error(`Provider smoke package is not a directory: ${portablePath(directory)}`);
   const store = await ResearchArtifactStoreV1.open(directory);
@@ -227,16 +240,28 @@ export async function verifyResearchSmokePackage(
     readJson(join(directory, "oracle-qualification.json")).then((value) => OracleQualificationV2Schema.parse(value)),
     readStoredLiveTrials(join(directory, "live-trials.jsonl")),
   ]);
+  await store.validateCompletedArtifacts();
   if (!qualification.qualified || qualification.failures.length > 0) {
     throw new Error("Provider smoke package does not contain a green oracle qualification");
   }
+  assertCurrentOracleQualification(loaded, qualification);
   const qualificationHash = researchQualificationHash(qualification);
   if (manifest.source.suiteHash !== loaded.suiteHash || qualification.suiteHash !== loaded.suiteHash ||
     manifest.source.qualificationHash !== qualificationHash) {
     throw new Error("Provider smoke package provenance does not match the loaded research benchmark");
   }
+  if (manifest.source.git.commit !== git.commit || manifest.budget.priorCommittedUsd !== "0") {
+    throw new Error("Provider smoke package does not match the clean executable commit or zero-spend baseline");
+  }
   assertExactSmokeSchedule(loaded, manifest, trials);
-  const gate = evaluateProviderSmoke(trials);
+  assertResearchPhaseTrialIntegrity({ trials, qualification, manifest, phase: "smoke" });
+  await assertStoredResearchCostAccounting(store, trials);
+  await assertStoredResearchContentIntegrity(store, loaded, trials);
+  const budget = new ResearchBudget({
+    capUsd: manifest.budget.hardCapUsd,
+    committedUsd: sumUsd([manifest.budget.priorCommittedUsd, ...trials.map((trial) => trial.costUsd)]),
+  }).snapshot();
+  const gate = evaluateSmokeGate({ trials, qualification, budget });
   if (!gate.passed) throw new Error(`Provider smoke gate failed: ${gate.failures.join("; ")}`);
   const returnedModels = {
     google: returnedModelFor("google", manifest, trials),
@@ -249,6 +274,7 @@ export async function verifyResearchSmokePackage(
     gatePassed: true,
     suiteHash: loaded.suiteHash,
     qualificationHash,
+    smokeCommittedUsd: budget.committedUsd,
     returnedModels,
   };
   return { directory, manifest, qualification, trials, authorization };
@@ -256,12 +282,31 @@ export async function verifyResearchSmokePackage(
 
 function pathsOverlap(left: string, right: string): boolean {
   const relativePath = relative(left, right);
-  return relativePath === "" || (!relativePath.startsWith("..") && !isAbsolute(relativePath));
+  return relativePath === "" ||
+    (relativePath !== ".." && !relativePath.startsWith(`..${sep}`) && !isAbsolute(relativePath));
 }
 
 function assertSeparatePackages(smokeDirectory: string, pilotDirectory: string): void {
   if (pathsOverlap(smokeDirectory, pilotDirectory) || pathsOverlap(pilotDirectory, smokeDirectory)) {
     throw new Error("Smoke and pilot result packages must use separate, non-nested directories");
+  }
+}
+
+/** Resolve symlink aliases through the nearest existing ancestor of a prospective output path. */
+async function canonicalProspectiveDirectory(directoryValue: string): Promise<string> {
+  let existing = resolve(directoryValue);
+  const missingSegments: string[] = [];
+  while (true) {
+    try {
+      const canonicalExisting = await realpath(existing);
+      return resolve(canonicalExisting, ...missingSegments.reverse());
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException | undefined)?.code !== "ENOENT") throw error;
+      const parent = dirname(existing);
+      if (parent === existing) throw error;
+      missingSegments.push(basename(existing));
+      existing = parent;
+    }
   }
 }
 
@@ -279,8 +324,9 @@ function assertPilotManifestResumeOptions(options: {
   args: ResearchLiveCliArgs;
   verifiedSmoke: VerifiedResearchSmokePackageV1;
   localManifest: ResearchModelManifestV1;
+  git: CleanRepositoryProvenance;
 }): void {
-  const { manifest, args, verifiedSmoke, localManifest } = options;
+  const { manifest, args, verifiedSmoke, localManifest, git } = options;
   if (args.runId && manifest.runId !== args.runId) throw new Error("--run-id does not match the existing package");
   if (args.schedulerSeed !== undefined && manifest.design.schedulerSeed !== args.schedulerSeed) {
     throw new Error("--scheduler-seed does not match the existing package");
@@ -294,6 +340,10 @@ function assertPilotManifestResumeOptions(options: {
   if (manifest.source.suiteHash !== verifiedSmoke.authorization.suiteHash ||
     manifest.source.qualificationHash !== verifiedSmoke.authorization.qualificationHash) {
     throw new Error("Existing pilot package provenance does not match the verified smoke package");
+  }
+  if (manifest.source.git.commit !== git.commit ||
+    manifest.budget.priorCommittedUsd !== verifiedSmoke.authorization.smokeCommittedUsd) {
+    throw new Error("Existing pilot package does not match the clean executable commit or smoke spend");
   }
   const models = configuredResearchModels(localManifest);
   for (const provider of manifest.providers) {
@@ -311,6 +361,7 @@ async function loadOrBuildPilotManifest(options: {
   generatedRunId: string;
   verifiedSmoke: VerifiedResearchSmokePackageV1;
   localManifest: ResearchModelManifestV1;
+  git: CleanRepositoryProvenance;
 }): Promise<ResearchRunManifestV1> {
   const existing = await readExistingManifest(options.directory);
   if (existing) {
@@ -319,6 +370,7 @@ async function loadOrBuildPilotManifest(options: {
       args: options.args,
       verifiedSmoke: options.verifiedSmoke,
       localManifest: options.localManifest,
+      git: options.git,
     });
     return existing;
   }
@@ -329,9 +381,10 @@ async function loadOrBuildPilotManifest(options: {
     schedulerSeed: options.args.schedulerSeed ?? options.verifiedSmoke.manifest.design.schedulerSeed,
     bootstrapSeed: options.args.bootstrapSeed ?? options.verifiedSmoke.manifest.design.bootstrapSeed,
     timeoutMs: options.args.timeoutMs ?? options.verifiedSmoke.manifest.design.timeoutMs,
+    priorCommittedUsd: options.verifiedSmoke.authorization.smokeCommittedUsd,
     suiteHash: options.verifiedSmoke.authorization.suiteHash,
     qualificationHash: options.verifiedSmoke.authorization.qualificationHash,
-    git: repositoryProvenance(),
+    git: options.git,
     runtime: runtimeProvenance(),
     smokeReturnedModels: options.verifiedSmoke.authorization.returnedModels,
   });
@@ -341,15 +394,17 @@ export async function runResearchLiveCli(
   argv: readonly string[],
   generatedAt = new Date().toISOString(),
   fetchImpl: typeof globalThis.fetch = globalThis.fetch,
+  provenance: ReturnType<typeof repositoryProvenance> = repositoryProvenance(),
 ): Promise<ResearchLiveCliResult | undefined> {
   const args = parseResearchLiveArgs(argv);
   if (args.help) {
     process.stdout.write(RESEARCH_LIVE_USAGE);
     return undefined;
   }
+  const git = requireCleanRepositoryProvenance(provenance);
   const loaded = await loadResearchBenchmarkV2FromDir(resolve(args.worldDir));
   // This checks every checksum and the smoke gate before credentials are read or a pilot adapter exists.
-  const verifiedSmoke = await verifyResearchSmokePackage(args.smokePackageDir!, loaded);
+  const verifiedSmoke = await verifyResearchSmokePackage(args.smokePackageDir!, loaded, git);
   const localManifest = await loadLocalModelManifest(args.modelManifestPath);
   const localModels = configuredResearchModels(localManifest);
   for (const providerId of LIVE_RESEARCH_PROVIDER_IDS) {
@@ -359,7 +414,9 @@ export async function runResearchLiveCli(
   }
 
   const generatedId = generatedRunId("pilot", generatedAt);
-  const directory = resolve(args.outputDir ?? defaultArtifactDirectory(args.runId ?? generatedId));
+  const directory = await canonicalProspectiveDirectory(
+    args.outputDir ?? defaultArtifactDirectory(args.runId ?? generatedId),
+  );
   assertSeparatePackages(verifiedSmoke.directory, directory);
   await assertMutablePackageDirectory(directory);
   const manifest = await loadOrBuildPilotManifest({
@@ -369,6 +426,7 @@ export async function runResearchLiveCli(
     generatedRunId: generatedId,
     verifiedSmoke,
     localManifest,
+    git,
   });
   const providers = createLiveProviders(localManifest, fetchImpl);
   const store = await ResearchArtifactStoreV1.open(directory);
@@ -387,6 +445,7 @@ export async function runResearchLiveCli(
   });
   const finalized = await finalizeResearchLivePackage({
     store,
+    loaded,
     manifest,
     qualification: verifiedSmoke.qualification,
     phase: "pilot",

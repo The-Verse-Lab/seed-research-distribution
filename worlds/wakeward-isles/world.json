@@ -1,887 +1,309 @@
 {
-  "id": "world.wakeward-isles",
-  "name": "The Wakeward Isles",
-  "summary": "The Wakeward Isles are four settled islands joined by ferries, tide roads, and a public chain of signal lamps. A seasonal gale has left the network intact but unreliable: a lens is out of true, a causeway gate sticks, stores have landed at the wrong quay, and every community holds a different piece of the repair plan. The work is ordinary, consequential, and shared. No single island can keep the circuit running alone.",
-  "style": [
-    "Write with clear, concrete civic-fantasy detail and restrained warmth.",
-    "Favor weather, working hands, signal light, ferry wakes, tools, and shared meals.",
-    "Keep danger legible and non-sensational; most conflicts are competing duties among decent people.",
-    "Let competence, restraint, and small acts of cooperation carry emotional weight."
-  ],
-  "lore": [
-    {
-      "id": "lore.common-light",
-      "title": "The Common Light",
-      "body": "Every inhabited island contributes oil, glass, labor, or boats to the Wakeward circuit. The lamps belong to no crown or company; keeping them lit is the oldest shared duty in the isles.",
-      "tags": ["relay", "civic", "history"]
-    },
-    {
-      "id": "lore.first-circuit",
-      "title": "A Runner's First Circuit",
-      "body": "New circuit runners travel once with a routekeeper before receiving a route book of their own. The routekeeper may advise and assist, but the runner remains responsible for every handoff entered under their badge.",
-      "tags": ["runners", "custom", "work"]
-    },
-    {
-      "id": "lore.gale-season",
-      "title": "Gale Season",
-      "body": "The first hard gale marks the turn from summer traffic to the careful autumn timetable. The islands expect damage, inspect together, and reopen each link only when both ends agree it is sound.",
-      "tags": ["weather", "season", "safety"]
-    },
-    {
-      "id": "lore.three-voices",
-      "title": "Three Voices at the Table",
-      "body": "The Relay Office argues for one reliable standard, the Free Ferries defend local judgment, and the Island Commons ask who bears the cost. None can run the network without the other two.",
-      "tags": ["factions", "cooperation", "governance"]
-    }
-  ],
-  "facts": [
-    {
-      "id": "fact.cold.wrap",
-      "statement": "The blueglass tonic must remain inside an insulated wrap until it reaches Reedbank Clinic; an hour in open sun spoils it.",
-      "subjectIds": ["item.tonic-crate", "item.insulated-wrap", "loc.lowmere-clinic"],
-      "domains": ["medicine", "delivery", "storage"],
-      "access": "professional",
-      "sourceLabel": "clinic handling card",
-      "tags": ["cold-passage", "critical"]
-    },
-    {
-      "id": "fact.cold.tide",
-      "statement": "The Lowmere tide causeway remains dry until noon on the first circuit day.",
-      "subjectIds": ["loc.lowmere-causeway"],
-      "domains": ["tides", "routes", "delivery"],
-      "scope": {"regionIds": ["lowmere"]},
-      "access": "local",
-      "sourceLabel": "tide board",
-      "tags": ["cold-passage"]
-    },
-    {
-      "id": "fact.cold.clinic",
-      "statement": "Reedbank Clinic accepts protected medicine deliveries at its east counter throughout the morning.",
-      "subjectIds": ["loc.lowmere-clinic", "npc.sori-ansel"],
-      "domains": ["medicine", "delivery"],
-      "scope": {"locationIds": ["loc.lowmere-clinic"], "regionIds": ["lowmere"]},
-      "access": "local",
-      "tags": ["cold-passage"]
-    },
-    {
-      "id": "fact.ferry.second-bell",
-      "statement": "The Cinderhook service ferry now leaves Bellharbor at second bell, 11:00, while repairs shorten the quay window.",
-      "subjectIds": ["loc.bellharbor-quay", "loc.cinder-ferry-yard", "npc.pax-lorne"],
-      "domains": ["ferries", "schedule", "routes"],
-      "access": "common",
-      "validFrom": "after the first gale",
-      "sourceLabel": "current ferry board",
-      "tags": ["second-bell", "critical"]
-    },
-    {
-      "id": "fact.ferry.old-second-bell",
-      "statement": "Before the gale, the Cinderhook service ferry left at noon.",
-      "subjectIds": ["loc.bellharbor-quay", "loc.cinder-ferry-yard"],
-      "domains": ["ferries", "schedule", "history"],
-      "kind": "defunct",
-      "access": "common",
-      "validUntil": "the first gale",
-      "supersededBy": "fact.ferry.second-bell",
-      "sourceLabel": "summer ferry board",
-      "tags": ["second-bell", "stale"]
-    },
-    {
-      "id": "fact.ferry.load",
-      "statement": "The repair ferry can carry six cargo marks in addition to its passengers; heavier loads wait for the evening barge.",
-      "subjectIds": ["loc.cinder-ferry-yard", "npc.pax-lorne"],
-      "domains": ["ferries", "cargo", "capacity"],
-      "scope": {"factionIds": ["faction.free-ferries"]},
-      "access": "faction",
-      "tags": ["second-bell"]
-    },
-    {
-      "id": "fact.glass.current-pattern",
-      "statement": "The repaired east beacon uses the clear lens above the blue lens; reversing them makes the safe-water mark look like a storm warning.",
-      "subjectIds": ["loc.highwake-beacon", "item.signal-lens"],
-      "domains": ["signals", "glass", "repair"],
-      "scope": {"factionIds": ["faction.relay-office"]},
-      "access": "professional",
-      "validFrom": "the spring refit",
-      "sourceLabel": "current calibration card",
-      "tags": ["clear-glass", "critical"]
-    },
-    {
-      "id": "fact.glass.old-pattern",
-      "statement": "The old east-beacon pattern placed blue above clear.",
-      "subjectIds": ["loc.highwake-beacon", "item.signal-lens"],
-      "domains": ["signals", "glass", "history"],
-      "kind": "historical",
-      "scope": {"factionIds": ["faction.relay-office"]},
-      "access": "professional",
-      "validUntil": "the spring refit",
-      "supersededBy": "fact.glass.current-pattern",
-      "sourceLabel": "retired calibration card",
-      "tags": ["clear-glass", "stale"]
-    },
-    {
-      "id": "fact.glass.key",
-      "statement": "The brass calibration key opens both the glassworks test frame and the Far Beacon service gate.",
-      "subjectIds": ["item.calibration-key", "loc.cinder-glassworks", "loc.highwake-beacon"],
-      "domains": ["signals", "tools", "access"],
-      "access": "restricted",
-      "tags": ["clear-glass"]
-    },
-    {
-      "id": "fact.weather.squall",
-      "statement": "A three-mark pressure fall at the Weather House means a fast squall will cross Highwake before 14:00 today.",
-      "subjectIds": ["loc.highwake-weather", "npc.edda-marr"],
-      "domains": ["weather", "forecast", "routes"],
-      "scope": {"regionIds": ["highwake"]},
-      "access": "professional",
-      "sourceLabel": "morning pressure trace",
-      "tags": ["true-bearing", "critical"]
-    },
-    {
-      "id": "fact.weather.cliff",
-      "statement": "The Highwake cliff path should be cleared by 13:30 when a fast squall is due; the final stair has no shelter.",
-      "subjectIds": ["loc.highwake-cliff"],
-      "domains": ["weather", "routes", "safety"],
-      "scope": {"regionIds": ["highwake"]},
-      "access": "local",
-      "tags": ["true-bearing"]
-    },
-    {
-      "id": "fact.weather.cove",
-      "statement": "The lee alcove below the Weather House is the nearest marked shelter on Highwake.",
-      "subjectIds": ["loc.highwake-weather"],
-      "domains": ["weather", "shelter", "routes"],
-      "scope": {"regionIds": ["highwake"]},
-      "access": "local",
-      "tags": ["true-bearing"]
-    },
-    {
-      "id": "fact.stores.grain",
-      "statement": "Lowmere has a two-week grain surplus after the terrace harvest and does not need another grain allotment this circuit.",
-      "subjectIds": ["loc.lowmere-fields", "npc.tomet-reed"],
-      "domains": ["supplies", "grain", "allocation"],
-      "scope": {"regionIds": ["lowmere"], "factionIds": ["faction.island-commons"]},
-      "access": "faction",
-      "sourceLabel": "Commons store count",
-      "tags": ["shared-stores", "critical"]
-    },
-    {
-      "id": "fact.stores.water",
-      "statement": "Highwake's rain tank lost its lower seal in the gale and needs clean water until the replacement arrives.",
-      "subjectIds": ["loc.highwake-weather", "item.pump-seal"],
-      "domains": ["supplies", "water", "repair"],
-      "scope": {"regionIds": ["highwake"]},
-      "access": "local",
-      "tags": ["shared-stores"]
-    },
-    {
-      "id": "fact.stores.seal",
-      "statement": "Cinderhook's small copper pump seal fits the Highwake rain tank without modification.",
-      "subjectIds": ["loc.cinder-drydock", "item.pump-seal", "loc.highwake-weather"],
-      "domains": ["supplies", "repair", "tools"],
-      "access": "professional",
-      "tags": ["shared-stores"]
-    },
-    {
-      "id": "fact.manifest.crate17",
-      "statement": "Crate Seventeen contains clinic bandages and belongs at Reedbank Clinic, not the Cinderhook drydock.",
-      "subjectIds": ["item.supply-ledger", "loc.lowmere-clinic", "loc.cinder-drydock"],
-      "domains": ["manifest", "cargo", "medicine"],
-      "access": "restricted",
-      "sourceLabel": "signed cargo ledger",
-      "tags": ["missing-manifest", "critical"]
-    },
-    {
-      "id": "fact.manifest.ink",
-      "statement": "The green correction ink on the cargo seal is used only at the Bellharbor Relay House.",
-      "subjectIds": ["item.cargo-seal", "loc.bellharbor-relay"],
-      "domains": ["manifest", "records", "provenance"],
-      "access": "professional",
-      "tags": ["missing-manifest"]
-    },
-    {
-      "id": "fact.manifest.revision",
-      "statement": "The current manifest revision was filed at 07:20, before the first ferry loaded.",
-      "subjectIds": ["item.supply-ledger", "loc.bellharbor-relay"],
-      "domains": ["manifest", "schedule", "records"],
-      "access": "restricted",
-      "sourceLabel": "Relay House copy book",
-      "tags": ["missing-manifest"]
-    },
-    {
-      "id": "fact.bellharbor.relay-house",
-      "statement": "The Bellharbor Relay House is the public contract hall for circuit work and the archive of current route notices.",
-      "subjectIds": ["loc.bellharbor-relay", "faction.relay-office"],
-      "domains": ["work", "routes", "records"],
-      "scope": {"regionIds": ["bellharbor"]},
-      "access": "local"
-    },
-    {
-      "id": "fact.bellharbor.market",
-      "statement": "The Commons Market trades food and household goods; it does not issue ferry clearances or route contracts.",
-      "subjectIds": ["loc.bellharbor-market"],
-      "domains": ["trade", "work", "routes"],
-      "scope": {"regionIds": ["bellharbor"]},
-      "access": "local",
-      "tags": ["distractor"]
-    },
-    {
-      "id": "fact.bellharbor.first-bell",
-      "statement": "Bellharbor's first work bell sounds at 08:00 and the quay board is updated immediately afterward.",
-      "subjectIds": ["loc.bellharbor-quay"],
-      "domains": ["schedule", "work"],
-      "scope": {"regionIds": ["bellharbor"]},
-      "access": "local",
-      "tags": ["distractor"]
-    },
-    {
-      "id": "fact.lowmere.causeway",
-      "statement": "Lowmere's stone causeway is a public tide road maintained jointly by the Commons and ferry crews.",
-      "subjectIds": ["loc.lowmere-causeway", "faction.free-ferries", "faction.island-commons"],
-      "domains": ["routes", "governance"],
-      "scope": {"regionIds": ["lowmere"]},
-      "access": "local"
-    },
-    {
-      "id": "fact.lowmere.clinic",
-      "statement": "Reedbank Clinic serves every island and records supplies by need rather than by faction share.",
-      "subjectIds": ["loc.lowmere-clinic", "faction.island-commons"],
-      "domains": ["medicine", "governance"],
-      "access": "common"
-    },
-    {
-      "id": "fact.lowmere.terraces",
-      "statement": "The Lowmere terraces grow grain, beans, and orchard fruit above the salt line.",
-      "subjectIds": ["loc.lowmere-fields"],
-      "domains": ["farming", "supplies"],
-      "scope": {"regionIds": ["lowmere"]},
-      "access": "local",
-      "tags": ["distractor"]
-    },
-    {
-      "id": "fact.cinderhook.drydock",
-      "statement": "Cinderhook Drydock handles structural repairs and keeps the circuit's shared stock of fittings.",
-      "subjectIds": ["loc.cinder-drydock", "faction.free-ferries"],
-      "domains": ["repair", "ferries", "tools"],
-      "scope": {"regionIds": ["cinderhook"]},
-      "access": "local",
-      "tags": ["distractor"]
-    },
-    {
-      "id": "fact.cinderhook.glassworks",
-      "statement": "The Signal Glassworks cuts and tests every replacement lens used by the Wakeward beacons.",
-      "subjectIds": ["loc.cinder-glassworks", "faction.relay-office"],
-      "domains": ["signals", "glass", "repair"],
-      "access": "common"
-    },
-    {
-      "id": "fact.cinderhook.ferry-yard",
-      "statement": "The Cinderhook Ferry Yard controls the service gate between the public landing and the working drydock.",
-      "subjectIds": ["loc.cinder-ferry-yard", "loc.cinder-drydock"],
-      "domains": ["ferries", "access", "repair"],
-      "scope": {"regionIds": ["cinderhook"]},
-      "access": "local"
-    },
-    {
-      "id": "fact.highwake.weather-house",
-      "statement": "The Highwake Weather House posts observations, not orders; ferry crews decide whether they sail.",
-      "subjectIds": ["loc.highwake-weather", "npc.edda-marr", "faction.free-ferries"],
-      "domains": ["weather", "governance"],
-      "access": "common"
-    },
-    {
-      "id": "fact.highwake.beacon",
-      "statement": "Far Beacon marks the deep channel into the island chain and must show a clear-blue pair when the water is safe.",
-      "subjectIds": ["loc.highwake-beacon", "item.signal-lens"],
-      "domains": ["signals", "routes"],
-      "access": "common"
-    },
-    {
-      "id": "fact.highwake.cliff",
-      "statement": "The Highwake cliff path is steep but maintained, with handrails between the Weather House and Far Beacon.",
-      "subjectIds": ["loc.highwake-cliff"],
-      "domains": ["routes", "terrain"],
-      "scope": {"regionIds": ["highwake"]},
-      "access": "local"
-    },
-    {
-      "id": "fact.faction.relay-office",
-      "statement": "The Relay Office maintains common signal standards and the official route books.",
-      "subjectIds": ["faction.relay-office"],
-      "domains": ["factions", "signals", "records"],
-      "access": "common"
-    },
-    {
-      "id": "fact.faction.free-ferries",
-      "statement": "The Free Ferries are an independent cooperative whose captains retain final authority over their own boats.",
-      "subjectIds": ["faction.free-ferries"],
-      "domains": ["factions", "ferries", "governance"],
-      "access": "common"
-    },
-    {
-      "id": "fact.faction.island-commons",
-      "statement": "The Island Commons coordinate clinics, food stores, shelters, and local labor across the four islands.",
-      "subjectIds": ["faction.island-commons"],
-      "domains": ["factions", "supplies", "governance"],
-      "access": "common"
-    },
-    {
-      "id": "fact.network.common-duty",
-      "statement": "A circuit repair is accepted only after workers at both ends sign the same completion line.",
-      "subjectIds": ["faction.relay-office", "faction.free-ferries", "faction.island-commons"],
-      "domains": ["work", "cooperation", "records"],
-      "access": "common"
-    },
-    {
-      "id": "fact.route.circuit",
-      "statement": "A complete service circuit runs Bellharbor to Lowmere, Cinderhook, Highwake, then back to Bellharbor.",
-      "subjectIds": ["loc.bellharbor-quay", "loc.lowmere-causeway", "loc.cinder-ferry-yard", "loc.highwake-weather"],
-      "domains": ["routes", "work"],
-      "access": "common"
-    },
-    {
-      "id": "fact.storm.recent",
-      "statement": "The first autumn gale passed overnight; it damaged fittings and schedules but caused no loss of life.",
-      "subjectIds": ["loc.bellharbor-quay", "loc.highwake-beacon"],
-      "domains": ["weather", "current-events"],
-      "access": "common",
-      "validFrom": "this morning"
-    }
-  ],
-  "factions": [
-    {
-      "id": "faction.relay-office",
-      "name": "Relay Office",
-      "description": "The public service that keeps route books, trains runners, and certifies the shared signal code.",
-      "goals": ["Restore reliable service", "Keep one interoperable signal standard", "Make every repair auditable"],
-      "relationships": {"faction.free-ferries": 20, "faction.island-commons": 45}
-    },
-    {
-      "id": "faction.free-ferries",
-      "name": "Free Ferries",
-      "description": "A cooperative of independent captains and dock crews who share rescue duties while guarding local judgment.",
-      "goals": ["Keep boats and crews safe", "Preserve captain authority", "Move essential cargo first"],
-      "relationships": {"faction.relay-office": 20, "faction.island-commons": 35}
-    },
-    {
-      "id": "faction.island-commons",
-      "name": "Island Commons",
-      "description": "The councils, clinics, farms, and shelters that allocate shared stores by demonstrated need.",
-      "goals": ["Meet essential needs across all islands", "Keep allocations transparent", "Prevent one island from carrying every cost"],
-      "relationships": {"faction.relay-office": 45, "faction.free-ferries": 35}
-    }
+  "version": 1,
+  "worldId": "world.wakeward-isles.research-v2",
+  "campaignId": "camp.wakeward.research-v2",
+  "playerId": "pc.you",
+  "companionId": "npc.mara-venn",
+  "partyEntityIds": ["pc.you", "npc.mara-venn"],
+  "entities": [
+    { "id": "pc.you", "locationId": "loc.bellharbor-quay", "inventory": [] },
+    { "id": "npc.mara-venn", "locationId": "loc.bellharbor-quay", "inventory": [] },
+    { "id": "npc.nia-wren", "locationId": "loc.bellharbor-relay", "inventory": [] }
   ],
   "locations": [
     {
       "id": "loc.bellharbor-quay",
-      "name": "Bellharbor Quay",
-      "description": "A broad stone landing where four ferry colors share one tide board. Crews check ropes, runners compare satchels, and the first work bell carries cleanly across the water.",
-      "region": "bellharbor",
-      "x": 0,
-      "y": 0,
-      "npcs": ["npc.pax-lorne", "npc.nia-wren"],
       "exits": [
-        {"to": "loc.bellharbor-relay", "direction": "east", "name": "the lamp-lined walk to the Relay House", "minutes": 10},
-        {"to": "loc.bellharbor-market", "direction": "north", "name": "the covered steps to Commons Market", "minutes": 10},
-        {"to": "loc.lowmere-causeway", "direction": "south", "name": "the Lowmere tide road", "minutes": 45},
-        {"to": "loc.cinder-ferry-yard", "direction": "east", "name": "the Cinderhook service ferry", "minutes": 60},
-        {"to": "loc.highwake-weather", "direction": "north", "name": "the Highwake packet", "minutes": 90}
+        { "to": "loc.bellharbor-relay", "minutes": 10, "initialState": "open" },
+        { "to": "loc.lowmere-causeway", "minutes": 45, "initialState": "open" },
+        { "to": "loc.cinder-ferry-yard", "minutes": 60, "initialState": "open" },
+        { "to": "loc.highwake-weather", "minutes": 90, "initialState": "open" }
       ]
     },
     {
       "id": "loc.bellharbor-relay",
-      "name": "Relay House",
-      "description": "A whitewashed hall of route boards, drying charts, and long tables scarred by generations of compasses. Current notices hang in blue frames; retired copies are crossed through and archived upstairs.",
-      "region": "bellharbor",
-      "x": 1,
-      "y": 0,
-      "npcs": ["npc.mara-venn", "npc.ivo-pell", "npc.lio-senn"],
-      "work": [
-        {"id": "work.route-copy", "label": "Copy and verify the morning route board", "ability": "int", "dc": 10, "wageCp": 55, "failWageCp": 20, "minutes": 240, "cooldownDays": 1},
-        {"id": "work.quay-run", "label": "Carry sealed notices around Bellharbor", "ability": "dex", "dc": 11, "wageCp": 65, "failWageCp": 15, "minutes": 240, "cooldownDays": 1}
-      ],
-      "guild": {
-        "name": "The Wakeward Relay House",
-        "clerkId": "npc.ivo-pell",
-        "factionId": "faction.relay-office",
-        "lodging": {
-          "roomName": "the runners' loft",
-          "tiers": [
-            {"id": "shared", "label": "a curtained bunk in the runners' loft", "nightlyCp": 12, "private": false},
-            {"id": "quiet", "label": "a small quiet room beside the archive stair", "nightlyCp": 28, "private": true}
-          ]
-        }
-      },
       "exits": [
-        {"to": "loc.bellharbor-quay", "direction": "west", "name": "the lamp-lined walk to the quay", "minutes": 10},
-        {"to": "loc.bellharbor-market", "direction": "north", "name": "the archive lane", "minutes": 10}
-      ]
-    },
-    {
-      "id": "loc.bellharbor-market",
-      "name": "Commons Market",
-      "description": "A roofed square where island tables are marked by color rather than price class. A public scale stands at the center, and every allotment posted there can be challenged before sunset.",
-      "region": "bellharbor",
-      "x": 0,
-      "y": 1,
-      "npcs": ["npc.aven-dorr"],
-      "exits": [
-        {"to": "loc.bellharbor-quay", "direction": "south", "name": "the covered steps to the quay", "minutes": 10},
-        {"to": "loc.bellharbor-relay", "direction": "south", "name": "the archive lane", "minutes": 10},
-        {"to": "loc.lowmere-fields", "direction": "east", "name": "the produce ferry to Lowmere", "minutes": 60}
+        { "to": "loc.bellharbor-quay", "minutes": 10, "initialState": "open" }
       ]
     },
     {
       "id": "loc.lowmere-causeway",
-      "name": "Tide Causeway",
-      "description": "Flat stones cross a pale channel between marker poles. The road is generous at low tide and gone without argument at high water; a hand-cranked gate keeps late carts from following it down.",
-      "region": "lowmere",
-      "x": 0,
-      "y": -1,
-      "npcs": [],
       "exits": [
-        {"to": "loc.bellharbor-quay", "direction": "north", "name": "the tide road to Bellharbor", "minutes": 45},
-        {"to": "loc.lowmere-clinic", "direction": "east", "name": "the reedbank lane", "minutes": 15}
+        { "to": "loc.bellharbor-quay", "minutes": 45, "initialState": "open" },
+        { "to": "loc.lowmere-clinic", "minutes": 15, "initialState": "open" }
       ]
     },
     {
       "id": "loc.lowmere-clinic",
-      "name": "Reedbank Clinic",
-      "description": "A bright timber clinic raised above the wet meadow, with a shaded delivery counter and a slate board listing what each island has sent and what remains needed.",
-      "region": "lowmere",
-      "x": 1,
-      "y": -1,
-      "npcs": ["npc.sori-ansel"],
-      "interactions": [
-        {"id": "interaction.clinic-counter", "kind": "inspectable", "label": "check the protected-delivery counter", "text": "The counter has hooks for insulated wraps and a signed receipt book kept dry beneath the sill."}
-      ],
       "exits": [
-        {"to": "loc.lowmere-causeway", "direction": "west", "name": "the reedbank lane", "minutes": 15},
-        {"to": "loc.lowmere-fields", "direction": "south", "name": "the terrace path", "minutes": 15}
-      ]
-    },
-    {
-      "id": "loc.lowmere-fields",
-      "name": "Terraced Fields",
-      "description": "Low stone walls hold green terraces above the salt line. Store sheds stand open for counting, and chalk marks on every bin show what is reserved, what is surplus, and who signed the number.",
-      "region": "lowmere",
-      "x": 1,
-      "y": -2,
-      "npcs": ["npc.tomet-reed"],
-      "exits": [
-        {"to": "loc.lowmere-clinic", "direction": "north", "name": "the terrace path", "minutes": 15},
-        {"to": "loc.bellharbor-market", "direction": "west", "name": "the produce ferry to Bellharbor", "minutes": 60}
+        { "to": "loc.lowmere-causeway", "minutes": 15, "initialState": "open" }
       ]
     },
     {
       "id": "loc.cinder-ferry-yard",
-      "name": "Ferry Yard",
-      "description": "A cobbled landing crowded with trestles, spare oars, and cargo frames. A blue service gate separates arriving passengers from the active drydock, opened only when a crew member signs them through.",
-      "region": "cinderhook",
-      "x": 2,
-      "y": 0,
-      "npcs": ["npc.pax-lorne", "npc.nia-wren"],
       "exits": [
-        {"to": "loc.bellharbor-quay", "direction": "west", "name": "the Bellharbor service ferry", "minutes": 60},
-        {
-          "to": "loc.cinder-drydock",
-          "direction": "east",
-          "name": "the blue drydock gate",
-          "minutes": 10,
-          "barrier": {"kind": "gate", "keyItemId": "item.ferry-token", "dc": 13, "breakDc": 17, "description": "a blue service gate with a crew-token latch"}
-        }
+        { "to": "loc.bellharbor-quay", "minutes": 60, "initialState": "open" },
+        { "to": "loc.cinder-drydock", "minutes": 10, "initialState": "locked" }
       ]
     },
     {
       "id": "loc.cinder-drydock",
-      "name": "Cinderhook Drydock",
-      "description": "Two stone slips descend into sheltered water beneath gantries of black timber. Every fitting has a labeled bin, every repair a chalk line, and no boat leaves until someone other than its maker checks the work.",
-      "region": "cinderhook",
-      "x": 3,
-      "y": 0,
-      "npcs": ["npc.bera-coil"],
-      "interactions": [
-        {"id": "interaction.pump-shelf", "kind": "inspectable", "label": "inspect the shared fittings shelf", "text": "Copper seals, rope eyes, and pump valves are sorted by measured diameter rather than by boat."}
-      ],
       "exits": [
-        {
-          "to": "loc.cinder-ferry-yard",
-          "direction": "west",
-          "name": "the blue service gate",
-          "minutes": 10,
-          "barrier": {"kind": "gate", "keyItemId": "item.ferry-token", "dc": 13, "breakDc": 17, "description": "a blue service gate with a crew-token latch"}
-        },
-        {"to": "loc.cinder-glassworks", "direction": "north", "name": "the hot-stone lane", "minutes": 10}
+        { "to": "loc.cinder-ferry-yard", "minutes": 10, "initialState": "open" },
+        { "to": "loc.cinder-glassworks", "minutes": 10, "initialState": "open" }
       ]
     },
     {
       "id": "loc.cinder-glassworks",
-      "name": "Signal Glassworks",
-      "description": "A cool inspection room sits beyond the furnace wall. Clear and colored lenses rest in felt-lined frames, each etched with its station, date, and the initials of two testers.",
-      "region": "cinderhook",
-      "x": 3,
-      "y": 1,
-      "npcs": ["npc.jalen-quill"],
       "exits": [
-        {"to": "loc.cinder-drydock", "direction": "south", "name": "the hot-stone lane", "minutes": 10},
-        {"to": "loc.highwake-weather", "direction": "north", "name": "the north packet to Highwake", "minutes": 75}
+        { "to": "loc.cinder-drydock", "minutes": 10, "initialState": "open" },
+        { "to": "loc.highwake-weather", "minutes": 75, "initialState": "open" }
       ]
     },
     {
       "id": "loc.highwake-weather",
-      "name": "Weather House",
-      "description": "A low stone station built into the hill, its roof crowded with cups, vanes, and rain gauges. Fresh traces hang beside old ones so any visitor can see what changed and when.",
-      "region": "highwake",
-      "x": 3,
-      "y": 2,
-      "npcs": ["npc.edda-marr"],
-      "interactions": [
-        {"id": "interaction.pressure-trace", "kind": "clue", "label": "read the morning pressure trace", "text": "The ink line drops three marked divisions between dawn and first bell."}
-      ],
       "exits": [
-        {"to": "loc.cinder-glassworks", "direction": "south", "name": "the Cinderhook packet", "minutes": 75},
-        {"to": "loc.bellharbor-quay", "direction": "west", "name": "the Bellharbor packet", "minutes": 90},
-        {"to": "loc.highwake-cliff", "direction": "north", "name": "the beacon stair", "minutes": 20}
+        { "to": "loc.cinder-glassworks", "minutes": 75, "initialState": "open" },
+        { "to": "loc.bellharbor-quay", "minutes": 90, "initialState": "open" },
+        { "to": "loc.highwake-cliff", "minutes": 20, "initialState": "open" }
       ]
     },
     {
       "id": "loc.highwake-cliff",
-      "name": "Cliff Path",
-      "description": "A maintained stair follows the lee side of the ridge before crossing one exposed shelf. Brass handrails shine where generations of keepers have tested them in bad weather.",
-      "region": "highwake",
-      "x": 3,
-      "y": 3,
-      "npcs": [],
       "exits": [
-        {"to": "loc.highwake-weather", "direction": "south", "name": "the stair down to the Weather House", "minutes": 20},
-        {
-          "to": "loc.highwake-beacon",
-          "direction": "north",
-          "name": "the Far Beacon service gate",
-          "minutes": 30,
-          "barrier": {"kind": "gate", "keyItemId": "item.calibration-key", "dc": 14, "breakDc": 18, "description": "a brass service gate protecting the final beacon stair"}
-        }
+        { "to": "loc.highwake-weather", "minutes": 20, "initialState": "open" },
+        { "to": "loc.highwake-beacon", "minutes": 30, "initialState": "open" }
       ]
     },
     {
       "id": "loc.highwake-beacon",
-      "name": "Far Beacon",
-      "description": "The outer lamp stands above deep water in a round tower of pale stone. Its shutters face every approach, and the lens cradle is built so two people can check an alignment from opposite sides.",
-      "region": "highwake",
-      "x": 3,
-      "y": 4,
-      "npcs": ["npc.ren-hale"],
-      "interactions": [
-        {"id": "interaction.lens-cradle", "kind": "inspectable", "label": "inspect the lens cradle", "text": "Two labeled seats hold the clear and blue lenses, with the spring refit order stamped into the brass."}
-      ],
       "exits": [
-        {
-          "to": "loc.highwake-cliff",
-          "direction": "south",
-          "name": "the Far Beacon service gate",
-          "minutes": 30,
-          "barrier": {"kind": "gate", "keyItemId": "item.calibration-key", "dc": 14, "breakDc": 18, "description": "a brass service gate protecting the final beacon stair"}
-        }
+        { "to": "loc.highwake-cliff", "minutes": 30, "initialState": "open" }
       ]
     }
   ],
-  "npcs": [
+  "facts": [
+    { "id": "fact.cold.wrap", "text": "The tonic must be wrapped at the Relay House before clinic delivery." },
+    { "id": "fact.cold.tide", "text": "The Lowmere causeway remains dry through the morning." },
+    { "id": "fact.cold.clinic", "text": "Reedbank Clinic accepts protected deliveries at its east counter." },
+    { "id": "fact.ferry.second-bell", "text": "The repair ferry now leaves at second bell." },
+    { "id": "fact.ferry.old-second-bell", "text": "The superseded ferry schedule listed noon." },
+    { "id": "fact.ferry.load", "text": "The repair ferry can carry six cargo marks." },
+    { "id": "fact.glass.current-pattern", "text": "The repaired beacon needs the clear lens above the blue lens." },
+    { "id": "fact.glass.old-pattern", "text": "The retired beacon pattern placed blue above clear." },
+    { "id": "fact.glass.key", "text": "The calibration key opens the glassworks test frame." },
+    { "id": "fact.weather.squall", "text": "A fast squall requires the signed safe-bearing chart." },
+    { "id": "fact.weather.cliff", "text": "The unsheltered cliff stair should be cleared before the squall." },
+    { "id": "fact.weather.cove", "text": "The lee alcove is Highwake's nearest marked shelter." },
+    { "id": "fact.stores.grain", "text": "Lowmere has a grain surplus this circuit." },
+    { "id": "fact.stores.water", "text": "Highwake's rain tank needs a replacement seal." },
+    { "id": "fact.stores.seal", "text": "The drydock's copper seal fits the Highwake rain tank." },
+    { "id": "fact.manifest.crate17", "text": "Crate Seventeen belongs at Reedbank Clinic, not the drydock." },
+    { "id": "fact.manifest.ink", "text": "Green correction ink is used only at the Relay House." },
+    { "id": "fact.manifest.revision", "text": "The current manifest revision was filed before loading." },
+    { "id": "casefact.manifest.old-copy", "text": "The Ferry Yard carbon copy predates the revision." },
+    { "id": "casefact.manifest.current-copy", "text": "The Relay House copy is current and countersigned." },
+    { "id": "casefact.manifest.green-ink", "text": "The green correction is absent from the dispatched carbon copy." }
+  ],
+  "quests": [
+    { "id": "quest.cold-passage", "initialState": "hidden", "objectiveIds": ["collect-protected-tonic", "deliver-tonic"] },
+    { "id": "quest.second-bell", "initialState": "hidden", "objectiveIds": ["reach-repair-berth"] },
+    { "id": "quest.clear-glass", "initialState": "hidden", "objectiveIds": ["collect-current-lens", "calibrate-far-beacon"] },
+    { "id": "quest.true-bearing", "initialState": "hidden", "objectiveIds": ["post-safe-bearing"] },
+    { "id": "quest.shared-stores", "initialState": "hidden", "objectiveIds": ["collect-pump-seal", "restore-rain-tank"] },
+    { "id": "quest.missing-manifest", "initialState": "hidden", "objectiveIds": ["publish-corrected-manifest"] }
+  ],
+  "cases": [
     {
-      "id": "npc.mara-venn",
-      "name": "Mara Venn",
-      "summary": "A veteran routekeeper assigned to accompany a new runner's first circuit.",
-      "persona": "Mara treats coordination as a craft: observe first, speak plainly, and make the smallest useful move. She respects a partner's responsibility and never mistakes helping for taking over. Her humor is dry and kind, usually arriving after the work is safe.",
-      "sex": "female",
-      "age": 38,
-      "description": "A weather-browned woman with dark hair braided close, a blue route cord at one shoulder, and hands marked by rope and lamp oil.",
-      "personality": "Patient, exact, quietly warm, and comfortable admitting uncertainty. Mara values competence but makes room for someone still learning.",
-      "personalityTemplate": "stoic-guardian",
-      "alignment": "ng",
-      "goals": ["Keep the circuit reliable without taking the runner's responsibility away", "Help every island finish with the same trustworthy record"],
-      "knowledge": [
-        {"factId": "fact.route.circuit", "familiarity": "expert", "certainty": "certain", "source": "fifteen years running the circuit", "disclosure": {"mode": "open"}},
-        {"factId": "fact.network.common-duty", "familiarity": "expert", "certainty": "certain", "source": "Relay Office practice", "disclosure": {"mode": "open"}},
-        {"factId": "fact.storm.recent", "familiarity": "firsthand", "certainty": "certain", "source": "this morning's inspection", "disclosure": {"mode": "open"}},
-        {"factId": "fact.faction.relay-office", "familiarity": "expert", "certainty": "certain", "source": "her service", "disclosure": {"mode": "open"}}
+      "id": "case.missing-manifest",
+      "questId": "quest.missing-manifest",
+      "culpritId": "npc.nia-wren",
+      "evidenceFactIds": [
+        "casefact.manifest.old-copy",
+        "casefact.manifest.current-copy",
+        "casefact.manifest.green-ink"
       ],
-      "privateKnowledge": [
-        {"statement": "You have been offered the vacant chief routekeeper post, but you have not decided whether accepting it would put too much distance between you and the crews.", "topic": "the vacant chief routekeeper post", "domains": ["work", "leadership"], "familiarity": "firsthand", "certainty": "certain", "source": "a sealed Relay Office letter", "disclosure": {"mode": "trust", "minFriendship": 35, "reason": "she wants the runner to know her before judging the choice"}}
+      "requiredEvidenceFactIds": [
+        "casefact.manifest.old-copy",
+        "casefact.manifest.current-copy",
+        "casefact.manifest.green-ink"
       ],
-      "relationships": {"npc.ivo-pell": 55, "npc.pax-lorne": 35, "npc.aven-dorr": 40, "npc.edda-marr": 50},
-      "factionId": "faction.relay-office",
-      "socialRole": "routekeeper and field mentor",
-      "voiceTags": ["plain", "measured", "dry humor", "names uncertainty directly"],
-      "preferences": ["likes checked work and hot tea", "respects partners who revise a plan when evidence changes"],
-      "boundaries": ["will not falsify a route record", "does not act as though a partner's silence were permission"],
-      "stats": {"abilities": {"str": 12, "dex": 14, "con": 12, "int": 15, "wis": 16, "cha": 12}, "maxHp": 18, "armorClass": 12, "level": 2, "speed": 30, "proficiencies": ["navigation", "signal glass", "thieves' tools"], "spells": []},
-      "inventory": ["item.insulated-wrap", "item.ferry-token", "item.calibration-key", "item.repair-kit", "item.route-book"],
-      "autonomy": {"isPartyMember": true, "level": "proactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.25},
-      "schedule": {"variance": 0, "defaultLocationId": "loc.bellharbor-relay", "defaultActivity": "reviewing route notices", "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.bellharbor-relay", "activity": "preparing the first circuit", "venue": true}]}
-    },
-    {
-      "id": "npc.ivo-pell",
-      "name": "Ivo Pell",
-      "summary": "Bellharbor's relay clerk and keeper of the current route board.",
-      "persona": "Ivo is brisk, courteous, and devoted to records that another person can actually use. He corrects errors without humiliating their author.",
-      "sex": "male", "age": 46,
-      "description": "A compact man in a blue work coat, with chalk on both cuffs and square spectacles on a cord.",
-      "personality": "Orderly, humane, and skeptical of memory when a signed record is available.",
-      "personalityTemplate": "sage", "alignment": "lg",
-      "goals": ["Keep the current board unambiguous", "Train runners to leave an auditable trail"],
-      "knowledge": [
-        {"factId": "fact.bellharbor.relay-house", "familiarity": "expert", "certainty": "certain", "source": "his post", "disclosure": {"mode": "open"}},
-        {"factId": "fact.ferry.second-bell", "familiarity": "firsthand", "certainty": "certain", "source": "the signed ferry notice", "disclosure": {"mode": "open"}},
-        {"factId": "fact.manifest.revision", "familiarity": "firsthand", "certainty": "certain", "source": "the copy book", "disclosure": {"mode": "asked-only"}}
-      ],
-      "privateKnowledge": [{"factId": "fact.manifest.ink", "topic": "the correction ink", "domains": ["manifest", "records"], "familiarity": "expert", "certainty": "certain", "source": "archive practice", "disclosure": {"mode": "asked-only", "reason": "record provenance matters only when the document is in question"}}],
-      "relationships": {"npc.mara-venn": 55, "npc.lio-senn": 45},
-      "factionId": "faction.relay-office", "socialRole": "relay clerk", "inventory": ["item.circuit-badge", "item.cargo-seal"],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.2},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.bellharbor-relay", "activity": "keeping the current route board", "venue": true}]}
-    },
-    {
-      "id": "npc.lio-senn",
-      "name": "Lio Senn",
-      "summary": "The Relay House archivist who can distinguish a current correction from an old copy.",
-      "persona": "Lio speaks softly and precisely. He enjoys explaining how a record acquired its authority, but refuses to pretend a plausible guess is evidence.",
-      "sex": "nonbinary", "age": 31,
-      "description": "A fine-boned archivist with cropped copper hair, green ink on one thumb, and a patient gaze.",
-      "personality": "Curious, rigorous, and generous with methods as well as answers.",
-      "personalityTemplate": "sage", "alignment": "ln",
-      "goals": ["Resolve the missing manifest from primary records", "Teach others to distinguish provenance from confidence"],
-      "knowledge": [
-        {"factId": "fact.manifest.ink", "familiarity": "expert", "certainty": "certain", "source": "archive practice", "disclosure": {"mode": "open"}},
-        {"factId": "fact.manifest.revision", "familiarity": "firsthand", "certainty": "certain", "source": "the copy book", "disclosure": {"mode": "open"}},
-        {"factId": "fact.glass.old-pattern", "familiarity": "competent", "certainty": "certain", "source": "retired service cards", "disclosure": {"mode": "asked-only"}}
-      ],
-      "privateKnowledge": [],
-      "relationships": {"npc.ivo-pell": 45, "npc.nia-wren": 10},
-      "factionId": "faction.relay-office", "socialRole": "route archivist", "inventory": ["item.supply-ledger"],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.2},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.bellharbor-relay", "activity": "checking revisions in the copy book", "venue": true}]}
-    },
-    {
-      "id": "npc.pax-lorne",
-      "name": "Pax Lorne",
-      "summary": "A Free Ferries captain responsible for the shortened Cinderhook run.",
-      "persona": "Pax is direct, cheerful under pressure, and protective of crew judgment. They will explain a refusal in practical terms and listen when new evidence changes the risk.",
-      "sex": "nonbinary", "age": 42,
-      "description": "A broad ferry captain in a russet coat, with close curls and a whistle tied beside a brass crew token.",
-      "personality": "Decisive, sociable, and willing to revise a call without pretending the first one was foolish.",
-      "personalityTemplate": "firebrand", "alignment": "cg",
-      "goals": ["Keep the shortened ferry run safe", "Protect captain authority while sharing useful evidence"],
-      "knowledge": [
-        {"factId": "fact.ferry.second-bell", "familiarity": "firsthand", "certainty": "certain", "source": "their own sailing order", "disclosure": {"mode": "open"}},
-        {"factId": "fact.ferry.load", "familiarity": "expert", "certainty": "certain", "source": "the repair ferry's mark sheet", "disclosure": {"mode": "open"}},
-        {"factId": "fact.faction.free-ferries", "familiarity": "expert", "certainty": "certain", "source": "cooperative membership", "disclosure": {"mode": "open"}}
-      ],
-      "privateKnowledge": [],
-      "relationships": {"npc.mara-venn": 35, "npc.bera-coil": 60, "npc.nia-wren": 30},
-      "factionId": "faction.free-ferries", "socialRole": "service-ferry captain", "inventory": ["item.ferry-token"],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.2},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.bellharbor-quay", "activity": "checking the Cinderhook ferry", "venue": true}]}
-    },
-    {
-      "id": "npc.nia-wren",
-      "name": "Nia Wren",
-      "summary": "A quick young courier who copied the first cargo list after the gale.",
-      "persona": "Nia is energetic, candid, and eager to be useful. When she makes a mistake she wants to fix the whole system at once; patient questions help her separate what she saw from what she inferred.",
-      "sex": "female", "age": 24,
-      "description": "A wiry courier with wind-tangled black hair, a yellow satchel, and three pencils tucked behind one ear.",
-      "personality": "Bright, conscientious, and sometimes too quick to turn partial evidence into a complete story.",
-      "personalityTemplate": "wide-eyed", "alignment": "ng",
-      "goals": ["Correct the cargo copy she rushed", "Earn a route book without hiding uncertainty"],
-      "knowledge": [
-        {"factId": "fact.manifest.crate17", "familiarity": "firsthand", "certainty": "uncertain", "source": "the corrected crate mark", "disclosure": {"mode": "open"}},
-        {"factId": "fact.ferry.second-bell", "familiarity": "competent", "certainty": "certain", "source": "the quay board", "disclosure": {"mode": "open"}},
-        {"factId": "fact.bellharbor.first-bell", "familiarity": "competent", "certainty": "certain", "source": "daily courier work", "disclosure": {"mode": "open"}}
-      ],
-      "privateKnowledge": [{"statement": "You copied the first cargo list before Ivo's correction arrived and fear that admitting it will cost you your route-book examination.", "topic": "who copied the first cargo list", "domains": ["manifest", "work"], "familiarity": "firsthand", "certainty": "certain", "source": "your own action", "disclosure": {"mode": "reluctant", "reason": "she fears losing the examination"}}],
-      "relationships": {"npc.pax-lorne": 30, "npc.lio-senn": 10, "npc.mara-venn": 20},
-      "factionId": "faction.free-ferries", "socialRole": "junior courier", "inventory": ["item.supply-ledger"],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.25},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.bellharbor-quay", "activity": "sorting the morning cargo slips", "venue": true}]}
-    },
-    {
-      "id": "npc.aven-dorr",
-      "name": "Aven Dorr",
-      "summary": "The Commons coordinator who balances island requests against the posted store count.",
-      "persona": "Aven asks who needs a resource, who has already contributed, and what claim can be checked. He is warm in manner and stubborn about transparent allocation.",
-      "sex": "male", "age": 51,
-      "description": "A tall man with silver at his temples, a green Commons sash, and a folding tally board under one arm.",
-      "personality": "Patient, politically alert, and unwilling to let urgency erase fairness.",
-      "personalityTemplate": "caretaker", "alignment": "ng",
-      "goals": ["Direct shared stores where they do the most good", "Keep every allocation open to challenge"],
-      "knowledge": [
-        {"factId": "fact.stores.grain", "familiarity": "expert", "certainty": "certain", "source": "the posted store count", "disclosure": {"mode": "open"}},
-        {"factId": "fact.stores.water", "familiarity": "competent", "certainty": "confident", "source": "Highwake's request", "disclosure": {"mode": "open"}},
-        {"factId": "fact.faction.island-commons", "familiarity": "expert", "certainty": "certain", "source": "his office", "disclosure": {"mode": "open"}}
-      ],
-      "privateKnowledge": [],
-      "relationships": {"npc.mara-venn": 40, "npc.sori-ansel": 55, "npc.tomet-reed": 50},
-      "factionId": "faction.island-commons", "socialRole": "Commons allocation coordinator", "inventory": ["item.cargo-seal"],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.2},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.bellharbor-market", "activity": "posting the shared-store count", "venue": true}]}
-    },
-    {
-      "id": "npc.sori-ansel",
-      "name": "Sori Ansel",
-      "summary": "The Reedbank clinician responsible for protected deliveries.",
-      "persona": "Sori is calm, practical, and careful about the difference between a useful warning and noise. She explains handling rules in plain language and thanks people for checking.",
-      "sex": "female", "age": 44,
-      "description": "A sturdy clinician in a grey-green work apron, with soft brown eyes and an insulated wrap folded over one arm.",
-      "personality": "Grounded, compassionate, and exact about preventable risk.",
-      "personalityTemplate": "caretaker", "alignment": "lg",
-      "goals": ["Receive the tonic in usable condition", "Make safe handling easy to understand"],
-      "knowledge": [
-        {"factId": "fact.cold.wrap", "familiarity": "expert", "certainty": "certain", "source": "clinic storage practice", "disclosure": {"mode": "open"}},
-        {"factId": "fact.cold.clinic", "familiarity": "firsthand", "certainty": "certain", "source": "her own counter", "disclosure": {"mode": "open"}},
-        {"factId": "fact.lowmere.clinic", "familiarity": "expert", "certainty": "certain", "source": "her service", "disclosure": {"mode": "open"}}
-      ],
-      "privateKnowledge": [],
-      "relationships": {"npc.aven-dorr": 55, "npc.tomet-reed": 35, "npc.mara-venn": 25},
-      "factionId": "faction.island-commons", "socialRole": "clinic steward", "inventory": ["item.tonic-crate", "item.insulated-wrap"],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.2},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.lowmere-clinic", "activity": "staffing the protected-delivery counter", "venue": true}]}
-    },
-    {
-      "id": "npc.tomet-reed",
-      "name": "Tomet Reed",
-      "summary": "Lowmere's terrace keeper and recorder of the current grain surplus.",
-      "persona": "Tomet speaks in concrete quantities and dislikes both scarcity theater and careless abundance. He will show anyone the bins behind his numbers.",
-      "sex": "male", "age": 57,
-      "description": "A broad-shouldered farmer with sun-browned skin, white curls, and chalk numbers down one sleeve.",
-      "personality": "Steady, transparent, and quietly proud of collective competence.",
-      "personalityTemplate": "caretaker", "alignment": "ng",
-      "goals": ["Keep Lowmere's count accurate", "Release the real surplus without weakening winter stores"],
-      "knowledge": [
-        {"factId": "fact.stores.grain", "familiarity": "firsthand", "certainty": "certain", "source": "his own bin count", "disclosure": {"mode": "open"}},
-        {"factId": "fact.lowmere.terraces", "familiarity": "expert", "certainty": "certain", "source": "a lifetime farming there", "disclosure": {"mode": "open"}},
-        {"factId": "fact.lowmere.causeway", "familiarity": "competent", "certainty": "certain", "source": "daily use", "disclosure": {"mode": "open"}}
-      ],
-      "privateKnowledge": [],
-      "relationships": {"npc.aven-dorr": 50, "npc.sori-ansel": 35},
-      "factionId": "faction.island-commons", "socialRole": "terrace keeper", "inventory": [],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.2},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.lowmere-fields", "activity": "checking the terrace stores", "venue": true}]}
-    },
-    {
-      "id": "npc.bera-coil",
-      "name": "Bera Coil",
-      "summary": "Cinderhook's drydock forewoman and keeper of shared repair fittings.",
-      "persona": "Bera is concise, inventive, and delighted by a repair another person can repeat. She values local judgment but labels every shared fitting for the next crew.",
-      "sex": "female", "age": 48,
-      "description": "A muscular forewoman with cropped grey curls, copper dust on her palms, and a measuring cord around her neck.",
-      "personality": "Practical, independent, and generous with tools when the need is real.",
-      "personalityTemplate": "firebrand", "alignment": "cg",
-      "goals": ["Return the ferry gate and pumps to service", "Keep shared fittings available to every island"],
-      "knowledge": [
-        {"factId": "fact.stores.seal", "familiarity": "expert", "certainty": "certain", "source": "she measured the fitting", "disclosure": {"mode": "open"}},
-        {"factId": "fact.cinderhook.drydock", "familiarity": "expert", "certainty": "certain", "source": "her post", "disclosure": {"mode": "open"}},
-        {"factId": "fact.cinderhook.ferry-yard", "familiarity": "firsthand", "certainty": "certain", "source": "daily work", "disclosure": {"mode": "open"}}
-      ],
-      "privateKnowledge": [],
-      "relationships": {"npc.pax-lorne": 60, "npc.jalen-quill": 30, "npc.mara-venn": 20},
-      "factionId": "faction.free-ferries", "socialRole": "drydock forewoman", "inventory": ["item.pump-seal", "item.repair-kit", "item.ferry-token"],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.2},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.cinder-drydock", "activity": "checking the shared fittings shelf", "venue": true}]}
-    },
-    {
-      "id": "npc.jalen-quill",
-      "name": "Jalen Quill",
-      "summary": "The signalwright responsible for the replacement Far Beacon lens.",
-      "persona": "Jalen thinks aloud in tests and counterchecks. He is proud of exact work, happy to be corrected by a current card, and impatient with a confident answer that skips verification.",
-      "sex": "male", "age": 35,
-      "description": "A lean glassworker with amber safety lenses, careful hands, and a blue burn mark on one cuff.",
-      "personality": "Analytical, collaborative, and more interested in a reproducible result than personal credit.",
-      "personalityTemplate": "sage", "alignment": "ln",
-      "goals": ["Install the Far Beacon lens in the current pattern", "Retire every ambiguous service card"],
-      "knowledge": [
-        {"factId": "fact.glass.current-pattern", "familiarity": "expert", "certainty": "certain", "source": "the spring refit", "disclosure": {"mode": "open"}},
-        {"factId": "fact.glass.old-pattern", "familiarity": "expert", "certainty": "certain", "source": "the retired card", "disclosure": {"mode": "asked-only"}},
-        {"factId": "fact.glass.key", "familiarity": "firsthand", "certainty": "certain", "source": "his tool issue", "disclosure": {"mode": "open"}},
-        {"factId": "fact.cinderhook.glassworks", "familiarity": "expert", "certainty": "certain", "source": "his post", "disclosure": {"mode": "open"}}
-      ],
-      "privateKnowledge": [],
-      "relationships": {"npc.bera-coil": 30, "npc.ren-hale": 45, "npc.mara-venn": 25},
-      "factionId": "faction.relay-office", "socialRole": "signalwright", "inventory": ["item.signal-lens", "item.calibration-key"],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.2},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.cinder-glassworks", "activity": "testing the replacement lens", "venue": true}]}
-    },
-    {
-      "id": "npc.edda-marr",
-      "name": "Edda Marr",
-      "summary": "Highwake's weather observer and keeper of the morning pressure trace.",
-      "persona": "Edda separates observation, forecast, and decision every time she speaks. She offers evidence freely and leaves boat authority with the people who bear it.",
-      "sex": "female", "age": 63,
-      "description": "A small older woman with a white braid, a slate-grey coat, and ink-stained fingertips.",
-      "personality": "Reflective, disciplined, and deeply attentive to how certainty is communicated.",
-      "personalityTemplate": "sage", "alignment": "ng",
-      "goals": ["Publish the squall forecast before crews commit", "Keep observation distinct from command"],
-      "knowledge": [
-        {"factId": "fact.weather.squall", "familiarity": "expert", "certainty": "confident", "source": "the morning pressure trace", "disclosure": {"mode": "open"}},
-        {"factId": "fact.weather.cliff", "familiarity": "firsthand", "certainty": "certain", "source": "years on Highwake", "disclosure": {"mode": "open"}},
-        {"factId": "fact.weather.cove", "familiarity": "firsthand", "certainty": "certain", "source": "years on Highwake", "disclosure": {"mode": "open"}},
-        {"factId": "fact.highwake.weather-house", "familiarity": "expert", "certainty": "certain", "source": "her post", "disclosure": {"mode": "open"}}
-      ],
-      "privateKnowledge": [],
-      "relationships": {"npc.mara-venn": 50, "npc.ren-hale": 55, "npc.pax-lorne": 20},
-      "factionId": "faction.relay-office", "socialRole": "weather observer", "inventory": ["item.weather-chart"],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.2},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.highwake-weather", "activity": "maintaining the weather trace", "venue": true}]}
-    },
-    {
-      "id": "npc.ren-hale",
-      "name": "Ren Hale",
-      "summary": "The Far Beacon keeper waiting for a correctly ordered replacement lens.",
-      "persona": "Ren is unhurried, observant, and hospitable. He trusts the shared checking process more than rank and will ask a newcomer to read back the pattern before he touches the shutters.",
-      "sex": "male", "age": 60,
-      "description": "A long-limbed keeper with brown skin, a salt-white beard, and a polished brass hand lamp.",
-      "personality": "Calm, methodical, and quietly pleased when another person catches an error.",
-      "personalityTemplate": "recluse", "alignment": "ng",
-      "goals": ["Return Far Beacon to a trustworthy clear-blue signal", "Teach the check rather than demand obedience"],
-      "knowledge": [
-        {"factId": "fact.highwake.beacon", "familiarity": "expert", "certainty": "certain", "source": "his post", "disclosure": {"mode": "open"}},
-        {"factId": "fact.glass.current-pattern", "familiarity": "expert", "certainty": "certain", "source": "the spring refit", "disclosure": {"mode": "open"}},
-        {"factId": "fact.highwake.cliff", "familiarity": "firsthand", "certainty": "certain", "source": "daily travel", "disclosure": {"mode": "open"}}
-      ],
-      "privateKnowledge": [],
-      "relationships": {"npc.edda-marr": 55, "npc.jalen-quill": 45},
-      "factionId": "faction.relay-office", "socialRole": "beacon keeper", "inventory": ["item.calibration-key"],
-      "autonomy": {"isPartyMember": false, "level": "reactive", "canLead": false, "heartbeatSeconds": 40, "replyDecayAlpha": 0.2},
-      "schedule": {"variance": 0, "slots": [{"phases": ["deep night", "dawn", "morning", "afternoon", "dusk", "night"], "locationId": "loc.highwake-beacon", "activity": "checking the beacon shutters", "venue": true}]}
+      "successEffects": [
+        { "kind": "setObjective", "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "done": true }
+      ]
     }
   ],
-  "monsters": [],
-  "items": [
-    {"id": "item.circuit-badge", "name": "Circuit Badge", "description": "A blue enamel badge authorizing its holder to sign public relay handoffs.", "kind": "quest", "properties": {"baseCostCp": 10}},
-    {"id": "item.tonic-crate", "name": "Blueglass Tonic Crate", "description": "A small clinic crate marked KEEP SHADED and fitted for an insulated wrap.", "kind": "quest", "properties": {"baseCostCp": 200}},
-    {"id": "item.insulated-wrap", "name": "Insulated Wrap", "description": "Layered felt and bright canvas sized for a clinic crate.", "kind": "tool", "properties": {"baseCostCp": 35}},
-    {"id": "item.ferry-token", "name": "Ferry Crew Token", "description": "A brass token cut to the service-gate latch and stamped with the cooperative mark.", "kind": "tool", "properties": {"baseCostCp": 20}},
-    {"id": "item.signal-lens", "name": "Clear-Blue Signal Lens", "description": "A paired beacon lens etched for Far Beacon and wrapped in felt.", "kind": "quest", "properties": {"baseCostCp": 180}},
-    {"id": "item.calibration-key", "name": "Calibration Key", "description": "A long brass key for signal test frames and beacon service gates.", "kind": "tool", "properties": {"baseCostCp": 40}},
-    {"id": "item.weather-chart", "name": "Morning Weather Chart", "description": "A signed pressure trace with the fast-squall threshold marked in blue.", "kind": "quest", "properties": {"baseCostCp": 5}},
-    {"id": "item.pump-seal", "name": "Copper Pump Seal", "description": "A measured replacement ring for the Highwake rain-tank pump.", "kind": "quest", "properties": {"baseCostCp": 60}},
-    {"id": "item.supply-ledger", "name": "Circuit Supply Ledger", "description": "A bound cargo ledger with current and crossed-through quay assignments.", "kind": "quest", "properties": {"baseCostCp": 15}},
-    {"id": "item.cargo-seal", "name": "Corrected Cargo Seal", "description": "A paper seal amended in green Relay House ink.", "kind": "quest", "properties": {"baseCostCp": 2}},
-    {"id": "item.repair-kit", "name": "Routekeeper Repair Kit", "description": "Cord, wedges, chalk, lamp wire, and compact hand tools in a blue roll.", "kind": "tool", "properties": {"baseCostCp": 80}},
-    {"id": "item.route-book", "name": "Wakeward Route Book", "description": "A weatherproof notebook with current signals, tide tables, and signed handoff pages.", "kind": "tool", "properties": {"baseCostCp": 25}}
+  "events": [
+    {
+      "id": "event.cold.wrap-at-relay",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.bellharbor-relay" },
+        { "kind": "questState", "questId": "quest.cold-passage", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.tonic-crate" },
+        { "kind": "factKnown", "factId": "fact.cold.wrap" }
+      ] },
+      "effects": [
+        { "kind": "transferItem", "itemId": "item.insulated-wrap", "from": null, "to": "pc.you" },
+        { "kind": "setObjective", "questId": "quest.cold-passage", "objectiveId": "collect-protected-tonic", "done": true }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.cold.deliver-at-clinic",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.lowmere-clinic" },
+        { "kind": "questState", "questId": "quest.cold-passage", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.tonic-crate" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.insulated-wrap" }
+      ] },
+      "effects": [
+        { "kind": "setObjective", "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "done": true },
+        { "kind": "setQuestState", "questId": "quest.cold-passage", "state": "complete" }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.second-bell.open-gate",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-ferry-yard" },
+        { "kind": "questState", "questId": "quest.second-bell", "state": "active" },
+        { "kind": "factKnown", "factId": "fact.ferry.second-bell" }
+      ] },
+      "effects": [
+        { "kind": "setExitState", "locationId": "loc.cinder-ferry-yard", "to": "loc.cinder-drydock", "state": "open" }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.second-bell.reach-drydock",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-drydock" },
+        { "kind": "questState", "questId": "quest.second-bell", "state": "active" }
+      ] },
+      "effects": [
+        { "kind": "setObjective", "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "done": true },
+        { "kind": "setQuestState", "questId": "quest.second-bell", "state": "complete" }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.clear-glass.collect-lens",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-glassworks" },
+        { "kind": "questState", "questId": "quest.clear-glass", "state": "active" },
+        { "kind": "factKnown", "factId": "fact.glass.current-pattern" }
+      ] },
+      "effects": [
+        { "kind": "transferItem", "itemId": "item.signal-lens", "from": null, "to": "pc.you" },
+        { "kind": "setObjective", "questId": "quest.clear-glass", "objectiveId": "collect-current-lens", "done": true }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.clear-glass.calibrate-beacon",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.highwake-beacon" },
+        { "kind": "questState", "questId": "quest.clear-glass", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.signal-lens" }
+      ] },
+      "effects": [
+        { "kind": "setObjective", "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "done": true },
+        { "kind": "setQuestState", "questId": "quest.clear-glass", "state": "complete" }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.true-bearing.post-bearing",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.bellharbor-quay" },
+        { "kind": "questState", "questId": "quest.true-bearing", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.weather-chart" },
+        { "kind": "factKnown", "factId": "fact.weather.squall" }
+      ] },
+      "effects": [
+        { "kind": "setObjective", "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "done": true },
+        { "kind": "setQuestState", "questId": "quest.true-bearing", "state": "complete" }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.shared-stores.collect-seal",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-drydock" },
+        { "kind": "questState", "questId": "quest.shared-stores", "state": "active" },
+        { "kind": "factKnown", "factId": "fact.stores.seal" }
+      ] },
+      "effects": [
+        { "kind": "transferItem", "itemId": "item.pump-seal", "from": null, "to": "pc.you" },
+        { "kind": "setObjective", "questId": "quest.shared-stores", "objectiveId": "collect-pump-seal", "done": true }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.shared-stores.restore-tank",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.highwake-weather" },
+        { "kind": "questState", "questId": "quest.shared-stores", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.pump-seal" }
+      ] },
+      "effects": [
+        { "kind": "setObjective", "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "done": true },
+        { "kind": "setQuestState", "questId": "quest.shared-stores", "state": "complete" }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.manifest.current-copy",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.bellharbor-relay" },
+        { "kind": "questState", "questId": "quest.missing-manifest", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.supply-ledger" }
+      ] },
+      "effects": [
+        { "kind": "revealCaseEvidence", "caseId": "case.missing-manifest", "factId": "casefact.manifest.current-copy" },
+        { "kind": "discloseFacts", "factIds": ["casefact.manifest.current-copy"] }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.manifest.old-copy",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-drydock" },
+        { "kind": "questState", "questId": "quest.missing-manifest", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.supply-ledger" }
+      ] },
+      "effects": [
+        { "kind": "revealCaseEvidence", "caseId": "case.missing-manifest", "factId": "casefact.manifest.old-copy" },
+        { "kind": "discloseFacts", "factIds": ["casefact.manifest.old-copy"] }
+      ],
+      "once": "campaign"
+    },
+    {
+      "id": "event.manifest.green-ink",
+      "when": "onEnterLocation",
+      "trigger": { "allOf": [
+        { "kind": "atLocation", "locationId": "loc.cinder-drydock" },
+        { "kind": "questState", "questId": "quest.missing-manifest", "state": "active" },
+        { "kind": "hasItem", "entityId": "pc.you", "itemId": "item.supply-ledger" },
+        { "kind": "factKnown", "factId": "fact.manifest.crate17" }
+      ] },
+      "effects": [
+        { "kind": "revealCaseEvidence", "caseId": "case.missing-manifest", "factId": "casefact.manifest.green-ink" },
+        { "kind": "discloseFacts", "factIds": ["casefact.manifest.green-ink"] }
+      ],
+      "once": "campaign"
+    }
   ],
-  "spells": [],
-  "houseRules": {},
-  "regions": [
-    {"id": "bellharbor", "name": "Bellharbor", "summary": "The administrative harbor and common market.", "danger": 0, "crowd": 2, "eventRate": 0, "ambientPool": [], "threatPool": [], "threatShare": 0},
-    {"id": "lowmere", "name": "Lowmere", "summary": "Clinic, terraces, and a tide-bound road.", "danger": 0, "crowd": 1, "eventRate": 0, "ambientPool": [], "threatPool": [], "threatShare": 0},
-    {"id": "cinderhook", "name": "Cinderhook", "summary": "Ferry repair yards and signal glassworks.", "danger": 0, "crowd": 1, "eventRate": 0, "ambientPool": [], "threatPool": [], "threatShare": 0},
-    {"id": "highwake", "name": "Highwake", "summary": "Weather station, cliff path, and the outer beacon.", "danger": 1, "crowd": 0, "eventRate": 0, "ambientPool": [], "threatPool": [], "threatShare": 0}
-  ],
-  "seededRoutines": false,
-  "formativeMemories": false,
-  "frontierExpansion": false,
-  "campLocation": {"name": "Circuit Camp", "description": "A sheltered public rest site with a shared kettle, dry rope racks, and space for route books under canvas."},
-  "constitution": {
-    "toggles": {"scenes": true},
-    "danger": 0,
-    "defeatOutcomes": [],
-    "useGenericDefeatOutcomes": false
-  }
+  "mechanics": { "travelMinuteJitter": 2 }
 }

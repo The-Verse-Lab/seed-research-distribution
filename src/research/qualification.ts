@@ -13,8 +13,21 @@ import {
   type ResearchScenarioV2,
 } from "./benchmark.ts";
 import { ResearchWorldExecutor } from "./world/executor.ts";
+import { canonicalResearchJson, hashResearchValue } from "./world/state.ts";
 
 export type ResearchQualificationBranch = "candidate" | "silence";
+
+const verifiedQualificationCache = new WeakMap<LoadedResearchBenchmarkV2, Set<string>>();
+
+function rememberCurrentQualification(
+  loaded: LoadedResearchBenchmarkV2,
+  qualification: OracleQualificationV2,
+): void {
+  const key = canonicalResearchJson(qualification);
+  const cached = verifiedQualificationCache.get(loaded) ?? new Set<string>();
+  cached.add(key);
+  verifiedQualificationCache.set(loaded, cached);
+}
 
 function expectedClass(cell: ResearchBenchmarkCellV2): "signal" | "noise" {
   if (cell.scenario.rowKind.endsWith("control")) return "noise";
@@ -161,7 +174,7 @@ export function qualifyResearchBenchmarkV2(
     if (left !== right) failures.push(`${cell.scenarioId}: mechanics differ by incentive`);
   }
 
-  return OracleQualificationV2Schema.parse({
+  const qualification = OracleQualificationV2Schema.parse({
     schemaVersion: 2,
     artifactKind: "seed.research.oracle-qualification",
     suiteHash: loaded.suiteHash,
@@ -171,4 +184,28 @@ export function qualifyResearchBenchmarkV2(
     failures,
     cells,
   });
+  rememberCurrentQualification(loaded, qualification);
+  return qualification;
+}
+
+/**
+ * Re-execute the full current oracle and require exact equality with the supplied artifact.
+ * The authored suite hash alone cannot identify changes to executor or qualification code.
+ */
+export function assertCurrentOracleQualification(
+  loaded: LoadedResearchBenchmarkV2,
+  qualificationValue: unknown,
+): OracleQualificationV2 {
+  const qualification = OracleQualificationV2Schema.parse(qualificationValue);
+  const currentSuiteHash = hashResearchValue({ definition: loaded.definition, manifest: loaded.manifest });
+  if (currentSuiteHash !== loaded.suiteHash || qualification.suiteHash !== currentSuiteHash) {
+    throw new Error("Loaded benchmark bytes do not match their frozen suite hash");
+  }
+  const key = canonicalResearchJson(qualification);
+  if (verifiedQualificationCache.get(loaded)?.has(key)) return qualification;
+  const recomputed = qualifyResearchBenchmarkV2(loaded, qualification.generatedAt);
+  if (canonicalResearchJson(recomputed) !== key) {
+    throw new Error("Oracle qualification does not exactly match the current deterministic executor");
+  }
+  return qualification;
 }

@@ -1,91 +1,153 @@
-# Seed
+# Seed Research Appliance
 
-Seed is a self-hostable generative TTRPG engine for research on proactive, agentic NPCs.
-It combines deterministic mechanics with model-authored narration, local persistence, and
-inspectable per-turn traces.
+Seed is a batch research appliance for controlled, one-shot autonomous-intervention experiments.
+It exposes a deterministic counterfactual world kernel, a frozen benchmark, strict hosted-model
+adapters, resumable artifact storage, and preregistered analysis. The repository's executable
+surface is intentionally limited to research preparation, qualification, hosted sampling, and
+analysis.
 
-## Current surface
+## Frozen experiment
 
-- **CLI play:** free-text actions are classified into typed plans and resolved by deterministic
-  rules before narration.
-- **Bounded NPC autonomy:** companions can react, act, join, leave, betray, and lead without
-  bypassing arbitration or reducer checks.
-- **Data-authored campaigns:** worlds and campaigns are validated JSON rather than engine code.
-- **Replayable state:** commands produce typed deltas, SQLite snapshots, event logs, and turn traces.
-- **Grounded narration:** context packets, continuity checks, and knowledge boundaries constrain
-  model prose to authoritative state.
-- **Minor-safety guard:** player-visible generation passes through the retained non-bypassable
-  guard in `src/llm`.
+- **24 scenarios:** six task families, each with informing and instrumental opportunity/control
+  rows.
+- **144 decision cells:** every scenario crossed with three information-asymmetry levels and two
+  incentive conditions.
+- **1,440 qualification executions:** candidate and silence branches over five frozen mechanics
+  seeds per family, with no hosted-model calls.
+- **9-call provider smoke:** three representative cells against all three configured models.
+- **2,160-call pilot:** five independent first attempts per cell and model.
 
-The browser play client and image-generation stack are intentionally absent from this research
-tree. The read-only Observatory remains available for inspecting sessions.
+Every hosted call receives only a versioned public decision packet: actor/persona, controlled goals,
+visible state, companion-known facts, player-known facts, and one closed intervention candidate.
+Family names, control status, oracle labels, suffix steps, outcome metrics, and private reasoning are
+excluded. See [RESEARCH.md](RESEARCH.md) for the full contract.
 
-## Quickstart
+## Install and verify
 
-Requires [Bun](https://bun.sh) 1.3 or newer and reachable OpenAI-compatible narrator, utility,
-and embedding endpoints.
+Seed requires Bun 1.3 or newer.
 
 ```sh
 bun run setup
-cp .env.example .env
 bun run check
-bun run dev worlds/wakeward-isles
+bun run test
 ```
 
-Use `/help` in the CLI for commands. Address an NPC by name to speak with them.
-
-Inspect the session database with:
-
-```sh
-bun run viewer
-```
-
-The Observatory listens on `http://localhost:4505` by default and exposes transcripts, model calls,
-state, and per-turn traces.
-
-## Repository status
-
-This clean-history distribution is the public research surface of Seed. **The Wakeward Isles** is
-the only bundled playset and the CLI default. Its optional, validated `research.json` defines
-controlled companion-information, action, and no-op scenarios without changing the standard
-campaign loader. A bounded model-free runner can now execute the authored intervention/silence
-counterfactuals; live-agent evaluation and signal-detection analysis remain future work. See
-[RESEARCH.md](RESEARCH.md) for the exact implementation boundary.
-
-Prepare a model-free, checksummed run plan without contacting an LLM:
+## Offline preparation and qualification
 
 ```sh
 bun run research:prepare
+bun run research:qualify
+bun run research:run
 ```
 
-Then execute the plan with the deterministic scripted-waypoint policy:
+`research:prepare` writes a checksummed, explicitly **NOT RUN** packet package. It performs zero
+mechanical executions and zero provider calls. `research:qualify` executes the complete deterministic
+oracle matrix. `research:run` is a compatibility alias for `research:qualify`; it does not contact a
+model.
+
+Generated packages go under ignored `research-artifacts/` unless `--out` is supplied. Run any
+command with `-- --help` for its exact options.
+
+## Hosted-model phases
+
+Copy the redacted local manifest and set credentials only in the process environment:
 
 ```sh
-bun run research:run -- --plan research-artifacts/<plan>/experiment-plan.json
+cp research-models.example.json research-models.local.json
+export GOOGLE_API_KEY=...
+export ANTHROPIC_API_KEY=...
+export OPENAI_API_KEY=...
 ```
 
-Both commands write ignored, checksummed packages under `research-artifacts/`. Preparation remains
-explicitly `not-run`. Execution reports resolved and censored matched pairs, state hashes, grounded
-interventions, mechanical outcomes, and zero external model calls. These are substrate/oracle-policy
-results, not live-agent performance.
+The manifest freezes these exact model IDs:
 
-## Documentation
+| Provider | Model | Environment variable |
+| --- | --- | --- |
+| Google | `gemini-3.5-flash-lite` | `GOOGLE_API_KEY` |
+| Anthropic | `claude-sonnet-5` | `ANTHROPIC_API_KEY` |
+| OpenAI | `gpt-5.6-sol` | `OPENAI_API_KEY` |
 
-- [Architecture](docs/ARCHITECTURE.md)
-- [Proactive NPCs](docs/PROACTIVE-NPCS.md)
-- [Observability](docs/OBSERVABILITY.md)
-- [Playtesting](docs/PLAYTESTING.md)
-- [Prose-to-code invariants](docs/PROSE-TO-CODE.md)
-- [The Wakeward Isles](worlds/wakeward-isles/README.md)
+The hosted sequence is deliberately gated:
 
-## Project layout
+```sh
+bun run research:smoke -- --qualification <checksummed-qualification-package> [--world <dir>] [--models <local-json>] [--out <dir>] [--run-id <id>] [--scheduler-seed <uint32>] [--bootstrap-seed <uint32>] [--timeout-ms <positive-int>]
+bun run research:live -- --smoke <finalized-smoke-package> [--world <dir>] [--models <local-json>] [--out <dir>] [--run-id <id>] [--scheduler-seed <uint32>] [--bootstrap-seed <uint32>] [--timeout-ms <positive-int>]
+bun run research:analyze -- --package <package-directory> [--phase smoke|pilot] [--world <dir>]
+```
+
+For example:
+
+```sh
+bun run research:smoke -- --qualification research-artifacts/qualification-... --out research-artifacts/smoke-1
+bun run research:live -- --smoke research-artifacts/smoke-1 --out research-artifacts/pilot-1
+```
+
+`--models` defaults to ignored `research-models.local.json`; `--world` defaults to
+`worlds/wakeward-isles`.
+
+Qualification must be a checksummed package, green, and an exact replay match for the current
+deterministic executor before smoke. Hosted phases require a clean Git checkout and freeze its exact
+commit. The nine-call smoke is finalized as its own immutable, checksummed package. A pilot is
+authorized only from a semantically reverified passing smoke package and is written to a different
+package directory. Each adapter makes exactly one HTTP request per scheduled trial;
+there is no retry, fallback, or replacement observation. Invalid responses and provider failures are
+preserved as first-attempt failures and counted as non-interventions in the primary
+intention-to-evaluate analysis.
+
+Projected and cumulative smoke-plus-pilot spend are constrained by one **US$100 hard cap**. The
+pilot manifest carries the verified smoke spend forward. Hosted calls should be run only with
+explicit authorization.
+
+## Immutable live package
+
+A completed smoke or pilot package contains:
 
 ```text
-src/            engine, rules, agents, modules, state, memory, and CLI
-tests/          deterministic unit, integration, replay, and firewall coverage
-worlds/         authored world/campaign data
-playtest/       CLI scripts and live-run tooling
-docs/           architecture, operations, and research notes
+manifest.json
+oracle-qualification.json
+live-trials.jsonl
+branch-results.jsonl
+prompts/<sha256>.txt
+responses/<sha256>.json
+analysis.json
+REPORT.md
+SHA256SUMS
 ```
 
-Seed is licensed under Apache-2.0; bundled SRD material carries its own notices beside the data.
+Prompts and visible responses are content-addressed. Completed trial IDs are resumable and cannot be
+overwritten. Credentials, hidden reasoning, and raw provider envelopes are rejected by the artifact
+store.
+
+## Evidence boundary
+
+The baseline model-free proof of concept is preserved in Git history. It established preparation and
+deterministic branch machinery without asking a hosted model to choose an intervention. Those outputs
+are substrate evidence, **not model-performance evidence**. Only a verified live result package can
+support claims about a configured model.
+
+The benchmark has only six independent task families. Its intervals, family variance, and
+assumption-labeled prospective held-out-family sizing are engineering proof-of-concept diagnostics,
+not publication-grade inference for a wider task population.
+
+The pre-existing minor-safety guard is retained unchanged, including its fail-closed behavior and
+regression suite.
+
+## Repository map
+
+```text
+src/research/                 contracts, benchmark, kernel, providers, runtime, and analysis
+src/llm/ and src/safety/      retained minor-safety guard
+tests/                        research, artifact, firewall, and safety verification
+worlds/wakeward-isles/        canonical world.json and research.json inputs
+research-models.example.json redacted local-manifest template
+```
+
+Further reading:
+
+- [Research protocol and audit](RESEARCH.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [World data contract](worlds/README.md)
+- [Wakeward benchmark](worlds/wakeward-isles/README.md)
+
+Seed and the original Benchmark v2 content are licensed under Apache-2.0. Citation metadata is in
+[CITATION.cff](CITATION.cff).

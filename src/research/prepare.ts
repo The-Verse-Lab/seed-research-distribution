@@ -1,122 +1,94 @@
 #!/usr/bin/env bun
-/**
- * Prepare a checksummed research-plan package without running a model or an episode.
- *
- * @author Runkai Zhang
- */
-import { execFileSync } from "node:child_process";
+/** Freeze exact Benchmark v2 packets and provenance without executing mechanics or models. */
 import { readFile } from "node:fs/promises";
-import { basename, isAbsolute, relative, resolve } from "node:path";
+import { resolve } from "node:path";
+import { loadResearchBenchmarkV2FromDir } from "./benchmark.ts";
 import {
-  buildResearchPreparation,
-  researchSourceFile,
-  writeResearchPreparationArtifacts,
-} from "./artifacts.ts";
-import { loadResearchSuiteFromDir } from "./scenario.ts";
+  buildResearchPreparationV2,
+  researchPreparationSourceV2,
+  writeResearchPreparationV2,
+} from "./preparation.ts";
+import {
+  DEFAULT_RESEARCH_WORLD_DIR,
+  defaultArtifactDirectory,
+  generatedRunId,
+  portablePath,
+  repositoryProvenance,
+  valueAfter,
+} from "./cli-support.ts";
 
-interface Args {
+export interface ResearchPreparationCliArgs {
   worldDir: string;
   outputDir?: string;
   runId?: string;
   help: boolean;
 }
 
-const USAGE = `Usage: bun run research:prepare [world-dir] [--out <directory>] [--run-id <id>]
+const USAGE = `Usage: bun run research:prepare -- [options]
 
-Builds a model-free, checksummed experiment preparation package. It does not run episodes,
-call an LLM, score outcomes, or claim a research result.
+Freeze the 144 exact public packets in a checksummed, explicitly NOT RUN package.
+This command makes zero provider calls and executes zero mechanical branches.
 
-Defaults:
-  world-dir  worlds/wakeward-isles
-  --out      research-artifacts/<generated-run-id>
+Options:
+  --world <directory>  default worlds/wakeward-isles
+  --out <directory>    default research-artifacts/prep-<timestamp>
+  --run-id <id>        optional portable output identifier
+  --help
 `;
 
-function valueAfter(argv: string[], index: number, flag: string): string {
-  const value = argv[index + 1];
-  if (!value || value.startsWith("--")) throw new Error(`${flag} requires a value`);
-  return value;
-}
-
-export function parseResearchPreparationArgs(argv: string[]): Args {
-  const args: Args = { worldDir: "worlds/wakeward-isles", help: false };
-  let positional = false;
+export function parseResearchPreparationArgs(argv: readonly string[]): ResearchPreparationCliArgs {
+  const parsed: ResearchPreparationCliArgs = { worldDir: DEFAULT_RESEARCH_WORLD_DIR, help: false };
   for (let index = 0; index < argv.length; index++) {
     const arg = argv[index]!;
-    if (arg === "--help" || arg === "-h") args.help = true;
+    if (arg === "--help" || arg === "-h") parsed.help = true;
+    else if (arg === "--world") {
+      parsed.worldDir = valueAfter(argv, index, arg);
+      index++;
+    } else if (arg.startsWith("--world=")) parsed.worldDir = arg.slice(8);
     else if (arg === "--out") {
-      args.outputDir = valueAfter(argv, index, arg);
+      parsed.outputDir = valueAfter(argv, index, arg);
       index++;
-    } else if (arg.startsWith("--out=")) args.outputDir = arg.slice("--out=".length);
+    } else if (arg.startsWith("--out=")) parsed.outputDir = arg.slice(6);
     else if (arg === "--run-id") {
-      args.runId = valueAfter(argv, index, arg);
+      parsed.runId = valueAfter(argv, index, arg);
       index++;
-    } else if (arg.startsWith("--run-id=")) args.runId = arg.slice("--run-id=".length);
-    else if (arg.startsWith("-")) throw new Error(`unknown flag ${arg}`);
-    else if (!positional) {
-      args.worldDir = arg;
-      positional = true;
-    } else throw new Error(`unexpected positional argument ${arg}`);
+    } else if (arg.startsWith("--run-id=")) parsed.runId = arg.slice(9);
+    else throw new Error(`Unknown research:prepare argument: ${arg}`);
   }
-  if (args.outputDir === "") throw new Error("--out requires a value");
-  if (args.runId === "") throw new Error("--run-id requires a value");
-  return args;
+  if (!parsed.worldDir || parsed.outputDir === "" || parsed.runId === "") throw new Error("CLI paths and IDs must be non-empty");
+  return parsed;
 }
 
-function gitText(args: string[]): string | null {
-  try {
-    return execFileSync("git", args, {
-      cwd: process.cwd(),
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
-  } catch {
-    return null;
-  }
-}
-
-function portablePath(path: string): string {
-  const repoRelative = relative(process.cwd(), path).replaceAll("\\", "/");
-  return repoRelative.startsWith("../") || isAbsolute(repoRelative) ? basename(path) : repoRelative;
-}
-
-async function main(): Promise<void> {
-  const args = parseResearchPreparationArgs(process.argv.slice(2));
+export async function runResearchPreparationCli(
+  argv: readonly string[],
+  generatedAt = new Date().toISOString(),
+): Promise<void> {
+  const args = parseResearchPreparationArgs(argv);
   if (args.help) {
     process.stdout.write(USAGE);
     return;
   }
-
-  const generatedAt = new Date().toISOString();
-  const runId = args.runId ?? `prep-${generatedAt.replace(/[:.]/g, "-")}`;
   const worldDir = resolve(args.worldDir);
-  const outputDir = resolve(args.outputDir ?? "research-artifacts", args.outputDir ? "" : runId);
-  const loaded = await loadResearchSuiteFromDir(worldDir);
-  const sourceFiles = await Promise.all(
-    ["world.json", "campaign.json", "research.json"].map(async (name) => {
-      const path = resolve(worldDir, name);
-      return researchSourceFile(portablePath(path), await readFile(path));
-    }),
-  );
-  const commit = gitText(["rev-parse", "HEAD"]);
-  const status = gitText(["status", "--porcelain", "--untracked-files=normal"]);
-  const artifact = buildResearchPreparation(loaded, {
-    runId,
+  const runId = args.runId ?? generatedRunId("prep", generatedAt);
+  const outputDir = resolve(args.outputDir ?? defaultArtifactDirectory(runId));
+  const loaded = await loadResearchBenchmarkV2FromDir(worldDir);
+  const sourceFiles = await Promise.all(["world.json", "research.json"].map(async (name) => {
+    const path = resolve(worldDir, name);
+    return researchPreparationSourceV2(portablePath(path), await readFile(path));
+  }));
+  const repository = repositoryProvenance();
+  const artifact = buildResearchPreparationV2(loaded, {
     generatedAt,
-    worldDir: portablePath(worldDir),
     sourceFiles,
-    repository: { commit, dirty: status === null ? null : status.length > 0 },
-    runtime: { bun: process.versions.bun ?? null, node: process.version },
+    repositoryCommit: repository.commit,
+    repositoryDirty: repository.dirty,
+    bun: process.versions.bun ?? null,
+    node: process.version,
   });
-  const paths = await writeResearchPreparationArtifacts(outputDir, artifact);
-
+  const paths = await writeResearchPreparationV2(outputDir, loaded, artifact);
   console.log(`Prepared ${artifact.planId}`);
-  console.log(`Status: NOT RUN (0 model calls, 0 outcomes)`);
-  console.log(
-    `Design: ${artifact.design.conditionCellCount} condition cells · ${artifact.design.plannedEpisodeCount} planned episodes`,
-  );
-  console.log(`Artifacts: ${paths.directory}`);
+  console.log("Status: NOT RUN (0 provider calls; 0 mechanical executions)");
+  console.log(`Packets: ${artifact.design.conditionCellCount}; artifacts: ${paths.directory}`);
 }
 
-if (import.meta.main) {
-  await main();
-}
+if (import.meta.main) await runResearchPreparationCli(process.argv.slice(2));

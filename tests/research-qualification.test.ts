@@ -1,7 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import { fileURLToPath } from "node:url";
 import { loadResearchBenchmarkV2FromDir } from "../src/research/benchmark.ts";
-import { qualifyResearchBenchmarkV2 } from "../src/research/qualification.ts";
+import {
+  assertCurrentOracleQualification,
+  qualifyResearchBenchmarkV2,
+} from "../src/research/qualification.ts";
 
 const DIR = fileURLToPath(new URL("../worlds/wakeward-isles", import.meta.url));
 
@@ -35,10 +38,32 @@ describe("Benchmark v2 oracle qualification", () => {
     expect(controls.every((cell) => cell.branches.every((branch) => branch.taskSuccess))).toBe(true);
   });
 
+  test("classifies preregistered task-dependent stops without censoring the cell", async () => {
+    const loaded = await loadResearchBenchmarkV2FromDir(DIR);
+    const result = qualifyResearchBenchmarkV2(loaded, "2026-08-16T00:00:00.000Z");
+    const branches = result.cells.flatMap((cell) => cell.branches);
+    const expectedStops = branches.filter((branch) => branch.status === "expected-task-stop");
+    expect(expectedStops).toHaveLength(100);
+    expect(expectedStops.every((branch) =>
+      branch.taskSuccess === false &&
+      branch.groundingAccepted === true &&
+      /^suffix\[\d+\]:/.test(branch.failureReason ?? "")
+    )).toBe(true);
+    expect(branches.filter((branch) => branch.status === "structural-censor")).toEqual([]);
+  });
+
   test("is deterministic apart from declared generation time", async () => {
     const loaded = await loadResearchBenchmarkV2FromDir(DIR);
     const first = qualifyResearchBenchmarkV2(loaded, "2026-08-16T00:00:00.000Z");
     const second = qualifyResearchBenchmarkV2(loaded, "2026-08-17T00:00:00.000Z");
     expect({ ...first, generatedAt: "" }).toEqual({ ...second, generatedAt: "" });
+  });
+
+  test("invalidates a cached qualification when caller-owned benchmark bytes mutate", async () => {
+    const loaded = await loadResearchBenchmarkV2FromDir(DIR);
+    const result = qualifyResearchBenchmarkV2(loaded, "2026-08-16T00:00:00.000Z");
+    expect(assertCurrentOracleQualification(loaded, result)).toEqual(result);
+    loaded.manifest.actor.persona = `${loaded.manifest.actor.persona} altered`;
+    expect(() => assertCurrentOracleQualification(loaded, result)).toThrow(/frozen suite hash/);
   });
 });

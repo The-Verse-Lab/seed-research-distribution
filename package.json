@@ -1,30 +1,24 @@
 {
-  "name": "seed",
+  "name": "seed-research-appliance",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "A self-hostable generative TTRPG engine with proactive, agentic NPCs.",
+  "description": "A controlled research appliance for one-shot autonomous-intervention experiments.",
   "author": "Runkai Zhang",
   "license": "Apache-2.0",
   "engines": {
     "bun": ">=1.3.0"
   },
-  "bin": {
-    "seed": "src/cli/main.ts"
-  },
   "scripts": {
     "setup": "bun install --frozen-lockfile",
-    "check": "bun run typecheck && bun test",
-    "dev": "bun run src/cli/main.ts",
-    "start": "bun run src/cli/main.ts",
-    "viewer": "bun run src/viewer/main.ts",
-    "typecheck": "tsc --noEmit",
+    "check": "tsc --noEmit && bun test",
     "test": "bun test",
     "research:prepare": "bun run src/research/prepare.ts",
-    "research:run": "bun run src/research/run.ts",
-    "playtest:sweep": "bun run playtest/auto/run.ts",
-    "playtest:triage": "bun run playtest/auto/triage.ts",
-    "playtest:loop": "bash playtest/auto/loop.sh"
+    "research:qualify": "bun run src/research/qualify.ts",
+    "research:run": "bun run src/research/qualify.ts",
+    "research:smoke": "bun run src/research/smoke.ts",
+    "research:live": "bun run src/research/live.ts",
+    "research:analyze": "bun run src/research/analyze.ts"
   },
   "dependencies": {
     "zod": "^3.23.8"

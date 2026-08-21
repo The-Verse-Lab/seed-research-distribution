@@ -4,14 +4,9 @@
 setup = "bun run setup"
 run_mode = "concurrent"
 
-[scripts.run.viewer]
-available_in = [ "local" ]
-command = "SEED_VIEWER_PORT=$CONDUCTOR_PORT bun run viewer"
-default = true
-icon = "monitor"
-
 [scripts.run.test]
 command = "bun test --watch"
+default = true
 icon = "test-tube"
 
 [scripts.run.check]

@@ -1,350 +1,241 @@
-/**
- * Distribution firewall for the research extraction.
- *
- * Executable code, tests, configuration, active documentation, authored worlds, and playtest
- * assets must stay free of retired product surfaces and the replaced bundled campaign.
- */
-import { describe, expect, test } from "bun:test";
+/** Distribution firewall for the research-only experiment appliance. */
+import { execFileSync } from "node:child_process";
 import { readdir, readFile, stat } from "node:fs/promises";
-import { relative, resolve } from "node:path";
+import { dirname, extname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadPlaySetFromDir } from "../src/content/loader.ts";
-import { loadResearchSuiteFromDir } from "../src/research/scenario.ts";
+import { describe, expect, test } from "bun:test";
+import {
+  expandResearchBenchmarkCells,
+  loadResearchBenchmarkV2FromDir,
+} from "../src/research/benchmark.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
-const SELF = "tests/research-firewall.test.ts";
-const retiredWorldTitle = ["Sundered", "Reach"].join(" ");
-const retiredWorldPath = ["worlds", ["sundered", "reach"].join("-")].join("/");
-const bundledWorldSlug = ["wakeward", "isles"].join("-");
-
-const safetyAllowlist = new Set([
-  "src/llm/safety.ts",
-  "src/llm/guarded-gateway.ts",
-  "src/safety/minor.ts",
-  "tests/safety.test.ts",
-  "tests/guarded-gateway.test.ts",
-  "playtest/scripts/safety-matrix.ts",
-  "playtest/scripts/safety-engine-probe.txt",
-]);
-
-const removedPaths = [
-  ["src", "modules", ["inti", "macy"].join("")].join("/"),
-  ["src", "rules", `${["inti", "macy"].join("")}.ts`].join("/"),
-  ["src", "rules", `${["preda", "tion"].join("")}.ts`].join("/"),
-  ["src", "rules", `${["preda", "tion-mark"].join("")}.ts`].join("/"),
-  ["src", "safety", `${["player", "coercion"].join("-")}.ts`].join("/"),
-  ["src", "rules", "claims.ts"].join("/"),
-  ["src", "rules", "opportunity.ts"].join("/"),
-  ["src", "engine", "resolvers", "claims.ts"].join("/"),
-  ["src", "web"].join("/"),
-  ["src", "web-ui"].join("/"),
-  ["src", "art"].join("/"),
-  ["src", "analytics"].join("/"),
-  ["playtest", "run-live.sh"].join("/"),
-  ["playtest", "bc-live.txt"].join("/"),
-  ["playtest", "bc-long.txt"].join("/"),
-  ["playtest", "bc-reload.txt"].join("/"),
-  ["playtest", "thistle-short.txt"].join("/"),
-  "workflows",
-];
-
-const retiredIdentifiers = [
-  ["intimate", "Advance"].join(""),
-  ["consensual", "Action"].join(""),
-  ["consensual", "Scene"].join(""),
-  ["intimacy", "FocusId"].join(""),
-  ["open", "Predation"].join(""),
-  ["predator", "Style"].join(""),
-  ["predator", "Targets"].join(""),
-  ["predator", "Share"].join(""),
-  ["predator", "Pool"].join(""),
-  ["predation", "Mark"].join(""),
-  ["exposureInvites", "Predation"].join(""),
-  ["vulnerabilityInvites", "Predation"].join(""),
-  ["requires", "AdultLayer"].join(""),
-  ["requiresAllParticipants", "Adult"].join(""),
-  ["requiresExplicitAdult", "Ages"].join(""),
-  ["content", "Profile"].join(""),
-  ["allowNon", "Consensual"].join(""),
-  ["coercive", "Courtship"].join(""),
-  ["relationship", "Stats"].join(""),
-  ["adjustRelationship", "Stat"].join(""),
-  ["relationshipStat", "Changed"].join(""),
-  ["coercion", "Risk"].join(""),
-  ["SEED", "INTIMACY"].join("_"),
-  ["N", "SFW"].join(""),
-  ["Client", "Msg"].join(""),
-  ["Server", "Msg"].join(""),
-  ["Action", "Msg"].join(""),
-  ["OpenShop", "Msg"].join(""),
-  ["open", "shop"].join("-"),
-  ["guidance", "Of"].join(""),
-  ["Character", "Art"].join(""),
-  ["SEED", "GUARDRAIL", "DISABLED"].join("_"),
-];
-
-const retiredContentWords = [
-  ["ad", "ult"].join(""),
-  ["inti", "macy"].join(""),
-  ["inti", "mate"].join(""),
-  ["pred", "ator"].join(""),
-  ["pred", "atory"].join(""),
-  ["preda", "tion"].join(""),
-  ["rom", "ance"].join(""),
-  ["N", "SFW"].join(""),
-  ["sex", "ual"].join(""),
-  ["sex", "ualized"].join(""),
-  ["ero", "tic"].join(""),
-  ["nu", "de"].join(""),
-  ["nu", "dity"].join(""),
-  ["na", "ked"].join(""),
-  ["sed", "uce"].join(""),
-  ["seduc", "tion"].join(""),
-  ["seduc", "tive"].join(""),
-  ["lu", "st"].join(""),
-  ["lust", "ful"].join(""),
-  ["arou", "sal"].join(""),
-  ["org", "asm"].join(""),
-  ["ra", "pe"].join(""),
-  ["rap", "ed"].join(""),
-  ["rap", "ist"].join(""),
-  ["bro", "thel"].join(""),
-  ["pros", "titute"].join(""),
-  ["prosti", "tution"].join(""),
-  ["cour", "tesan"].join(""),
-  ["lib", "ido"].join(""),
-  ["fet", "ish"].join(""),
-  ["ki", "nk"].join(""),
-  ["po", "rn"].join(""),
-  ["porno", "graphic"].join(""),
-  ["in", "cest"].join(""),
-  ["vir", "gin"].join(""),
-  ["virgin", "ity"].join(""),
-  ["gen", "ital"].join(""),
-  ["bre", "ast"].join(""),
-  ["who", "re"].join(""),
-  ["fu", "ck"].join(""),
-  ["fuck", "ing"].join(""),
-];
-
-const textExtensions = new Set([
-  ".ts",
-  ".tsx",
-  ".js",
-  ".json",
-  ".md",
-  ".txt",
-  ".yml",
-  ".yaml",
-  ".sh",
-  ".toml",
-  ".py",
-  ".cff",
-  ".example",
-  "",
-]);
-
-async function exists(path: string): Promise<boolean> {
-  try {
-    await stat(path);
-    return true;
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return false;
-    throw error;
-  }
-}
 
 async function filesBelow(path: string): Promise<string[]> {
-  let info;
-  try {
-    info = await stat(path);
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
-    throw error;
-  }
+  const info = await stat(path).catch(() => null);
+  if (!info) return [];
   if (info.isFile()) return [path];
-  const out: string[] = [];
+  const files: string[] = [];
   for (const entry of await readdir(path, { withFileTypes: true })) {
     const child = resolve(path, entry.name);
-    if (entry.isDirectory()) out.push(...(await filesBelow(child)));
-    else if (entry.isFile()) out.push(child);
+    if (entry.isDirectory()) files.push(...await filesBelow(child));
+    else if (entry.isFile()) files.push(child);
   }
-  return out;
+  return files;
 }
 
-function extensionOf(path: string): string {
-  const at = path.lastIndexOf(".");
-  return at < 0 ? "" : path.slice(at);
+function repositoryPaths(paths: readonly string[]): string[] {
+  return paths.map((path) => relative(ROOT, path).replaceAll("\\", "/")).sort();
 }
 
-function escaped(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function git(args: readonly string[]): string {
+  return execFileSync("git", [...args], { cwd: ROOT, encoding: "utf8" }).trim();
 }
 
-describe("research distribution firewall", () => {
-  test("retired implementation directories and files stay deleted", async () => {
-    const present: string[] = [];
-    for (const path of removedPaths) {
-      if (await exists(resolve(ROOT, path))) present.push(path);
+const EXPECTED_SOURCE_FILES = [
+  "src/llm/gateway.ts",
+  "src/llm/normalize.ts",
+  "src/llm/safety.ts",
+  "src/llm/types.ts",
+  "src/research/analysis.ts",
+  "src/research/analyze.ts",
+  "src/research/benchmark.ts",
+  "src/research/cli-support.ts",
+  "src/research/contracts.ts",
+  "src/research/index.ts",
+  "src/research/live.ts",
+  "src/research/live/artifact-store.ts",
+  "src/research/live/budget.ts",
+  "src/research/live/finalize.ts",
+  "src/research/live/gates.ts",
+  "src/research/live/integrity.ts",
+  "src/research/live/manifest.ts",
+  "src/research/live/pricing.ts",
+  "src/research/live/records.ts",
+  "src/research/live/run.ts",
+  "src/research/live/scheduler.ts",
+  "src/research/live/trial.ts",
+  "src/research/preparation.ts",
+  "src/research/prepare.ts",
+  "src/research/prompt.ts",
+  "src/research/providers/anthropic.ts",
+  "src/research/providers/google.ts",
+  "src/research/providers/index.ts",
+  "src/research/providers/openai.ts",
+  "src/research/providers/shared.ts",
+  "src/research/qualification.ts",
+  "src/research/qualify.ts",
+  "src/research/report.ts",
+  "src/research/smoke.ts",
+  "src/research/statistics.ts",
+  "src/research/world/commands.ts",
+  "src/research/world/deltas.ts",
+  "src/research/world/events.ts",
+  "src/research/world/executor.ts",
+  "src/research/world/index.ts",
+  "src/research/world/reducer.ts",
+  "src/research/world/replay.ts",
+  "src/research/world/schema.ts",
+  "src/research/world/state.ts",
+  "src/safety/minor.ts",
+].sort();
+
+const EXPECTED_TEST_FILES = [
+  "tests/normalize.test.ts",
+  "tests/research-analysis.test.ts",
+  "tests/research-artifact-store-v1.test.ts",
+  "tests/research-benchmark.test.ts",
+  "tests/research-budget.test.ts",
+  "tests/research-cli.test.ts",
+  "tests/research-contracts.test.ts",
+  "tests/research-firewall.test.ts",
+  "tests/research-gates-report.test.ts",
+  "tests/research-live-finalize.test.ts",
+  "tests/research-live-records.test.ts",
+  "tests/research-live-run.test.ts",
+  "tests/research-live-trial.test.ts",
+  "tests/research-manifest.test.ts",
+  "tests/research-preparation-v2.test.ts",
+  "tests/research-pricing.test.ts",
+  "tests/research-providers.test.ts",
+  "tests/research-qualification.test.ts",
+  "tests/research-scheduler.test.ts",
+  "tests/research-statistics.test.ts",
+  "tests/research-world-executor.test.ts",
+  "tests/safety.test.ts",
+].sort();
+
+describe("research-only distribution firewall", () => {
+  test("allows only the research appliance and the unchanged safety island", async () => {
+    expect(repositoryPaths(await filesBelow(resolve(ROOT, "src")))).toEqual(EXPECTED_SOURCE_FILES);
+    expect(repositoryPaths(await filesBelow(resolve(ROOT, "tests")))).toEqual(EXPECTED_TEST_FILES);
+    for (const removed of ["characters", "playtest", "src/engine", "src/modules", "src/viewer", "tests/fixtures", "tests/support"]) {
+      expect(await stat(resolve(ROOT, removed)).catch(() => null)).toBeNull();
     }
-    expect(present).toEqual([]);
   });
 
-  test("cut identifiers do not return to executable or authored surfaces", async () => {
-    const roots = [
-      "src",
-      "tests",
-      "worlds",
-      "characters",
-      "playtest",
-      "docs",
-      "README.md",
-      "RESEARCH.md",
-      "CLAUDE.md",
-      "AGENTS.md",
-      "NOTICE",
-      "CITATION.cff",
-      ".claude",
-      ".codex",
-      ".conductor",
-      "package.json",
-      ".env.example",
-    ];
-    const files = (await Promise.all(roots.map((path) => filesBelow(resolve(ROOT, path))))).flat();
-    const identifierPattern = new RegExp(retiredIdentifiers.map(escaped).join("|"), "i");
-    const contentPattern = new RegExp(`\\b(?:${retiredContentWords.map(escaped).join("|")})s?\\b`, "i");
-    const legacyKeys = [
-      ["ad", "ult"].join(""),
-      ["orien", "tation"].join(""),
-      ["all", "ure"].join(""),
-      ["bu", "st"].join(""),
-      ["gen", "itals"].join(""),
-    ];
-    const legacyKeyPattern = new RegExp(`['\"](?:${legacyKeys.map(escaped).join("|")})['\"]\\s*:`, "i");
+  test("keeps every research import inside the appliance, node built-ins, or zod", async () => {
     const failures: string[] = [];
-
-    for (const file of files) {
-      const path = relative(ROOT, file);
-      if (path === SELF || safetyAllowlist.has(path) || !textExtensions.has(extensionOf(file))) continue;
+    for (const file of await filesBelow(resolve(ROOT, "src/research"))) {
+      if (extname(file) !== ".ts") continue;
       const text = await readFile(file, "utf8");
-      const authoredContent =
-        path.startsWith("worlds/") ||
-        path.startsWith("characters/") ||
-        path.startsWith("tests/fixtures/") ||
-        path.startsWith("playtest/worlds/");
-      for (const [index, line] of text.split(/\r?\n/).entries()) {
-        if (identifierPattern.test(line) || legacyKeyPattern.test(line) || (authoredContent && contentPattern.test(line))) {
-          failures.push(`${path}:${index + 1}: ${line.trim()}`);
+      const imports = [...text.matchAll(/(?:from\s+|import\s*\()["']([^"']+)["']/g)].map((match) => match[1]!);
+      for (const specifier of imports) {
+        if (specifier === "zod" || specifier.startsWith("node:")) continue;
+        if (!specifier.startsWith(".")) {
+          failures.push(`${relative(ROOT, file)}: external import ${specifier}`);
+          continue;
+        }
+        const target = resolve(dirname(file), specifier);
+        if (!target.startsWith(resolve(ROOT, "src/research") + "/")) {
+          failures.push(`${relative(ROOT, file)}: escapes research root via ${specifier}`);
         }
       }
     }
-
     expect(failures).toEqual([]);
   });
 
-  test("the replaced campaign title and path stay absent from active distribution surfaces", async () => {
-    const roots = [
-      "src",
-      "tests",
-      "worlds",
-      "characters",
-      "playtest",
-      "docs",
+  test("exposes only setup, checks, and the five research workflow commands", async () => {
+    const packageJson = JSON.parse(await readFile(resolve(ROOT, "package.json"), "utf8")) as Record<string, unknown>;
+    expect(packageJson.name).toBe("seed-research-appliance");
+    expect(packageJson.bin).toBeUndefined();
+    expect(packageJson.scripts).toEqual({
+      setup: "bun install --frozen-lockfile",
+      check: "tsc --noEmit && bun test",
+      test: "bun test",
+      "research:prepare": "bun run src/research/prepare.ts",
+      "research:qualify": "bun run src/research/qualify.ts",
+      "research:run": "bun run src/research/qualify.ts",
+      "research:smoke": "bun run src/research/smoke.ts",
+      "research:live": "bun run src/research/live.ts",
+      "research:analyze": "bun run src/research/analyze.ts",
+    });
+  });
+
+  test("ships one canonical 24-scenario, 144-cell benchmark with no campaign file", async () => {
+    expect((await readdir(resolve(ROOT, "worlds"))).sort()).toEqual(["README.md", "wakeward-isles"]);
+    expect((await readdir(resolve(ROOT, "worlds/wakeward-isles"))).sort()).toEqual([
       "README.md",
-      "RESEARCH.md",
-      "CLAUDE.md",
-      "AGENTS.md",
-      "NOTICE",
-      "CITATION.cff",
-      ".claude",
-      ".codex",
-      ".conductor",
-      "package.json",
+      "research.json",
+      "world.json",
+    ]);
+    const loaded = await loadResearchBenchmarkV2FromDir(resolve(ROOT, "worlds/wakeward-isles"));
+    expect(loaded.manifest.scenarios).toHaveLength(24);
+    expect(new Set(loaded.manifest.scenarios.map((row) => row.family)).size).toBe(6);
+    expect(expandResearchBenchmarkCells(loaded)).toHaveLength(144);
+  });
+
+  test("ignores credentials, local manifests, generated packages, and Graphify output", () => {
+    for (const path of [
+      ".env",
+      ".env.local",
+      "research-models.local.json",
+      "research-artifacts/firewall-probe",
+      "graphify-out/graph.json",
+    ]) {
+      expect(() => execFileSync("git", ["check-ignore", "--quiet", path], { cwd: ROOT })).not.toThrow();
+    }
+    expect(git(["ls-files", "graphify-out"])).toBe("");
+  });
+
+  test("contains no credential values or machine-local absolute paths in distributed surfaces", async () => {
+    const roots = [
       ".env.example",
-    ];
-    const files = (await Promise.all(roots.map((path) => filesBelow(resolve(ROOT, path))))).flat();
-    const retiredTitleAcrossWhitespace = retiredWorldTitle.split(/\s+/).map(escaped).join("\\s+");
-    const pattern = new RegExp(`${retiredTitleAcrossWhitespace}|${escaped(retiredWorldPath)}`, "i");
-    const failures: string[] = [];
-
-    for (const file of files) {
-      if (!textExtensions.has(extensionOf(file))) continue;
-      const path = relative(ROOT, file);
-      if (pattern.test(await readFile(file, "utf8"))) failures.push(path);
-    }
-
-    expect(failures).toEqual([]);
-    expect(await exists(resolve(ROOT, retiredWorldPath))).toBe(false);
-  });
-
-  test("distribution metadata contains no machine-specific home path or private-fork instructions", async () => {
-    const roots = [
+      "research-models.example.json",
+      "package.json",
       "README.md",
       "RESEARCH.md",
+      "CLAUDE.md",
       "NOTICE",
       "CITATION.cff",
-      "AGENTS.md",
-      "CLAUDE.md",
-      ".claude",
-      ".codex",
-      ".conductor",
+      "docs",
+      "src",
+      "worlds",
     ];
-    const files = (await Promise.all(roots.map((path) => filesBelow(resolve(ROOT, path))))).flat();
-    const privateMarkers = [
-      "/Users/",
-      "/home/",
-      ["The-Verse-Lab", "seed"].join("/"),
-      ["upstream", "main"].join("/"),
-      ["strip", "adult-layer"].join("/"),
-    ];
-    const windowsHome = /[A-Za-z]:\\Users\\/i;
     const failures: string[] = [];
-
-    for (const file of files) {
-      const path = relative(ROOT, file);
-      if (!textExtensions.has(extensionOf(file))) continue;
-      for (const [index, line] of (await readFile(file, "utf8")).split(/\r?\n/).entries()) {
-        if (privateMarkers.some((marker) => line.includes(marker)) || windowsHome.test(line)) {
-          failures.push(`${path}:${index + 1}`);
+    const credential = /\b(?:sk-(?:ant-|proj-)?[a-z0-9_-]{20,}|AIza[a-z0-9_-]{20,})\b/i;
+    for (const root of roots) {
+      for (const file of await filesBelow(resolve(ROOT, root))) {
+        const text = await readFile(file, "utf8");
+        if (credential.test(text) || /\/Users\/[A-Za-z0-9._-]+\//.test(text)) {
+          failures.push(relative(ROOT, file));
         }
       }
     }
-
     expect(failures).toEqual([]);
-    expect(await readFile(resolve(ROOT, ".gitignore"), "utf8")).toContain("playtest/transcripts/");
   });
 
-  test("Wakeward Isles is the only bundled playset and the CLI default resolves to it", async () => {
-    const bundledDirectories = (await readdir(resolve(ROOT, "worlds"), { withFileTypes: true }))
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
-      .sort();
-    expect(bundledDirectories).toEqual([bundledWorldSlug]);
-
-    const worldDir = resolve(ROOT, "worlds", bundledWorldSlug);
-    const playset = await loadPlaySetFromDir(worldDir);
-    const suite = await loadResearchSuiteFromDir(worldDir);
-    expect(playset.world.id).toBe("world.wakeward-isles");
-    expect(playset.campaign.id).toBe("camp.wakeward.first-circuit");
-    expect(suite.manifest.scenarios).toHaveLength(18);
-
-    const cli = await readFile(resolve(ROOT, "src/cli/main.ts"), "utf8");
-    expect(cli).toContain(["..", "..", "worlds", bundledWorldSlug].join("/"));
+  test("keeps relative Markdown links resolvable", async () => {
+    const markdown = [
+      resolve(ROOT, "README.md"),
+      resolve(ROOT, "RESEARCH.md"),
+      resolve(ROOT, "CLAUDE.md"),
+      ...await filesBelow(resolve(ROOT, "docs")),
+      ...await filesBelow(resolve(ROOT, "worlds")),
+    ].filter((path) => extname(path) === ".md");
+    const broken: string[] = [];
+    for (const file of markdown) {
+      const text = await readFile(file, "utf8");
+      for (const match of text.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
+        const target = match[1]!.trim();
+        if (!target || target.startsWith("#") || /^[a-z]+:/i.test(target)) continue;
+        const path = resolve(dirname(file), target.split("#")[0]!);
+        if (!(await stat(path).catch(() => null))) broken.push(`${relative(ROOT, file)} -> ${target}`);
+      }
+    }
+    expect(broken).toEqual([]);
   });
 
-  test("the package exposes only retained CLI and observability scripts", async () => {
-    const pkg = JSON.parse(await readFile(resolve(ROOT, "package.json"), "utf8")) as {
-      scripts?: Record<string, string>;
-      dependencies?: Record<string, string>;
-      devDependencies?: Record<string, string>;
-    };
-    const scripts = Object.keys(pkg.scripts ?? {});
-    expect(scripts).not.toContain("web");
-    expect(scripts).not.toContain("build:web");
-    expect(scripts).not.toContain("playtest");
-
-    const packages = Object.keys({ ...(pkg.dependencies ?? {}), ...(pkg.devDependencies ?? {}) });
-    const retiredPackageFragments = [["post", "hog"].join(""), ["svel", "te"].join(""), ["vi", "te"].join("")];
-    expect(packages.filter((name) => retiredPackageFragments.some((part) => name.toLowerCase().includes(part)))).toEqual([]);
+  test("license and notice agree after all SRD-derived files are removed", async () => {
+    const [notice, packageText, license] = await Promise.all([
+      readFile(resolve(ROOT, "NOTICE"), "utf8"),
+      readFile(resolve(ROOT, "package.json"), "utf8"),
+      readFile(resolve(ROOT, "LICENSE"), "utf8"),
+    ]);
+    expect(JSON.parse(packageText).license).toBe("Apache-2.0");
+    expect(license).toContain("Apache License");
+    expect(notice).toContain("Apache License, Version 2.0");
+    expect(notice).not.toMatch(/SRD|Open Game License|Creative Commons|Wizards of the Coast/i);
+    expect(await stat(resolve(ROOT, "src/rules/srd")).catch(() => null)).toBeNull();
   });
 });

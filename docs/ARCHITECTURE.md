@@ -1,169 +1,170 @@
-# Seed architecture
+# Research appliance architecture
 
-Seed is a local-first generative TTRPG engine designed for experiments with proactive NPCs,
-information boundaries, deterministic mechanics, and inspectable agent behavior.
+Seed implements a narrow experimental pipeline: validated data enters a deterministic world kernel,
+public-safe packets enter strict provider adapters, and first-attempt observations enter immutable
+packages and preregistered analysis.
 
-## Design principles
-
-1. **Content is data.** Worlds, campaigns, characters, scenes, quests, and events are validated
-   JSON. Setting-specific facts do not belong in engine code.
-2. **Mechanics are deterministic.** Models choose or narrate intent; rules compute checks, costs,
-   combat, movement, inventory, and state transitions.
-3. **The reducer is the writer.** Engine modules enqueue typed commands. The reducer validates each
-   command, updates the world model, and emits replayable deltas.
-4. **Autonomy is bounded.** Player actions outrank reactive and spontaneous NPC turns. Heartbeats,
-   locks, cooldowns, grounding, and legality checks prevent autonomous actors from bypassing state.
-5. **Knowledge is scoped.** Narrator and NPC packets are built from authoritative state, public and
-   secret lore, disclosures, memories, and current presence.
-6. **Behavior is inspectable.** LLM calls, turn plans, accepted beats, deltas, and outcomes are
-   persisted for debugging and evaluation.
-7. **Model access is pluggable.** OpenAI-compatible narrator, creative, utility, and embedding roles
-   may point at different local or hosted endpoints.
-
-## Request flow
+## End-to-end flow
 
 ```text
-player text
-   |
-   v
-TurnClassifier -> validated TurnPlan
-   |
-   v
-GameEngine tick
-   perceive -> resolve -> react -> narrate -> commit -> persist
-                  |                       |
-                  | commands              | model prose
-                  v                       v
-             deterministic rules     guarded narration
-                  |                       |
-                  +----------+------------+
-                             v
-                         event stream
-                             |
-                             v
-                         CLI client
+world.json + research.json
+            |
+            v
+ benchmark validation -----> deterministic oracle qualification
+            |                          |
+            | 144 public packets       | 1,440 branch executions
+            v                          v
+  frozen trial schedule <------- qualification gate
+            |
+            v
+ exact one-call adapters
+            |
+            v
+ parsed closed decision -----> five-seed counterfactual replay
+            |                          |
+            +------------+-------------+
+                         v
+             immutable public-safe records
+                         |
+                         v
+              ITT + sensitivity analysis
 ```
 
-The same tick can include a player resolution and at most the bounded NPC activity allowed by the
-Director. Commands do not mutate state when created; they become authoritative only during commit.
+The smoke and pilot phases use separate package directories. Hosted phases require a clean,
+identifiable Git commit and re-execute the checksummed qualification with the current executor. A
+full pilot requires a semantically verified passing smoke authorization bound to the same suite
+hash, qualification hash, model identities, executable commit, and cumulative spend.
 
-## Major layers
+## Authored inputs
 
-### Content — `src/content`
+[`worlds/wakeward-isles/world.json`](../worlds/wakeward-isles/world.json) is the complete mechanical
+world definition consumed by the research kernel. It contains only locations, exits, entities,
+facts, quests, a case, and deterministic events.
 
-`schema.ts` is the runtime contract for worlds, campaigns, characters, events, NPC templates,
-regions, items, quests, and authored mechanics. `loader.ts` validates a directory and returns a
-`PlaySet`. Character rebinding and generic defeat tables also live here.
+[`worlds/wakeward-isles/research.json`](../worlds/wakeward-isles/research.json) freezes the actor,
+controlled goals, public labels, 24 scenarios, explicit suffix steps, and five literal mechanics
+seeds per family. [`benchmark.ts`](../src/research/benchmark.ts) validates all cross-references and
+expands three asymmetry levels by two incentives into 144 cells.
 
-### Engine — `src/engine`
+These two JSON files are the canonical world inputs. There is no third authored input in the world
+directory.
 
-- `engine.ts` orchestrates startup, input submission, ticks, persistence, and event publication.
-- `classify.ts` asks the utility role for a closed `TurnPlan` and applies validation/narrowing.
-- `turn-plan.ts` owns the plan schema.
-- `tick.ts` defines phase ordering and module context.
-- `resolvers/` turns grounded plans into deterministic commands and narrative briefs.
-- `grounded.ts` carries client-neutral grounded-action types shared by callers and the engine.
+## Deterministic world kernel
 
-### Modules — `src/modules`
+[`src/research/world/`](../src/research/world/) owns the experiment's complete mechanical state and
+transition surface:
 
-Modules participate in declared tick phases and communicate through the command queue. Current
-modules cover autonomy, dialogue, narration, combat, scenes, events, travel, camp and room events,
-NPC routines and memories, cases, captivity, errands, quest deadlines, status effects, upkeep, and
-relationship decay.
+- location and clock;
+- entity locations and inventories;
+- exit states;
+- quest, objective, and case state;
+- player-known facts; and
+- fired deterministic events.
 
-### Rules — `src/rules`
+The kernel accepts only closed commands for movement, fact disclosure, item transfer, exit changes,
+quest/objective updates, case resolution, clock advancement, and event marking. The reducer is the
+only state writer. Commands produce typed deltas, and replay verifies that folding deltas reproduces
+the canonical snapshot and hash.
 
-Pure or nearly pure rules own dice, checks, combat math, social asks, party decisions, movement,
-economy, items, magic, progression, captivity, consequences, continuity checks, regions, routines,
-memory salience, visible state, and text matching. The bundled SRD data lives in `src/rules/srd`.
+Qualification executes every candidate/silence branch over the family's five-seed panel. Expected
+task-dependent stops are ordinary negative outcomes; unexpected rejection, invalid state, executor
+failure, or horizon exhaustion is a structural censor and fails the gate.
 
-### World model — `src/world`
+## Public decision boundary
 
-`WorldModel` is the in-memory source of truth. It contains the entity registry, locations, exits,
-relationships, quest state, module slices, and clocks. `commands.ts` defines accepted writes;
-`reducer.ts` applies them and emits deltas. `replay.ts` and the test suite enforce the invariant that
-folding emitted deltas reconstructs the committed state.
+[`ResearchDecisionPacketV1`](../src/research/contracts.ts) is the only model input contract. Packet
+construction includes:
 
-Map, pathfinding, coordinate, region, enrichment, expansion, lodging, captivity, maintenance, and
-query helpers live beside the model.
+- actor ID, name, and persona;
+- controlled shared and incentive-specific goals;
+- visible location, clock, task, exits, and inventories;
+- companion-known and player-known facts; and
+- one closed candidate table.
 
-### State and events — `src/state`, `src/events`
+It excludes scenario family, row kind, signal/noise status, oracle results, future suffix steps,
+mechanics seeds, metrics, and branch outcomes. [`prompt.ts`](../src/research/prompt.ts) renders a
+canonical byte string and rejects forbidden private fields before dispatch. Each trial is stateless;
+there is no conversational carry-over.
 
-`GameState` is the durable/public projection. SQLite is the default store and retains snapshots,
-event logs, model calls, and turn traces. Typed game events feed the CLI and observability tools;
-typed deltas form the replay record.
+The output contract is exactly abstention or intervention with the offered candidate ID. Any other
+shape, unknown ID, or ungrounded action is a failed first attempt.
 
-### Agents and knowledge — `src/agents`, `src/knowledge`, `src/memory`
+## Hosted provider boundary
 
-The DM agent builds the narration brief and voices public prose. Significant NPCs receive scoped
-packets containing persona, goals, allowed knowledge, relevant memories, present state, and recent
-conversation. Their output is structured intent that must ground to a legal command or fall back to
-speech/no-op.
+[`src/research/providers/`](../src/research/providers/) contains three direct HTTP adapters:
 
-Lore retrieval, disclosure ledgers, NPC history, summaries, and vector caching supply bounded
-context without granting actors omniscience.
+| Adapter | Frozen model | Lowest reasoning setting |
+| --- | --- | --- |
+| Google | `gemini-3.5-flash-lite` | `minimal`, thoughts excluded |
+| Anthropic | `claude-sonnet-5` | low effort, thinking disabled |
+| OpenAI | `gpt-5.6-sol` | reasoning effort `none` |
 
-### LLM gateway — `src/llm`
+Each adapter performs exactly one fetch under one deadline and uses the vendor's strict structured
+output form. It neither retries nor reroutes. It returns a closed, public-safe attempt record with
+visible output, model identity, request/response identifiers, usage, latency, stop reason, and error
+class when available. Private reasoning and full vendor envelopes do not cross this boundary.
 
-All model access uses a single role-aware gateway interface. The OpenAI-compatible provider handles
-chat completions, streaming, and embeddings. Logging, rescue/retry, refusal detection, normalization,
-and the retained minor-safety guard are composed around the provider rather than embedded in game
-rules.
+The ignored `research-models.local.json` names environment variables rather than storing their
+values. [`manifest.ts`](../src/research/live/manifest.ts) freezes a redacted run manifest containing
+models, endpoints, reasoning settings, pricing snapshot, schedule parameters, source hashes, a clean
+Git commit, prior committed spend, and runtime provenance.
 
-### Clients and tooling — `src/cli`, `src/viewer`, `src/logging`
+## Scheduling, replay, and failure policy
 
-The CLI is the play surface. The Observatory is a separate read-only local server over the session
-database. Logging code records requests, responses, latency, token usage, provider finish reasons,
-turn correlation, and exportable traces.
+[`scheduler.ts`](../src/research/live/scheduler.ts) produces a deterministic recorded order. The
+pilot schedules 144 cells × three models × five independent replicates = 2,160 first attempts. No
+provider has more than one request in flight.
 
-## State transition contract
+Every valid decision is replayed mechanically with the chosen action and forced silence over the
+same five family seeds. A provider failure does not trigger a replacement call. The primary
+intention-to-evaluate analysis treats every invalid JSON/schema response, refusal, timeout, rate
+limit, model drift, grounding failure, or provider error as a non-intervention. A valid-response-only
+sensitivity analysis is reported separately.
+
+## Artifacts and budget
+
+[`ResearchArtifactStoreV1`](../src/research/live/artifact-store.ts) publishes fixed files atomically,
+stores prompts and visible responses by SHA-256, appends trial and branch records behind an exclusive
+package lock, recovers interrupted commits, and refuses completed-trial overwrite. Finalization
+cross-checks the exact schedule, qualification metadata, deterministic oracle replay, derived scores,
+cost basis, ten branch rows, and every referenced content blob before it writes `SHA256SUMS` and
+immediately verifies each listed byte.
+
+The store rejects credentials, private reasoning, unsafe field names, and raw envelopes. A projected
+reservation is made before dispatch and reconciled to reported usage after the first attempt.
+[`budget.ts`](../src/research/live/budget.ts) enforces both projected and cumulative spend under the
+US$100 hard cap, carrying exact smoke spend into the pilot ledger.
+
+## Analysis
+
+[`analysis.ts`](../src/research/analysis.ts) reports confusion counts, Hautus-corrected sensitivity
+and criterion, task-success rate and matched silence delta, regret, failure counts/rates, and slices
+by model, modality, asymmetry, incentive, and family. Confidence intervals use a deterministic
+10,000-resample family-cluster bootstrap.
+
+Six families do not support population-level generalization. The final report therefore labels the
+result as an engineering proof of concept and emits family variance plus an assumption-labeled
+prospective held-out-family size estimate when identifiable, or an explicit unavailable status.
+
+## Retained safety boundary
+
+The unchanged minor-safety guard remains in [`src/llm/safety.ts`](../src/llm/safety.ts), with its
+canonical predicate in [`src/safety/minor.ts`](../src/safety/minor.ts) and regression coverage in
+[`tests/safety.test.ts`](../tests/safety.test.ts). The research runtime does not weaken or bypass this
+guard. It remains a narrow fail-closed safety control, not an experimental outcome measure or a
+substitute for operator policy.
+
+## Source map
 
 ```text
-intent -> resolver/module -> Command[] -> applyCommand -> Delta[] -> events/projection/store
-```
-
-- Resolvers and modules may read current and queued state.
-- Only commands authorize mutation.
-- Deltas describe what actually committed.
-- Narration is checked against authorized commands and authoritative state.
-- Persistence happens after commit, so a saved snapshot and its log head agree.
-
-## NPC autonomy
-
-The Director uses priority `player > reactive NPC > spontaneous NPC`, plus heartbeat timing,
-reply-depth decay, per-actor locks, and scene ownership. NPC model output includes candidates and a
-closed intended action. Grounding then checks targets, presence, paths, costs, legality, and command
-shape before the reducer sees anything.
-
-See [PROACTIVE-NPCS.md](PROACTIVE-NPCS.md) for the detailed arbitration model.
-
-## Safety boundary
-
-The public research tree retains the model-independent minor-safety guard. It evaluates player input
-and player-visible generated prose, uses declared ages when available, and fails closed for ambiguous
-minor-sexual output when its judge is required but unavailable. It is not a substitute for operator
-policy, legal review, or model-side safeguards.
-
-## Directory map
-
-```text
-src/
-  agents/       DM, NPC, continuity-judge, and context construction
-  cli/          terminal client
-  config/       environment parsing and gateway composition
-  content/      schemas, loaders, character binding, authored tables
-  director/     arbitration and heartbeat primitives
-  engine/       orchestrator, classifier, tick, resolvers, grounded protocol
-  events/       public events, deltas, and bus
-  knowledge/    scoped fact packets and temporal rendering
-  llm/          gateway, provider, guard, rescue, normalization
-  logging/      model-call and turn-trace capture/export
-  memory/       disclosures, summaries, NPC history, vector retrieval/cache
-  modules/      phase participants
-  rules/        deterministic mechanics
-  safety/       canonical minor predicates
-  state/        projections and persistence
-  viewer/       read-only Observatory
-  world/        model, commands, reducer, replay, map, queries
-  worldsmith/   seeded content reconciliation utilities
+src/research/
+  benchmark.ts       authored-input validation and cell expansion
+  contracts.ts       versioned public and stored contracts
+  prompt.ts          canonical isolated prompt construction
+  qualification.ts   complete model-free oracle gate
+  world/             pure reducer, events, replay, and hashing
+  providers/         exact one-call hosted adapters
+  live/              schedule, budget, storage, gates, and orchestration
+  analysis.ts        signal-detection and outcome analysis
+  report.ts          public engineering report
 ```

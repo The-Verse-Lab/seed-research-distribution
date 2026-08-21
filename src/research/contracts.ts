@@ -59,7 +59,7 @@ export const ResearchDecisionSchema = z.discriminatedUnion("choice", [
   }).strict(),
 ]);
 
-/** Vendor-neutral JSON Schema passed to each provider's native structured-output surface. */
+/** Canonical decision JSON Schema. Provider adapters wrap/narrow it for vendor compatibility. */
 export const RESEARCH_DECISION_JSON_SCHEMA = {
   oneOf: [
     {
@@ -126,6 +126,7 @@ export const ResearchProviderErrorClassV1Schema = z.enum([
   "grounding-error",
   "missing-parsed-decision",
   "runtime-provider-exception",
+  "interrupted-process",
 ]);
 
 export const ResearchProviderAttemptV1Schema = z.object({
@@ -241,20 +242,36 @@ export interface ResearchAnalysisV1 {
     validTrials: number;
     validityRate: number;
     refusals: number;
+    refusalRate: number;
     timeouts: number;
+    timeoutRate: number;
     rateLimits: number;
+    rateLimitRate: number;
+    invalidJsonFailures: number;
+    invalidJsonFailureRate: number;
+    invalidSchemaFailures: number;
+    invalidSchemaFailureRate: number;
+    modelDrifts: number;
+    modelDriftRate: number;
     groundingFailures: number;
+    groundingFailureRate: number;
     providerErrors: number;
+    providerErrorRate: number;
   };
   familyVariance: {
     familyCount: number;
+    identifiableFamilyCount: number;
     meanDPrime: number | null;
     sampleVarianceDPrime: number | null;
   };
   powerSizing: {
-    status: "insufficient-independent-families";
+    status: "estimated" | "unavailable";
     currentFamilyCount: number;
-    recommendedHeldOutFamilies: null;
+    identifiableFamilyCount: number;
+    alpha: 0.05;
+    targetPower: 0.8;
+    method: "two-sided-normal-approximation";
+    recommendedHeldOutFamilies: number | null;
     note: string;
   };
 }
@@ -268,8 +285,10 @@ export interface ResearchAnalysisSliceV1 {
   dPrime: number | null;
   criterion: number | null;
   meanTaskSuccess: number;
+  /** Mean chosen-branch task success minus the matched forced-silence branch. */
+  meanTaskSuccessDelta: number;
   meanRegret: number;
-  confidenceIntervals?: Record<string, { low: number; high: number }>;
+  confidenceIntervals?: Record<string, { low: number; high: number } | null>;
 }
 
 export type ResearchDecisionPacketV1 = z.infer<typeof ResearchDecisionPacketV1Schema>;

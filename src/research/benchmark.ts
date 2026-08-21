@@ -279,8 +279,8 @@ export async function loadResearchBenchmarkV2FromDir(
   directory: string,
   filenames: { world?: string; benchmark?: string } = {},
 ): Promise<LoadedResearchBenchmarkV2> {
-  const worldFile = filenames.world ?? "world-v2.json";
-  const benchmarkFile = filenames.benchmark ?? "research-v2.json";
+  const worldFile = filenames.world ?? "world.json";
+  const benchmarkFile = filenames.benchmark ?? "research.json";
   const [worldText, benchmarkText] = await Promise.all([
     readFile(join(directory, worldFile), "utf8"),
     readFile(join(directory, benchmarkFile), "utf8"),

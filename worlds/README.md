@@ -1,64 +1,54 @@
-# Worlds
+# Research worlds
 
-This is where worlds and campaigns live — as **data**, not code. The engine is generic;
-everything that makes a setting specific is authored here. This directory *is* the
-"campaign infrastructure."
+This directory contains canonical data for the controlled research appliance. The repository ships
+one benchmark directory:
 
-## Layout
-
-Each play set is a directory with two standard files and may add a validated research overlay:
-
-```
+```text
 worlds/
-└── <your-world>/
-    ├── world.json       # the reusable setting
-    ├── campaign.json    # a campaign played on top of that world
-    └── research.json    # optional controlled-scenario manifest
+└── wakeward-isles/
+    ├── world.json
+    └── research.json
 ```
 
-A `world.json` may back several campaigns — copy a `campaign.json` pattern to start a new
-story in the same setting.
+`world.json` defines the complete deterministic state machine input. `research.json` defines the
+actor, controlled goals, fact masks, closed candidates, explicit suffix steps, and frozen seed
+panels. No additional authored input is loaded from this directory.
 
-## The contract
+## Validation contract
 
-The shapes are defined and validated in
-[`src/content/schema.ts`](../src/content/schema.ts). On load
-([`src/content/loader.ts`](../src/content/loader.ts)) Seed:
+[`src/research/world/schema.ts`](../src/research/world/schema.ts) validates the mechanical world.
+[`src/research/benchmark.ts`](../src/research/benchmark.ts) validates the benchmark and cross-checks
+every location, entity, fact, quest, objective, case, candidate, and suffix step before producing a
+cell.
 
-1. Validates each file against its Zod schema (types + ranges).
-2. Cross-checks references (the campaign's start location exists, companions are real
-   NPCs, scenes point at real locations). Authoring mistakes fail loudly here.
-3. When requested through `src/research/scenario.ts`, validates the optional research manifest
-   against the ordinary playset before returning any scenario clone.
+The frozen design is:
 
-## Authoring your own world
+- six task families;
+- four type-matched rows per family;
+- 24 scenarios;
+- three asymmetry levels and two incentive settings;
+- 144 decision cells; and
+- five literal mechanics seeds per family.
 
-1. Copy `wakeward-isles/` (or a test fixture under `tests/fixtures/worlds/`) to
-   `worlds/<your-world>/`.
-2. Rewrite `world.json` — `id`, `name`, `summary`, then fill `locations`, `npcs`,
-   `monsters`, `items`, `spells`, `lore`, `factions`.
-3. Rewrite `campaign.json` — point `worldId` at your world, define `characters`,
-   `scenes`, `quests`, and the `startingState`.
-4. Point the CLI at it: `bun src/cli/main.ts worlds/<your-world>` (path arg), or
-   `SEED_WORLD_DIR=worlds/<your-world> bun run dev`. No path/env ⇒ the flagship
-   `worlds/wakeward-isles`.
+All rows in a family share the same seed panel. Explicit suffixes prevent route selection from
+changing across counterfactual branches.
 
-### Making an NPC proactive
+## Making a derived suite
 
-The headline feature lives in each NPC's `autonomy` block:
+A derived benchmark must live in a separate directory with both files and must pass the same schema
+and cross-reference checks. Do not add fields that are unavailable to the public packet, encode
+answer labels in candidate descriptions, or change mechanics between incentive conditions.
 
-```jsonc
-"autonomy": {
-  "isPartyMember": true,   // travels with the party → eligible for autonomous turns
-  "level": "leader",       // passive | reactive | proactive | leader
-  "canLead": true,         // leader proposals may act on tacit consent
-  "heartbeatSeconds": 40,  // how often a quiet NPC reconsiders acting
-  "replyDecayAlpha": 0.2   // how fast NPC-to-NPC chatter tapers
-}
+At minimum, each family needs informing and instrumental opportunity/control rows whose labels are
+stable over all five seeds. Run:
+
+```sh
+bun run research:prepare -- --world worlds/<suite>
+bun run research:qualify -- --world worlds/<suite>
 ```
 
-See [docs/PROACTIVE-NPCS.md](../docs/PROACTIVE-NPCS.md) for what each setting does.
+Preparation freezes exact packet bytes without executing outcomes. Qualification must report zero
+structural censors and stable incentive-independent mechanics before hosted sampling.
 
-> The test worlds under `tests/fixtures/worlds/` (Thistledown Vale, Black Concord, and
-> the Emberford `example/`) exercise the schema and aren't shipped campaigns. Build your
-> own world alongside `wakeward-isles/`; you never have to touch the engine.
+The Wakeward Benchmark v2 material in this directory is original and licensed under Apache-2.0.
+See the [Wakeward benchmark guide](wakeward-isles/README.md) for its family design.

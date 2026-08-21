@@ -18,13 +18,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "types": ["bun"],
-
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "types": ["bun"]
   },
-  "include": ["src", "tests", "playtest/auto"],
-  "exclude": ["src/web-ui"]
+  "include": ["src", "tests"]
 }

@@ -1,4 +1,5 @@
-import { appendFile, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { appendFile, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -22,6 +23,11 @@ import { writeResearchQualificationPackage } from "../src/research/qualify.ts";
 import { parseResearchSmokeArgs, runResearchSmokeCli } from "../src/research/smoke.ts";
 
 const WORLD_DIR = fileURLToPath(new URL("../worlds/wakeward-isles", import.meta.url));
+const CLEAN_GIT = { commit: "0123456789abcdef0123456789abcdef01234567", dirty: false } as const;
+
+function sha256(value: string): string {
+  return createHash("sha256").update(value).digest("hex");
+}
 
 function fakeProviderFetch(input: string | URL | Request): Promise<Response> {
   const url = String(input);
@@ -75,6 +81,7 @@ describe("research-only CLI contracts", () => {
     expect(parseResearchAnalyzeArgs(["--package", "results/run", "--phase=pilot"])).toEqual({
       packageDir: "results/run",
       phase: "pilot",
+      worldDir: "worlds/wakeward-isles",
       help: false,
     });
     expect(() => parseResearchAnalyzeArgs([])).toThrow(/--package is required/);
@@ -141,21 +148,71 @@ describe("research-only CLI contracts", () => {
       }));
       for (const name of environmentNames) process.env[name] = "test-only-placeholder";
 
+      const alteredQualification = structuredClone(qualification);
+      alteredQualification.cells[0]!.branches[0]!.taskSuccess =
+        !alteredQualification.cells[0]!.branches[0]!.taskSuccess;
+      const alteredQualificationDir = join(scratch, "altered-qualification");
+      await writeResearchQualificationPackage(alteredQualificationDir, alteredQualification);
+      let alteredQualificationDispatches = 0;
+      await expect(runResearchSmokeCli([
+        "--qualification", alteredQualificationDir,
+        "--models", modelManifestPath,
+        "--out", join(scratch, "altered-smoke"),
+      ], "2026-08-16T12:00:00.000Z", ((...args) => {
+        alteredQualificationDispatches++;
+        return fakeProviderFetch(args[0]);
+      }) as typeof globalThis.fetch, CLEAN_GIT)).rejects.toThrow(/current deterministic executor/);
+      expect(alteredQualificationDispatches).toBe(0);
+
       const smokeDirectory = join(scratch, "smoke");
       const result = await runResearchSmokeCli([
         "--qualification", qualificationDir,
         "--models", modelManifestPath,
         "--out", smokeDirectory,
         "--run-id", "smoke-cli-test",
-      ], "2026-08-16T12:34:56.000Z", fakeProviderFetch as typeof globalThis.fetch);
+      ], "2026-08-16T12:34:56.000Z", fakeProviderFetch as typeof globalThis.fetch, CLEAN_GIT);
       expect(result?.run.completedTrialCount).toBe(9);
       expect(result?.finalized.gate).toEqual({ passed: true, failures: [] });
-      const verified = await verifyResearchSmokePackage(smokeDirectory, loaded);
+      const verified = await verifyResearchSmokePackage(smokeDirectory, loaded, CLEAN_GIT);
+      expect(Number(verified.authorization.smokeCommittedUsd)).toBeGreaterThan(0);
       expect(verified.authorization.returnedModels).toEqual({
         google: GOOGLE_RESEARCH_MODEL,
         anthropic: ANTHROPIC_RESEARCH_MODEL,
         openai: OPENAI_RESEARCH_MODEL,
       });
+
+      const smokeAlias = join(scratch, "smoke-alias");
+      await symlink(smokeDirectory, smokeAlias, "dir");
+      let aliasPilotDispatches = 0;
+      await expect(runResearchLiveCli([
+        "--smoke", smokeDirectory,
+        "--models", modelManifestPath,
+        "--out", join(smokeAlias, "pilot"),
+      ], "2026-08-16T13:00:00.000Z", ((...args) => {
+        aliasPilotDispatches++;
+        return fakeProviderFetch(args[0]);
+      }) as typeof globalThis.fetch, CLEAN_GIT)).rejects.toThrow(/separate, non-nested directories/);
+      expect(aliasPilotDispatches).toBe(0);
+
+      await expect(runResearchLiveCli([
+        "--smoke", smokeDirectory,
+        "--models", modelManifestPath,
+        "--out", join(smokeDirectory, "..pilot"),
+      ], "2026-08-16T13:01:00.000Z", fakeProviderFetch as typeof globalThis.fetch, CLEAN_GIT))
+        .rejects.toThrow(/separate, non-nested directories/);
+
+      const trialPath = join(smokeDirectory, "live-trials.jsonl");
+      const rows = (await readFile(trialPath, "utf8")).trimEnd().split("\n")
+        .map((line) => JSON.parse(line) as Record<string, unknown>);
+      rows[0]!.taskSuccessRate = 0.5;
+      const alteredTrialText = `${rows.map((row) => JSON.stringify(row)).join("\n")}\n`;
+      await writeFile(trialPath, alteredTrialText);
+      const checksumPath = join(smokeDirectory, "SHA256SUMS");
+      const checksumText = (await readFile(checksumPath, "utf8"))
+        .replace(/^[a-f0-9]{64}  live-trials\.jsonl$/m, `${sha256(alteredTrialText)}  live-trials.jsonl`);
+      await writeFile(checksumPath, checksumText);
+      await expect(verifyResearchSmokePackage(smokeDirectory, loaded, CLEAN_GIT))
+        .rejects.toThrow(/derived outcomes/);
 
       await appendFile(join(smokeDirectory, "REPORT.md"), "\ntampered\n");
       let pilotDispatches = 0;
@@ -166,7 +223,7 @@ describe("research-only CLI contracts", () => {
       ], "2026-08-16T13:34:56.000Z", ((...args) => {
         pilotDispatches++;
         return fakeProviderFetch(args[0]);
-      }) as typeof globalThis.fetch)).rejects.toThrow(/Checksum mismatch/);
+      }) as typeof globalThis.fetch, CLEAN_GIT)).rejects.toThrow(/Checksum mismatch/);
       expect(pilotDispatches).toBe(0);
     } finally {
       environmentNames.forEach((name, index) => {
@@ -176,5 +233,5 @@ describe("research-only CLI contracts", () => {
       });
       await rm(scratch, { recursive: true, force: true });
     }
-  });
+  }, 15_000);
 });

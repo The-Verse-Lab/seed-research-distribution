@@ -17,12 +17,13 @@ import {
   defaultArtifactDirectory,
   generatedRunId,
   loadLocalModelManifest,
-  loadOracleQualification,
   parsePositiveInteger,
   parseUint32,
   portablePath,
   readJson,
   repositoryProvenance,
+  requireCleanRepositoryProvenance,
+  type CleanRepositoryProvenance,
   valueAfter,
 } from "./cli-support.ts";
 import type { OracleQualificationV2 } from "./contracts.ts";
@@ -44,6 +45,7 @@ import {
   type ResearchLivePhaseResultV1,
 } from "./live/run.ts";
 import { readStoredLiveTrials } from "./live/records.ts";
+import { assertCurrentOracleQualification } from "./qualification.ts";
 
 export interface ResearchSmokeCliArgs {
   worldDir: string;
@@ -63,13 +65,13 @@ export interface ResearchSmokeCliResult {
   finalized: FinalizedResearchLivePackage;
 }
 
-export const RESEARCH_SMOKE_USAGE = `Usage: bun run research:smoke -- --qualification <file-or-package> [options]
+export const RESEARCH_SMOKE_USAGE = `Usage: bun run research:smoke -- --qualification <package> [options]
 
 Run the fixed 3-cell x 3-provider smoke directly against the configured hosted models.
 The result is finalized even when the provider smoke gate fails.
 
 Required:
-  --qualification <path>    green oracle JSON or checksummed qualification package
+  --qualification <path>    checksummed green qualification package
 
 Options:
   --world <directory>       default worlds/wakeward-isles
@@ -187,19 +189,19 @@ async function verifiedQualificationPackage(directory: string): Promise<OracleQu
   return OracleQualificationV2Schema.parse(await readJson(join(directory, "oracle-qualification.json")));
 }
 
-/** Load a qualification JSON directly, or verify exact checksum coverage before loading a package. */
+/** Verify exact checksum coverage before loading a qualification package. */
 export async function loadVerifiedOracleQualification(pathValue: string): Promise<OracleQualificationV2> {
   const path = resolve(pathValue);
   const info = await stat(path);
-  if (info.isFile()) return await loadOracleQualification(path);
   if (info.isDirectory()) return await verifiedQualificationPackage(path);
-  throw new Error(`Oracle qualification path is neither a file nor a directory: ${portablePath(path)}`);
+  throw new Error(`Oracle qualification must be a checksummed package directory: ${portablePath(path)}`);
 }
 
 function assertGreenQualification(
   qualification: OracleQualificationV2,
   loaded: LoadedResearchBenchmarkV2,
 ): void {
+  assertCurrentOracleQualification(loaded, qualification);
   if (!qualification.qualified || qualification.failures.length > 0) {
     throw new Error("Provider smoke requires a green oracle qualification");
   }
@@ -237,8 +239,9 @@ function assertManifestResumeOptions(options: {
   loaded: LoadedResearchBenchmarkV2;
   qualification: OracleQualificationV2;
   localManifest: ResearchModelManifestV1;
+  git: CleanRepositoryProvenance;
 }): void {
-  const { manifest, args, loaded, qualification, localManifest } = options;
+  const { manifest, args, loaded, qualification, localManifest, git } = options;
   if (args.runId && manifest.runId !== args.runId) throw new Error("--run-id does not match the existing package");
   if (args.schedulerSeed !== undefined && manifest.design.schedulerSeed !== args.schedulerSeed) {
     throw new Error("--scheduler-seed does not match the existing package");
@@ -252,6 +255,9 @@ function assertManifestResumeOptions(options: {
   if (manifest.source.suiteHash !== loaded.suiteHash ||
     manifest.source.qualificationHash !== researchQualificationHash(qualification)) {
     throw new Error("Existing package manifest does not match the requested benchmark qualification");
+  }
+  if (manifest.source.git.commit !== git.commit || manifest.budget.priorCommittedUsd !== "0") {
+    throw new Error("Existing smoke package does not match the clean executable commit or zero-spend baseline");
   }
   const models = configuredResearchModels(localManifest);
   for (const provider of manifest.providers) {
@@ -270,6 +276,7 @@ async function loadOrBuildSmokeManifest(options: {
   loaded: LoadedResearchBenchmarkV2;
   qualification: OracleQualificationV2;
   localManifest: ResearchModelManifestV1;
+  git: CleanRepositoryProvenance;
 }): Promise<ResearchRunManifestV1> {
   const existing = await readExistingManifest(options.directory);
   if (existing) {
@@ -279,6 +286,7 @@ async function loadOrBuildSmokeManifest(options: {
       loaded: options.loaded,
       qualification: options.qualification,
       localManifest: options.localManifest,
+      git: options.git,
     });
     return existing;
   }
@@ -291,7 +299,7 @@ async function loadOrBuildSmokeManifest(options: {
     timeoutMs: options.args.timeoutMs ?? DEFAULT_PROVIDER_TIMEOUT_MS,
     suiteHash: options.loaded.suiteHash,
     qualificationHash: researchQualificationHash(options.qualification),
-    git: repositoryProvenance(),
+    git: options.git,
     runtime: runtimeProvenance(),
   });
 }
@@ -314,12 +322,14 @@ export async function runResearchSmokeCli(
   argv: readonly string[],
   generatedAt = new Date().toISOString(),
   fetchImpl: typeof globalThis.fetch = globalThis.fetch,
+  provenance: ReturnType<typeof repositoryProvenance> = repositoryProvenance(),
 ): Promise<ResearchSmokeCliResult | undefined> {
   const args = parseResearchSmokeArgs(argv);
   if (args.help) {
     process.stdout.write(RESEARCH_SMOKE_USAGE);
     return undefined;
   }
+  const git = requireCleanRepositoryProvenance(provenance);
   const generatedId = generatedRunId("smoke", generatedAt);
   const directory = resolve(args.outputDir ?? defaultArtifactDirectory(args.runId ?? generatedId));
   await assertMutablePackageDirectory(directory);
@@ -337,6 +347,7 @@ export async function runResearchSmokeCli(
     loaded,
     qualification,
     localManifest,
+    git,
   });
   // Provider construction validates env presence. Secret values stay only inside the adapters.
   const providers = createLiveProviders(localManifest, fetchImpl);
@@ -355,6 +366,7 @@ export async function runResearchSmokeCli(
   });
   const finalized = await finalizeResearchLivePackage({
     store,
+    loaded,
     manifest,
     qualification,
     phase: "smoke",
