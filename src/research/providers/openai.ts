@@ -20,6 +20,7 @@ import {
   parseProviderRequest,
   parseVisibleResearchDecision,
   stringField,
+  RESEARCH_MAX_OUTPUT_TOKENS,
   type ResearchHttpProviderOptions,
 } from "./shared.ts";
 
@@ -55,7 +56,7 @@ export class OpenAIResearchProvider implements ResearchProvider {
         body: JSON.stringify({
           model: this.model,
           input: request.prompt,
-          max_output_tokens: 256,
+          max_output_tokens: RESEARCH_MAX_OUTPUT_TOKENS,
           reasoning: { effort: "none" },
           store: false,
           text: {
@@ -155,7 +156,9 @@ export class OpenAIResearchProvider implements ResearchProvider {
         configuredModel: this.model,
         status: "provider-error",
         latencyMs: result.latencyMs,
-        errorClass: responseStatus ? "incomplete-response" : "missing-response-status",
+        errorClass: incompleteReason === "max_output_tokens"
+          ? "output-truncated"
+          : responseStatus ? "incomplete-response" : "missing-response-status",
         ...metadata,
       });
     }

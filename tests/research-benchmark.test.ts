@@ -78,4 +78,42 @@ describe("Wakeward Research Benchmark v2", () => {
     expect(highPacket.playerKnownFacts).toHaveLength(1);
     expect(lowPacket.playerKnownFacts).toHaveLength(3);
   });
+
+  /**
+   * Row-identifying prose is invisible to `assertPromptIsolation`, which matches a fixed forbidden
+   * vocabulary, and to the packet key audit, which matches key names. Goal text and candidate
+   * descriptions therefore need their own equality checks: an opportunity row and its type-matched
+   * control must be indistinguishable from any channel except the fact ledger and the mechanics.
+   */
+  test("no packet channel distinguishes an opportunity row from its type-matched control", async () => {
+    const loaded = await loadResearchBenchmarkV2FromDir(DIR);
+    const cells = expandResearchBenchmarkCells(loaded);
+    const controlDescriptions = new Set<string>();
+
+    for (const family of WAKEWARD_FAMILIES) {
+      for (const incentive of ["cooperative", "mixed"] as const) {
+        const goalSets = cells
+          .filter((cell) => cell.scenario.family === family && cell.condition.incentive === incentive)
+          .map((cell) => JSON.stringify(buildResearchDecisionPacket(loaded, cell).controlledGoals));
+        expect(goalSets).not.toHaveLength(0);
+        expect(new Set(goalSets).size).toBe(1);
+      }
+
+      const rows = loaded.manifest.scenarios.filter((scenario) => scenario.family === family);
+      const byKind = (kind: string) => rows.find((scenario) => scenario.rowKind === kind)!;
+      // An informing control offers a disclosure the player already holds, so the two informing
+      // rows must read identically; only the fact mask may separate them.
+      expect(byKind("informing-control").candidate.description)
+        .toBe(byKind("informing-opportunity").candidate.description);
+      controlDescriptions.add(byKind("instrumental-control").candidate.description);
+    }
+
+    // A control candidate repeated verbatim across families would be a standing tell.
+    expect(controlDescriptions.size).toBe(WAKEWARD_FAMILIES.length);
+
+    const goalsByFamily = WAKEWARD_FAMILIES.map((family) =>
+      JSON.stringify(loaded.manifest.familyGoals[family])
+    );
+    expect(new Set(goalsByFamily).size).toBe(WAKEWARD_FAMILIES.length);
+  });
 });

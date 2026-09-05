@@ -18,6 +18,15 @@ export interface ResearchHttpProviderOptions {
 export type ResearchUsageV1 = NonNullable<ResearchProviderAttemptV1["usage"]>;
 
 /**
+ * The single output bound for every adapter, the frozen run manifest, and cost projection.
+ *
+ * It lives beside the adapters because it is a wire value first: defining it downstream let the
+ * manifest attest a bound the requests never carried. A decision is a few dozen tokens, so the
+ * headroom exists only to keep a verbose preamble from being recorded as a truncated non-answer.
+ */
+export const RESEARCH_MAX_OUTPUT_TOKENS = 512;
+
+/**
  * All three strict-output APIs accept a root object with a nested union. OpenAI specifically
  * rejects a union at the schema root, so the public decision union is wrapped consistently for
  * every provider and unwrapped before `parseResearchDecision`. The discriminators use `enum`

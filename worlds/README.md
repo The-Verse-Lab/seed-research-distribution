@@ -30,14 +30,21 @@ The frozen design is:
 - 144 decision cells; and
 - five literal mechanics seeds per family.
 
-All rows in a family share the same seed panel. Explicit suffixes prevent route selection from
-changing across counterfactual branches.
+All rows in a family share the same seed panel and the same controlled goals. Explicit suffixes
+prevent route selection from changing across counterfactual branches.
 
 ## Making a derived suite
 
 A derived benchmark must live in a separate directory with both files and must pass the same schema
 and cross-reference checks. Do not add fields that are unavailable to the public packet, encode
-answer labels in candidate descriptions, or change mechanics between incentive conditions.
+answer labels in candidate descriptions or controlled goals, or change mechanics between incentive
+conditions.
+
+Every free-text channel that reaches the packet is a potential label channel, and the automated
+isolation checks match key names and a fixed vocabulary — they cannot detect a row whose prose
+merely implies its own answer. Author goals per family, keep an informing control's description
+identical to its paired opportunity, and give each family's instrumental control a distinct inert
+item so that no phrasing or inventory pattern separates a control from its opportunity.
 
 At minimum, each family needs informing and instrumental opportunity/control rows whose labels are
 stable over all five seeds. Run:

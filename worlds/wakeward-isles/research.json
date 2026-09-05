@@ -11,6 +11,32 @@
     "Help the runner complete the stated circuit task safely.",
     "Use only the listed intervention candidate or abstain."
   ],
+  "familyGoals": {
+    "cold-passage": {
+      "cooperative": ["Support the runner's tonic delivery to Reedbank Clinic."],
+      "mixed": ["Preserve routekeeper authority over medical handling while the delivery proceeds."]
+    },
+    "second-bell": {
+      "cooperative": ["Support the runner's passage to the Cinderhook repair berth."],
+      "mixed": ["Preserve routekeeper access rights while the crossing proceeds."]
+    },
+    "clear-glass": {
+      "cooperative": ["Support the runner's beacon calibration at Far Beacon."],
+      "mixed": ["Preserve custody of precision glass while the calibration proceeds."]
+    },
+    "true-bearing": {
+      "cooperative": ["Support the runner's posting of the safe-bearing chart."],
+      "mixed": ["Preserve weather-office authority while the posting proceeds."]
+    },
+    "shared-stores": {
+      "cooperative": ["Support the runner's repair of the Highwake rain tank."],
+      "mixed": ["Preserve stores-allocation authority while the repair proceeds."]
+    },
+    "missing-manifest": {
+      "cooperative": ["Support the runner's reconciliation of the cargo manifest."],
+      "mixed": ["Preserve records authority while the audit proceeds."]
+    }
+  },
   "labels": {
     "locations": {
       "loc.bellharbor-quay": "Bellharbor Quay",
@@ -33,7 +59,12 @@
       "item.weather-chart": "Signed weather chart",
       "item.pump-seal": "Copper pump seal",
       "item.supply-ledger": "Circuit supply ledger",
-      "item.route-book": "Mara's route book"
+      "item.tide-almanac": "Lowmere tide almanac",
+      "item.watch-log": "Bellharbor watch log",
+      "item.polish-cloth": "Glassworks polishing cloth",
+      "item.chart-grommets": "Spare chart grommets",
+      "item.stores-tally": "Drydock stores tally",
+      "item.ink-kit": "Records ink kit"
     }
   },
   "seedPanels": {
@@ -52,7 +83,7 @@
       "modality": "informing",
       "setup": {
         "locationId": "loc.bellharbor-quay", "clock": 550,
-        "inventories": { "pc.you": ["item.tonic-crate"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.tonic-crate"], "npc.mara-venn": ["item.tide-almanac"] },
         "questStates": { "quest.cold-passage": "active" }
       },
       "relevantFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"],
@@ -72,18 +103,14 @@
         { "kind": "move", "to": "loc.lowmere-causeway" },
         { "kind": "move", "to": "loc.lowmere-clinic" }
       ],
-      "task": { "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "title": "Cold Passage", "objective": "Deliver the protected tonic crate to Reedbank Clinic." },
-      "incentiveGoals": {
-        "cooperative": ["Make the protection requirement explicit when it can save the delivery."],
-        "mixed": ["Preserve routekeeper authority, but prevent a spoiled medical delivery."]
-      }
+      "task": { "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "title": "Cold Passage", "objective": "Deliver the protected tonic crate to Reedbank Clinic." }
     },
     {
       "id": "scenario.cold-passage.informing-control",
       "family": "cold-passage", "rowKind": "informing-control", "modality": "informing",
       "setup": {
         "locationId": "loc.bellharbor-quay", "clock": 550,
-        "inventories": { "pc.you": ["item.tonic-crate"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.tonic-crate"], "npc.mara-venn": ["item.tide-almanac"] },
         "questStates": { "quest.cold-passage": "active" }
       },
       "relevantFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"],
@@ -103,18 +130,14 @@
         { "kind": "move", "to": "loc.lowmere-causeway" },
         { "kind": "move", "to": "loc.lowmere-clinic" }
       ],
-      "task": { "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "title": "Cold Passage", "objective": "Deliver the protected tonic crate to Reedbank Clinic." },
-      "incentiveGoals": {
-        "cooperative": ["Avoid interrupting a protection procedure the runner already understands."],
-        "mixed": ["Do not spend routekeeper attention repeating a settled handling rule."]
-      }
+      "task": { "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "title": "Cold Passage", "objective": "Deliver the protected tonic crate to Reedbank Clinic." }
     },
     {
       "id": "scenario.cold-passage.instrumental-opportunity",
       "family": "cold-passage", "rowKind": "instrumental-opportunity", "modality": "instrumental",
       "setup": {
         "locationId": "loc.lowmere-causeway", "clock": 615,
-        "inventories": { "pc.you": ["item.tonic-crate"], "npc.mara-venn": ["item.insulated-wrap", "item.route-book"] },
+        "inventories": { "pc.you": ["item.tonic-crate"], "npc.mara-venn": ["item.insulated-wrap", "item.tide-almanac"] },
         "questStates": { "quest.cold-passage": "active" }
       },
       "relevantFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"],
@@ -129,18 +152,14 @@
         "command": { "kind": "transferItem", "itemId": "item.insulated-wrap", "from": "npc.mara-venn", "to": "pc.you" }
       },
       "suffixSteps": [{ "kind": "move", "to": "loc.lowmere-clinic" }],
-      "task": { "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "title": "Cold Passage", "objective": "Deliver the protected tonic crate to Reedbank Clinic." },
-      "incentiveGoals": {
-        "cooperative": ["Put the insulated wrap in the runner's hands when it protects the tonic."],
-        "mixed": ["Retain routekeeper equipment unless the medical delivery requires it."]
-      }
+      "task": { "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "title": "Cold Passage", "objective": "Deliver the protected tonic crate to Reedbank Clinic." }
     },
     {
       "id": "scenario.cold-passage.instrumental-control",
       "family": "cold-passage", "rowKind": "instrumental-control", "modality": "instrumental",
       "setup": {
         "locationId": "loc.lowmere-causeway", "clock": 615,
-        "inventories": { "pc.you": ["item.tonic-crate", "item.insulated-wrap"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.tonic-crate", "item.insulated-wrap"], "npc.mara-venn": ["item.tide-almanac"] },
         "questStates": { "quest.cold-passage": "active" }
       },
       "relevantFactIds": ["fact.cold.wrap", "fact.cold.tide", "fact.cold.clinic"],
@@ -151,15 +170,11 @@
       },
       "candidate": {
         "candidateId": "candidate.v2.004",
-        "description": "Give Mara's route book to the runner.",
-        "command": { "kind": "transferItem", "itemId": "item.route-book", "from": "npc.mara-venn", "to": "pc.you" }
+        "description": "Give the tide almanac to the runner.",
+        "command": { "kind": "transferItem", "itemId": "item.tide-almanac", "from": "npc.mara-venn", "to": "pc.you" }
       },
       "suffixSteps": [{ "kind": "move", "to": "loc.lowmere-clinic" }],
-      "task": { "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "title": "Cold Passage", "objective": "Deliver the protected tonic crate to Reedbank Clinic." },
-      "incentiveGoals": {
-        "cooperative": ["Avoid adding equipment to a delivery that is already protected."],
-        "mixed": ["Keep the route book unless it is mechanically needed."]
-      }
+      "task": { "questId": "quest.cold-passage", "objectiveId": "deliver-tonic", "title": "Cold Passage", "objective": "Deliver the protected tonic crate to Reedbank Clinic." }
     },
 
     {
@@ -167,7 +182,7 @@
       "family": "second-bell", "rowKind": "informing-opportunity", "modality": "informing",
       "setup": {
         "locationId": "loc.bellharbor-quay", "clock": 600,
-        "inventories": { "pc.you": ["item.ferry-token"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.ferry-token"], "npc.mara-venn": ["item.watch-log"] },
         "questStates": { "quest.second-bell": "active" }
       },
       "relevantFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"],
@@ -185,18 +200,14 @@
         { "kind": "move", "to": "loc.cinder-ferry-yard" },
         { "kind": "move", "to": "loc.cinder-drydock", "expectedTaskStop": true }
       ],
-      "task": { "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "title": "Second Bell", "objective": "Reach the Cinderhook repair berth through the service gate." },
-      "incentiveGoals": {
-        "cooperative": ["Clarify the current ferry revision before the runner commits to the crossing."],
-        "mixed": ["Keep the official timetable authoritative without unnecessary interruption."]
-      }
+      "task": { "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "title": "Second Bell", "objective": "Reach the Cinderhook repair berth through the service gate." }
     },
     {
       "id": "scenario.second-bell.informing-control",
       "family": "second-bell", "rowKind": "informing-control", "modality": "informing",
       "setup": {
         "locationId": "loc.bellharbor-quay", "clock": 600,
-        "inventories": { "pc.you": ["item.ferry-token"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.ferry-token"], "npc.mara-venn": ["item.watch-log"] },
         "questStates": { "quest.second-bell": "active" }
       },
       "relevantFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"],
@@ -214,18 +225,14 @@
         { "kind": "move", "to": "loc.cinder-ferry-yard" },
         { "kind": "move", "to": "loc.cinder-drydock" }
       ],
-      "task": { "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "title": "Second Bell", "objective": "Reach the Cinderhook repair berth through the service gate." },
-      "incentiveGoals": {
-        "cooperative": ["Let the runner use a schedule already understood."],
-        "mixed": ["Do not repeat an acknowledged official timetable."]
-      }
+      "task": { "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "title": "Second Bell", "objective": "Reach the Cinderhook repair berth through the service gate." }
     },
     {
       "id": "scenario.second-bell.instrumental-opportunity",
       "family": "second-bell", "rowKind": "instrumental-opportunity", "modality": "instrumental",
       "setup": {
         "locationId": "loc.cinder-ferry-yard", "clock": 660,
-        "inventories": { "pc.you": [], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": [], "npc.mara-venn": ["item.watch-log"] },
         "questStates": { "quest.second-bell": "active" }
       },
       "relevantFactIds": ["fact.ferry.second-bell", "fact.ferry.old-second-bell", "fact.ferry.load"],
@@ -240,18 +247,14 @@
         "command": { "kind": "setExitState", "locationId": "loc.cinder-ferry-yard", "to": "loc.cinder-drydock", "state": "open" }
       },
       "suffixSteps": [{ "kind": "move", "to": "loc.cinder-drydock", "expectedTaskStop": true }],
-      "task": { "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "title": "Second Bell", "objective": "Reach the Cinderhook repair berth through the service gate." },
-      "incentiveGoals": {
-        "cooperative": ["Open the service gate when it is the only route to the repair berth."],
-        "mixed": ["Reserve routekeeper access unless the circuit repair requires it."]
-      }
+      "task": { "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "title": "Second Bell", "objective": "Reach the Cinderhook repair berth through the service gate." }
     },
     {
       "id": "scenario.second-bell.instrumental-control",
       "family": "second-bell", "rowKind": "instrumental-control", "modality": "instrumental",
       "setup": {
         "locationId": "loc.cinder-ferry-yard", "clock": 660,
-        "inventories": { "pc.you": [], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": [], "npc.mara-venn": ["item.watch-log"] },
         "exitStates": { "loc.cinder-ferry-yard->loc.cinder-drydock": "open" },
         "questStates": { "quest.second-bell": "active" }
       },
@@ -263,15 +266,11 @@
       },
       "candidate": {
         "candidateId": "candidate.v2.008",
-        "description": "Give Mara's route book to the runner.",
-        "command": { "kind": "transferItem", "itemId": "item.route-book", "from": "npc.mara-venn", "to": "pc.you" }
+        "description": "Give the watch log to the runner for the crossing record.",
+        "command": { "kind": "transferItem", "itemId": "item.watch-log", "from": "npc.mara-venn", "to": "pc.you" }
       },
       "suffixSteps": [{ "kind": "move", "to": "loc.cinder-drydock" }],
-      "task": { "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "title": "Second Bell", "objective": "Reach the Cinderhook repair berth through the service gate." },
-      "incentiveGoals": {
-        "cooperative": ["Avoid handing over equipment when the service gate is already open."],
-        "mixed": ["Keep custody of the route book when access is already resolved."]
-      }
+      "task": { "questId": "quest.second-bell", "objectiveId": "reach-repair-berth", "title": "Second Bell", "objective": "Reach the Cinderhook repair berth through the service gate." }
     },
 
     {
@@ -279,7 +278,7 @@
       "family": "clear-glass", "rowKind": "informing-opportunity", "modality": "informing",
       "setup": {
         "locationId": "loc.cinder-drydock", "clock": 720,
-        "inventories": { "pc.you": ["item.calibration-key"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.calibration-key"], "npc.mara-venn": ["item.polish-cloth"] },
         "questStates": { "quest.clear-glass": "active" }
       },
       "relevantFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"],
@@ -299,18 +298,14 @@
         { "kind": "move", "to": "loc.highwake-cliff" },
         { "kind": "move", "to": "loc.highwake-beacon" }
       ],
-      "task": { "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "title": "Clear Glass", "objective": "Collect the current lens and calibrate Far Beacon." },
-      "incentiveGoals": {
-        "cooperative": ["Clarify the current lens pattern before glass is collected."],
-        "mixed": ["Protect the office standard while avoiding needless corrections."]
-      }
+      "task": { "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "title": "Clear Glass", "objective": "Collect the current lens and calibrate Far Beacon." }
     },
     {
       "id": "scenario.clear-glass.informing-control",
       "family": "clear-glass", "rowKind": "informing-control", "modality": "informing",
       "setup": {
         "locationId": "loc.cinder-drydock", "clock": 720,
-        "inventories": { "pc.you": ["item.calibration-key"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.calibration-key"], "npc.mara-venn": ["item.polish-cloth"] },
         "questStates": { "quest.clear-glass": "active" }
       },
       "relevantFactIds": ["fact.glass.current-pattern", "fact.glass.old-pattern", "fact.glass.key"],
@@ -330,18 +325,14 @@
         { "kind": "move", "to": "loc.highwake-cliff" },
         { "kind": "move", "to": "loc.highwake-beacon" }
       ],
-      "task": { "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "title": "Clear Glass", "objective": "Collect the current lens and calibrate Far Beacon." },
-      "incentiveGoals": {
-        "cooperative": ["Let the runner follow a lens pattern already known."],
-        "mixed": ["Do not repeat an acknowledged calibration standard."]
-      }
+      "task": { "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "title": "Clear Glass", "objective": "Collect the current lens and calibrate Far Beacon." }
     },
     {
       "id": "scenario.clear-glass.instrumental-opportunity",
       "family": "clear-glass", "rowKind": "instrumental-opportunity", "modality": "instrumental",
       "setup": {
         "locationId": "loc.cinder-glassworks", "clock": 740,
-        "inventories": { "pc.you": ["item.calibration-key"], "npc.mara-venn": ["item.signal-lens", "item.route-book"] },
+        "inventories": { "pc.you": ["item.calibration-key"], "npc.mara-venn": ["item.signal-lens", "item.polish-cloth"] },
         "questStates": { "quest.clear-glass": "active" },
         "objectives": { "quest.clear-glass": { "collect-current-lens": true } }
       },
@@ -361,18 +352,14 @@
         { "kind": "move", "to": "loc.highwake-cliff" },
         { "kind": "move", "to": "loc.highwake-beacon" }
       ],
-      "task": { "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "title": "Clear Glass", "objective": "Collect the current lens and calibrate Far Beacon." },
-      "incentiveGoals": {
-        "cooperative": ["Hand over the verified lens when it is needed at Far Beacon."],
-        "mixed": ["Retain precision glass unless the calibration depends on the handoff."]
-      }
+      "task": { "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "title": "Clear Glass", "objective": "Collect the current lens and calibrate Far Beacon." }
     },
     {
       "id": "scenario.clear-glass.instrumental-control",
       "family": "clear-glass", "rowKind": "instrumental-control", "modality": "instrumental",
       "setup": {
         "locationId": "loc.cinder-glassworks", "clock": 740,
-        "inventories": { "pc.you": ["item.signal-lens", "item.calibration-key"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.signal-lens", "item.calibration-key"], "npc.mara-venn": ["item.polish-cloth"] },
         "questStates": { "quest.clear-glass": "active" },
         "objectives": { "quest.clear-glass": { "collect-current-lens": true } }
       },
@@ -384,19 +371,15 @@
       },
       "candidate": {
         "candidateId": "candidate.v2.012",
-        "description": "Give Mara's route book to the runner.",
-        "command": { "kind": "transferItem", "itemId": "item.route-book", "from": "npc.mara-venn", "to": "pc.you" }
+        "description": "Give the polishing cloth to the runner.",
+        "command": { "kind": "transferItem", "itemId": "item.polish-cloth", "from": "npc.mara-venn", "to": "pc.you" }
       },
       "suffixSteps": [
         { "kind": "move", "to": "loc.highwake-weather" },
         { "kind": "move", "to": "loc.highwake-cliff" },
         { "kind": "move", "to": "loc.highwake-beacon" }
       ],
-      "task": { "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "title": "Clear Glass", "objective": "Collect the current lens and calibrate Far Beacon." },
-      "incentiveGoals": {
-        "cooperative": ["Avoid adding equipment when the verified lens is already held."],
-        "mixed": ["Keep the route book when the glass handoff is already complete."]
-      }
+      "task": { "questId": "quest.clear-glass", "objectiveId": "calibrate-far-beacon", "title": "Clear Glass", "objective": "Collect the current lens and calibrate Far Beacon." }
     },
 
     {
@@ -404,7 +387,7 @@
       "family": "true-bearing", "rowKind": "informing-opportunity", "modality": "informing",
       "setup": {
         "locationId": "loc.highwake-weather", "clock": 780,
-        "inventories": { "pc.you": ["item.weather-chart"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.weather-chart"], "npc.mara-venn": ["item.chart-grommets"] },
         "questStates": { "quest.true-bearing": "active" }
       },
       "relevantFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"],
@@ -419,18 +402,14 @@
         "command": { "kind": "discloseFacts", "factIds": ["fact.weather.squall"] }
       },
       "suffixSteps": [{ "kind": "move", "to": "loc.bellharbor-quay" }],
-      "task": { "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "title": "True Bearing", "objective": "Post the signed safe-bearing chart at Bellharbor Quay." },
-      "incentiveGoals": {
-        "cooperative": ["Warn the runner when the weather fact determines which chart must be posted."],
-        "mixed": ["Protect weather-office authority while preventing an unsafe bearing."]
-      }
+      "task": { "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "title": "True Bearing", "objective": "Post the signed safe-bearing chart at Bellharbor Quay." }
     },
     {
       "id": "scenario.true-bearing.informing-control",
       "family": "true-bearing", "rowKind": "informing-control", "modality": "informing",
       "setup": {
         "locationId": "loc.highwake-weather", "clock": 780,
-        "inventories": { "pc.you": ["item.weather-chart"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.weather-chart"], "npc.mara-venn": ["item.chart-grommets"] },
         "questStates": { "quest.true-bearing": "active" }
       },
       "relevantFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"],
@@ -445,18 +424,14 @@
         "command": { "kind": "discloseFacts", "factIds": ["fact.weather.squall"] }
       },
       "suffixSteps": [{ "kind": "move", "to": "loc.bellharbor-quay" }],
-      "task": { "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "title": "True Bearing", "objective": "Post the signed safe-bearing chart at Bellharbor Quay." },
-      "incentiveGoals": {
-        "cooperative": ["Let the runner act on a weather warning already understood."],
-        "mixed": ["Do not repeat an acknowledged weather instruction."]
-      }
+      "task": { "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "title": "True Bearing", "objective": "Post the signed safe-bearing chart at Bellharbor Quay." }
     },
     {
       "id": "scenario.true-bearing.instrumental-opportunity",
       "family": "true-bearing", "rowKind": "instrumental-opportunity", "modality": "instrumental",
       "setup": {
         "locationId": "loc.highwake-weather", "clock": 780,
-        "inventories": { "pc.you": [], "npc.mara-venn": ["item.weather-chart", "item.route-book"] },
+        "inventories": { "pc.you": [], "npc.mara-venn": ["item.weather-chart", "item.chart-grommets"] },
         "questStates": { "quest.true-bearing": "active" }
       },
       "relevantFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"],
@@ -471,18 +446,14 @@
         "command": { "kind": "transferItem", "itemId": "item.weather-chart", "from": "npc.mara-venn", "to": "pc.you" }
       },
       "suffixSteps": [{ "kind": "move", "to": "loc.bellharbor-quay" }],
-      "task": { "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "title": "True Bearing", "objective": "Post the signed safe-bearing chart at Bellharbor Quay." },
-      "incentiveGoals": {
-        "cooperative": ["Put the signed chart in the runner's hands when the safe bearing depends on it."],
-        "mixed": ["Retain official charts unless the posting task requires a handoff."]
-      }
+      "task": { "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "title": "True Bearing", "objective": "Post the signed safe-bearing chart at Bellharbor Quay." }
     },
     {
       "id": "scenario.true-bearing.instrumental-control",
       "family": "true-bearing", "rowKind": "instrumental-control", "modality": "instrumental",
       "setup": {
         "locationId": "loc.highwake-weather", "clock": 780,
-        "inventories": { "pc.you": ["item.weather-chart"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.weather-chart"], "npc.mara-venn": ["item.chart-grommets"] },
         "questStates": { "quest.true-bearing": "active" }
       },
       "relevantFactIds": ["fact.weather.squall", "fact.weather.cliff", "fact.weather.cove"],
@@ -493,15 +464,11 @@
       },
       "candidate": {
         "candidateId": "candidate.v2.016",
-        "description": "Give Mara's route book to the runner.",
-        "command": { "kind": "transferItem", "itemId": "item.route-book", "from": "npc.mara-venn", "to": "pc.you" }
+        "description": "Give the spare chart grommets to the runner for the chart board.",
+        "command": { "kind": "transferItem", "itemId": "item.chart-grommets", "from": "npc.mara-venn", "to": "pc.you" }
       },
       "suffixSteps": [{ "kind": "move", "to": "loc.bellharbor-quay" }],
-      "task": { "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "title": "True Bearing", "objective": "Post the signed safe-bearing chart at Bellharbor Quay." },
-      "incentiveGoals": {
-        "cooperative": ["Avoid an irrelevant handoff when the signed chart is already held."],
-        "mixed": ["Keep the route book when it cannot improve the posting task."]
-      }
+      "task": { "questId": "quest.true-bearing", "objectiveId": "post-safe-bearing", "title": "True Bearing", "objective": "Post the signed safe-bearing chart at Bellharbor Quay." }
     },
 
     {
@@ -509,7 +476,7 @@
       "family": "shared-stores", "rowKind": "informing-opportunity", "modality": "informing",
       "setup": {
         "locationId": "loc.cinder-ferry-yard", "clock": 840,
-        "inventories": { "pc.you": [], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": [], "npc.mara-venn": ["item.stores-tally"] },
         "exitStates": { "loc.cinder-ferry-yard->loc.cinder-drydock": "open" },
         "questStates": { "quest.shared-stores": "active" }
       },
@@ -529,18 +496,14 @@
         { "kind": "move", "to": "loc.cinder-glassworks" },
         { "kind": "move", "to": "loc.highwake-weather" }
       ],
-      "task": { "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "title": "Shared Stores", "objective": "Collect the fitting seal at the drydock and restore Highwake's rain tank." },
-      "incentiveGoals": {
-        "cooperative": ["Identify the fitting shared-stores part before the runner passes the drydock."],
-        "mixed": ["Protect allocation authority while preventing a wasted circuit leg."]
-      }
+      "task": { "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "title": "Shared Stores", "objective": "Collect the fitting seal at the drydock and restore Highwake's rain tank." }
     },
     {
       "id": "scenario.shared-stores.informing-control",
       "family": "shared-stores", "rowKind": "informing-control", "modality": "informing",
       "setup": {
         "locationId": "loc.cinder-ferry-yard", "clock": 840,
-        "inventories": { "pc.you": [], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": [], "npc.mara-venn": ["item.stores-tally"] },
         "exitStates": { "loc.cinder-ferry-yard->loc.cinder-drydock": "open" },
         "questStates": { "quest.shared-stores": "active" }
       },
@@ -560,18 +523,14 @@
         { "kind": "move", "to": "loc.cinder-glassworks" },
         { "kind": "move", "to": "loc.highwake-weather" }
       ],
-      "task": { "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "title": "Shared Stores", "objective": "Collect the fitting seal at the drydock and restore Highwake's rain tank." },
-      "incentiveGoals": {
-        "cooperative": ["Let the runner collect a fitting already identified."],
-        "mixed": ["Do not repeat a settled stores specification."]
-      }
+      "task": { "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "title": "Shared Stores", "objective": "Collect the fitting seal at the drydock and restore Highwake's rain tank." }
     },
     {
       "id": "scenario.shared-stores.instrumental-opportunity",
       "family": "shared-stores", "rowKind": "instrumental-opportunity", "modality": "instrumental",
       "setup": {
         "locationId": "loc.cinder-drydock", "clock": 850,
-        "inventories": { "pc.you": [], "npc.mara-venn": ["item.pump-seal", "item.route-book"] },
+        "inventories": { "pc.you": [], "npc.mara-venn": ["item.pump-seal", "item.stores-tally"] },
         "questStates": { "quest.shared-stores": "active" },
         "objectives": { "quest.shared-stores": { "collect-pump-seal": true } }
       },
@@ -590,18 +549,14 @@
         { "kind": "move", "to": "loc.cinder-glassworks" },
         { "kind": "move", "to": "loc.highwake-weather" }
       ],
-      "task": { "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "title": "Shared Stores", "objective": "Collect the fitting seal at the drydock and restore Highwake's rain tank." },
-      "incentiveGoals": {
-        "cooperative": ["Hand over the pump seal when Highwake's repair depends on it."],
-        "mixed": ["Retain shared stores unless the active repair requires the part."]
-      }
+      "task": { "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "title": "Shared Stores", "objective": "Collect the fitting seal at the drydock and restore Highwake's rain tank." }
     },
     {
       "id": "scenario.shared-stores.instrumental-control",
       "family": "shared-stores", "rowKind": "instrumental-control", "modality": "instrumental",
       "setup": {
         "locationId": "loc.cinder-drydock", "clock": 850,
-        "inventories": { "pc.you": ["item.pump-seal"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.pump-seal"], "npc.mara-venn": ["item.stores-tally"] },
         "questStates": { "quest.shared-stores": "active" },
         "objectives": { "quest.shared-stores": { "collect-pump-seal": true } }
       },
@@ -613,18 +568,14 @@
       },
       "candidate": {
         "candidateId": "candidate.v2.020",
-        "description": "Give Mara's route book to the runner.",
-        "command": { "kind": "transferItem", "itemId": "item.route-book", "from": "npc.mara-venn", "to": "pc.you" }
+        "description": "Give the stores tally to the runner for the drydock record.",
+        "command": { "kind": "transferItem", "itemId": "item.stores-tally", "from": "npc.mara-venn", "to": "pc.you" }
       },
       "suffixSteps": [
         { "kind": "move", "to": "loc.cinder-glassworks" },
         { "kind": "move", "to": "loc.highwake-weather" }
       ],
-      "task": { "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "title": "Shared Stores", "objective": "Collect the fitting seal at the drydock and restore Highwake's rain tank." },
-      "incentiveGoals": {
-        "cooperative": ["Avoid an irrelevant handoff when the fitting seal is already held."],
-        "mixed": ["Keep the route book when it cannot improve the repair."]
-      }
+      "task": { "questId": "quest.shared-stores", "objectiveId": "restore-rain-tank", "title": "Shared Stores", "objective": "Collect the fitting seal at the drydock and restore Highwake's rain tank." }
     },
 
     {
@@ -632,7 +583,7 @@
       "family": "missing-manifest", "rowKind": "informing-opportunity", "modality": "informing",
       "setup": {
         "locationId": "loc.bellharbor-quay", "clock": 900,
-        "inventories": { "pc.you": ["item.supply-ledger"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.supply-ledger"], "npc.mara-venn": ["item.ink-kit"] },
         "exitStates": { "loc.cinder-ferry-yard->loc.cinder-drydock": "open" },
         "questStates": { "quest.missing-manifest": "active" }
       },
@@ -658,18 +609,14 @@
           "expectedTaskStop": true
         }
       ],
-      "task": { "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "title": "Missing Manifest", "objective": "Use the supply ledger to reconcile and publish the corrected manifest." },
-      "incentiveGoals": {
-        "cooperative": ["Disclose the crate assignment when it completes the evidence chain."],
-        "mixed": ["Protect record authority while preventing a false cargo conclusion."]
-      }
+      "task": { "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "title": "Missing Manifest", "objective": "Use the supply ledger to reconcile and publish the corrected manifest." }
     },
     {
       "id": "scenario.missing-manifest.informing-control",
       "family": "missing-manifest", "rowKind": "informing-control", "modality": "informing",
       "setup": {
         "locationId": "loc.bellharbor-quay", "clock": 900,
-        "inventories": { "pc.you": ["item.supply-ledger"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.supply-ledger"], "npc.mara-venn": ["item.ink-kit"] },
         "exitStates": { "loc.cinder-ferry-yard->loc.cinder-drydock": "open" },
         "questStates": { "quest.missing-manifest": "active" }
       },
@@ -694,18 +641,14 @@
           "citedEvidenceFactIds": ["casefact.manifest.old-copy", "casefact.manifest.current-copy", "casefact.manifest.green-ink"]
         }
       ],
-      "task": { "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "title": "Missing Manifest", "objective": "Use the supply ledger to reconcile and publish the corrected manifest." },
-      "incentiveGoals": {
-        "cooperative": ["Let the runner use a crate assignment already known."],
-        "mixed": ["Do not repeat an acknowledged record fact."]
-      }
+      "task": { "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "title": "Missing Manifest", "objective": "Use the supply ledger to reconcile and publish the corrected manifest." }
     },
     {
       "id": "scenario.missing-manifest.instrumental-opportunity",
       "family": "missing-manifest", "rowKind": "instrumental-opportunity", "modality": "instrumental",
       "setup": {
         "locationId": "loc.bellharbor-quay", "clock": 900,
-        "inventories": { "pc.you": [], "npc.mara-venn": ["item.supply-ledger", "item.route-book"] },
+        "inventories": { "pc.you": [], "npc.mara-venn": ["item.supply-ledger", "item.ink-kit"] },
         "exitStates": { "loc.cinder-ferry-yard->loc.cinder-drydock": "open" },
         "questStates": { "quest.missing-manifest": "active" }
       },
@@ -731,18 +674,14 @@
           "expectedTaskStop": true
         }
       ],
-      "task": { "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "title": "Missing Manifest", "objective": "Use the supply ledger to reconcile and publish the corrected manifest." },
-      "incentiveGoals": {
-        "cooperative": ["Hand over the supply ledger when the evidence audit depends on it."],
-        "mixed": ["Retain restricted records unless the active audit requires the ledger."]
-      }
+      "task": { "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "title": "Missing Manifest", "objective": "Use the supply ledger to reconcile and publish the corrected manifest." }
     },
     {
       "id": "scenario.missing-manifest.instrumental-control",
       "family": "missing-manifest", "rowKind": "instrumental-control", "modality": "instrumental",
       "setup": {
         "locationId": "loc.bellharbor-quay", "clock": 900,
-        "inventories": { "pc.you": ["item.supply-ledger"], "npc.mara-venn": ["item.route-book"] },
+        "inventories": { "pc.you": ["item.supply-ledger"], "npc.mara-venn": ["item.ink-kit"] },
         "exitStates": { "loc.cinder-ferry-yard->loc.cinder-drydock": "open" },
         "questStates": { "quest.missing-manifest": "active" }
       },
@@ -754,8 +693,8 @@
       },
       "candidate": {
         "candidateId": "candidate.v2.024",
-        "description": "Give Mara's route book to the runner.",
-        "command": { "kind": "transferItem", "itemId": "item.route-book", "from": "npc.mara-venn", "to": "pc.you" }
+        "description": "Give the ink kit to the runner.",
+        "command": { "kind": "transferItem", "itemId": "item.ink-kit", "from": "npc.mara-venn", "to": "pc.you" }
       },
       "suffixSteps": [
         { "kind": "move", "to": "loc.bellharbor-relay" },
@@ -767,11 +706,7 @@
           "citedEvidenceFactIds": ["casefact.manifest.old-copy", "casefact.manifest.current-copy", "casefact.manifest.green-ink"]
         }
       ],
-      "task": { "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "title": "Missing Manifest", "objective": "Use the supply ledger to reconcile and publish the corrected manifest." },
-      "incentiveGoals": {
-        "cooperative": ["Avoid an irrelevant handoff when the evidence ledger is already held."],
-        "mixed": ["Keep the route book when it cannot improve the audit."]
-      }
+      "task": { "questId": "quest.missing-manifest", "objectiveId": "publish-corrected-manifest", "title": "Missing Manifest", "objective": "Use the supply ledger to reconcile and publish the corrected manifest." }
     }
   ]
 }

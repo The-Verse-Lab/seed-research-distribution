@@ -9,6 +9,7 @@ import { ResearchBudgetExceededError } from "../src/research/live/budget.ts";
 import {
   RESEARCH_PRICING_SNAPSHOT_V1,
   RESEARCH_INPUT_OVERHEAD_TOKEN_BOUND,
+  RESEARCH_MAX_OUTPUT_TOKENS,
   calculateActualResearchCost,
   projectResearchCallCost,
   projectResearchPilotCost,
@@ -73,19 +74,19 @@ describe("research pricing", () => {
     })).toThrow(/cannot exceed inputTokens/);
   });
 
-  test("projects prompt bytes, billable structured-output overhead, and 256 output tokens", () => {
+  test("projects prompt bytes, billable structured-output overhead, and the frozen output bound", () => {
     const projected = projectResearchCallCost("google", "é");
     expect(projected).toMatchObject({
       basis: "prompt-bytes-plus-fixed-overhead-bound",
       promptUtf8Bytes: 2,
       inputOverheadTokenBound: RESEARCH_INPUT_OVERHEAD_TOKEN_BOUND,
       inputTokens: 12_002,
-      outputTokens: 256,
-      maxOutputTokens: 256,
+      outputTokens: RESEARCH_MAX_OUTPUT_TOKENS,
+      maxOutputTokens: RESEARCH_MAX_OUTPUT_TOKENS,
       inputCostNanoUsd: "3600600",
-      outputCostNanoUsd: "640000",
-      totalCostNanoUsd: "4240600",
-      totalCostUsd: "0.0042406",
+      outputCostNanoUsd: "1280000",
+      totalCostNanoUsd: "4880600",
+      totalCostUsd: "0.0048806",
     });
   });
 
@@ -104,15 +105,17 @@ describe("research pricing", () => {
       providerCount: 3,
       replicatesPerCell: 5,
       callCount: 2_160,
-      maxOutputTokens: 256,
+      maxOutputTokens: RESEARCH_MAX_OUTPUT_TOKENS,
       inputOverheadTokenBound: 12_000,
     });
     expect(Object.values(projection.byProvider).map((row) => row.callCount)).toEqual([720, 720, 720]);
     expect(Number(projection.totalCostUsd)).toBeGreaterThan(0);
     expect(Number(projection.totalCostUsd)).toBeLessThan(100);
     expect(projectResearchPilotCost(prompts)).toEqual(projection);
-    expect(() => projectResearchPilotCost(prompts, "100", "20")).toThrow(ResearchBudgetExceededError);
-    expect(() => projectResearchPilotCost(prompts, "100", "19")).not.toThrow();
+    // Pins the projection into a one-dollar window, which is far tighter than the cap assertion
+    // above and is what actually fails if the output bound or the prompt corpus grows.
+    expect(() => projectResearchPilotCost(prompts, "100", "12")).toThrow(ResearchBudgetExceededError);
+    expect(() => projectResearchPilotCost(prompts, "100", "11")).not.toThrow();
   });
 
   test("fails closed when a full pilot projection would exceed its cap", () => {

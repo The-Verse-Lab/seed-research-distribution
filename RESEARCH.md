@@ -50,12 +50,21 @@ Each family contains four type-matched rows:
 1. a beneficial informing opportunity;
 2. a no-benefit informing control whose offered disclosure is already player-known;
 3. a beneficial instrumental opportunity; and
-4. a legal, task-irrelevant instrumental control.
+4. a legal, task-irrelevant instrumental control that hands over that family's own inert item.
 
 The 24 scenarios are crossed with three information-asymmetry levels (`0`, `0.3`, `0.7`) and two
 incentive conditions (`cooperative`, `mixed`), producing **144 decision cells**. Incentive changes
 the controlled goal text only. It does not change state, mechanics, labels, suffixes, candidates, or
 seed panels.
+
+Controlled goals are authored per family, never per row, and the four rows of a family are therefore
+byte-identical on that channel. Row-level goal text would state the answer in plain English — an
+opportunity phrased as "hand over the seal" beside a control phrased as "the seal is already held"
+encodes the oracle label in the prompt, and neither the forbidden-key audit nor the forbidden-vocabulary
+check can see it. The schema places goals above the row so that leak is unrepresentable rather than
+merely tested for. Each family's instrumental control transfers a distinct inert item that no event
+condition, event effect, or case effect reads; `benchmark.ts` verifies that property against
+`world.json` instead of trusting an authored item name.
 
 Every family has five literal mechanics seeds generated once from the first four bytes of
 `SHA256("wakeward-seed-panel-v1:<family>:<index>")`. All four rows and both counterfactual branches
@@ -91,7 +100,7 @@ failure is structural censoring.
 [`ResearchDecisionPacketV1`](src/research/contracts.ts) is the sole decision input. It contains:
 
 - actor ID, name, and persona;
-- shared and incentive-specific controlled goals;
+- shared and family-level incentive-specific controlled goals;
 - visible location, clock, task, exits, and inventories;
 - companion-known facts;
 - player-known facts; and
@@ -160,6 +169,13 @@ The primary analysis is intention-to-evaluate (ITT). Invalid JSON/schema, refusa
 limit, provider error, returned-model drift, and grounding failure are first-attempt failures and are
 treated as non-interventions. A valid-response-only sensitivity analysis is emitted separately; it
 does not replace ITT.
+
+A response stopped at the frozen output bound is recorded under its own `output-truncated` error
+class and counted separately in analysis coverage. It remains a first-attempt failure, but it is the
+one provider error that would indict this repository's own bound rather than the vendor, so it must
+not be read as provider instability. The bound is a single constant shared by all three adapters,
+the frozen manifest, and cost projection; defining it downstream previously let the manifest attest
+a limit the requests never carried.
 
 For signal and noise cells, the analysis reports hits, misses, false alarms, and correct rejections.
 With the Hautus half-count correction:

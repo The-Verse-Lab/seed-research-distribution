@@ -20,6 +20,7 @@ import {
   parseProviderRequest,
   parseVisibleResearchDecision,
   stringField,
+  RESEARCH_MAX_OUTPUT_TOKENS,
   type ResearchHttpProviderOptions,
 } from "./shared.ts";
 
@@ -56,7 +57,7 @@ export class AnthropicResearchProvider implements ResearchProvider {
         },
         body: JSON.stringify({
           model: this.model,
-          max_tokens: 256,
+          max_tokens: RESEARCH_MAX_OUTPUT_TOKENS,
           thinking: { type: "disabled" },
           messages: [{ role: "user", content: request.prompt }],
           output_config: {
@@ -151,7 +152,9 @@ export class AnthropicResearchProvider implements ResearchProvider {
         configuredModel: this.model,
         status: "provider-error",
         latencyMs: result.latencyMs,
-        errorClass: stopReason ? "incomplete-response" : "missing-stop-reason",
+        errorClass: stopReason === "max_tokens"
+          ? "output-truncated"
+          : stopReason ? "incomplete-response" : "missing-stop-reason",
         ...metadata,
       });
     }

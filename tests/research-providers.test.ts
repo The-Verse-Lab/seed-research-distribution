@@ -15,6 +15,7 @@ import {
   OPENAI_RESEARCH_ENDPOINT,
   OPENAI_RESEARCH_MODEL,
   OpenAIResearchProvider,
+  RESEARCH_MAX_OUTPUT_TOKENS,
   WRAPPED_RESEARCH_DECISION_JSON_SCHEMA,
 } from "../src/research/providers/index.ts";
 
@@ -120,12 +121,16 @@ function researchRequest(timeoutMs = 1_000): ResearchProviderRequestV1 {
   };
 }
 
-function googleEnvelope(visibleOutput: string, returnedModel = GOOGLE_RESEARCH_MODEL): unknown {
+function googleEnvelope(
+  visibleOutput: string,
+  returnedModel = GOOGLE_RESEARCH_MODEL,
+  finishReason = "STOP",
+): unknown {
   return {
     responseId: "google-response-1",
     modelVersion: returnedModel,
     candidates: [{
-      finishReason: "STOP",
+      finishReason,
       content: {
         role: "model",
         parts: [
@@ -144,13 +149,13 @@ function googleEnvelope(visibleOutput: string, returnedModel = GOOGLE_RESEARCH_M
   };
 }
 
-function anthropicEnvelope(visibleOutput: string): unknown {
+function anthropicEnvelope(visibleOutput: string, stopReason = "end_turn"): unknown {
   return {
     id: "msg_123",
     type: "message",
     role: "assistant",
     model: ANTHROPIC_RESEARCH_MODEL,
-    stop_reason: "end_turn",
+    stop_reason: stopReason,
     content: [
       { type: "thinking", thinking: "ANTHROPIC_PRIVATE_THOUGHT", signature: "PRIVATE_SIGNATURE" },
       { type: "text", text: visibleOutput },
@@ -164,11 +169,16 @@ function anthropicEnvelope(visibleOutput: string): unknown {
   };
 }
 
-function openAIEnvelope(visibleOutput: string, returnedModel = OPENAI_RESEARCH_MODEL): unknown {
+function openAIEnvelope(
+  visibleOutput: string,
+  returnedModel = OPENAI_RESEARCH_MODEL,
+  incomplete?: { status: string; reason: string },
+): unknown {
   return {
     id: "resp_123",
     object: "response",
-    status: "completed",
+    status: incomplete?.status ?? "completed",
+    ...(incomplete ? { incomplete_details: { reason: incomplete.reason } } : {}),
     model: returnedModel,
     output: [
       {
@@ -213,7 +223,7 @@ describe("research provider raw HTTP request shapes", () => {
     expect(body).toEqual({
       contents: [{ role: "user", parts: [{ text: request.prompt }] }],
       generationConfig: {
-        maxOutputTokens: 256,
+        maxOutputTokens: RESEARCH_MAX_OUTPUT_TOKENS,
         thinkingConfig: { thinkingLevel: "minimal", includeThoughts: false },
         responseFormat: {
           text: {
@@ -265,7 +275,7 @@ describe("research provider raw HTTP request shapes", () => {
     const body = requestBody(calls[0]!);
     expect(body).toEqual({
       model: ANTHROPIC_RESEARCH_MODEL,
-      max_tokens: 256,
+      max_tokens: RESEARCH_MAX_OUTPUT_TOKENS,
       thinking: { type: "disabled" },
       messages: [{ role: "user", content: request.prompt }],
       output_config: {
@@ -316,7 +326,7 @@ describe("research provider raw HTTP request shapes", () => {
     expect(body).toEqual({
       model: OPENAI_RESEARCH_MODEL,
       input: request.prompt,
-      max_output_tokens: 256,
+      max_output_tokens: RESEARCH_MAX_OUTPUT_TOKENS,
       reasoning: { effort: "none" },
       store: false,
       text: {
@@ -576,6 +586,80 @@ describe("research provider status normalization", () => {
     expect(calls).toHaveLength(1);
     expect(attempt.status).toBe("invalid-schema");
     expect(attempt.errorClass).toBe("grounding-error");
+    expect(attempt.parsedDecision).toBeUndefined();
+  });
+
+  // Truncation stays a first-attempt failure, but it is the one provider-error cause that indicts
+  // our own frozen output bound rather than the vendor, so it must not sit in the same bucket as a
+  // 500 or a stalled response.
+  const TRUNCATED = '{"decision":{"choice":"interv';
+
+  test("Google MAX_TOKENS is output-truncated and keeps the partial visible output", async () => {
+    const calls: CapturedCall[] = [];
+    const provider = new GoogleResearchProvider({
+      apiKey: "key",
+      fetch: capturingFetch(calls, () => jsonResponse(
+        googleEnvelope(TRUNCATED, GOOGLE_RESEARCH_MODEL, "MAX_TOKENS"),
+      )),
+    });
+
+    const attempt = await provider.decide(researchRequest());
+
+    expect(calls).toHaveLength(1);
+    expect(attempt.status).toBe("provider-error");
+    expect(attempt.errorClass).toBe("output-truncated");
+    expect(attempt.stopReason).toBe("MAX_TOKENS");
+    expect(attempt.visibleOutput).toBe(TRUNCATED);
+    expect(attempt.parsedDecision).toBeUndefined();
+  });
+
+  test("Anthropic max_tokens is output-truncated, and other stops stay incomplete-response", async () => {
+    const truncatedCalls: CapturedCall[] = [];
+    const truncated = await new AnthropicResearchProvider({
+      apiKey: "key",
+      fetch: capturingFetch(truncatedCalls, () => jsonResponse(
+        anthropicEnvelope(TRUNCATED, "max_tokens"),
+      )),
+    }).decide(researchRequest());
+
+    expect(truncatedCalls).toHaveLength(1);
+    expect(truncated.status).toBe("provider-error");
+    expect(truncated.errorClass).toBe("output-truncated");
+    expect(truncated.stopReason).toBe("max_tokens");
+    expect(truncated.visibleOutput).toBe(TRUNCATED);
+
+    const otherCalls: CapturedCall[] = [];
+    const other = await new AnthropicResearchProvider({
+      apiKey: "key",
+      fetch: capturingFetch(otherCalls, () => jsonResponse(
+        anthropicEnvelope(TRUNCATED, "pause_turn"),
+      )),
+    }).decide(researchRequest());
+
+    expect(otherCalls).toHaveLength(1);
+    expect(other.status).toBe("provider-error");
+    expect(other.errorClass).toBe("incomplete-response");
+  });
+
+  test("OpenAI max_output_tokens is output-truncated", async () => {
+    const calls: CapturedCall[] = [];
+    const provider = new OpenAIResearchProvider({
+      apiKey: "key",
+      fetch: capturingFetch(calls, () => jsonResponse(
+        openAIEnvelope(TRUNCATED, OPENAI_RESEARCH_MODEL, {
+          status: "incomplete",
+          reason: "max_output_tokens",
+        }),
+      )),
+    });
+
+    const attempt = await provider.decide(researchRequest());
+
+    expect(calls).toHaveLength(1);
+    expect(attempt.status).toBe("provider-error");
+    expect(attempt.errorClass).toBe("output-truncated");
+    expect(attempt.stopReason).toBe("max_output_tokens");
+    expect(attempt.visibleOutput).toBe(TRUNCATED);
     expect(attempt.parsedDecision).toBeUndefined();
   });
 });

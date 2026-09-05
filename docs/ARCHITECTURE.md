@@ -76,7 +76,7 @@ failure, or horizon exhaustion is a structural censor and fails the gate.
 construction includes:
 
 - actor ID, name, and persona;
-- controlled shared and incentive-specific goals;
+- controlled shared and family-level incentive-specific goals;
 - visible location, clock, task, exits, and inventories;
 - companion-known and player-known facts; and
 - one closed candidate table.

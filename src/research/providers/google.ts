@@ -20,6 +20,7 @@ import {
   parseProviderRequest,
   parseVisibleResearchDecision,
   stringField,
+  RESEARCH_MAX_OUTPUT_TOKENS,
   type ResearchHttpProviderOptions,
 } from "./shared.ts";
 
@@ -66,7 +67,7 @@ export class GoogleResearchProvider implements ResearchProvider {
         body: JSON.stringify({
           contents: [{ role: "user", parts: [{ text: request.prompt }] }],
           generationConfig: {
-            maxOutputTokens: 256,
+            maxOutputTokens: RESEARCH_MAX_OUTPUT_TOKENS,
             thinkingConfig: {
               thinkingLevel: "minimal",
               includeThoughts: false,
@@ -166,7 +167,9 @@ export class GoogleResearchProvider implements ResearchProvider {
         configuredModel: this.model,
         status: "provider-error",
         latencyMs: result.latencyMs,
-        errorClass: finishReason ? "incomplete-response" : "missing-finish-reason",
+        errorClass: finishReason === "MAX_TOKENS"
+          ? "output-truncated"
+          : finishReason ? "incomplete-response" : "missing-finish-reason",
         ...metadata,
       });
     }

@@ -5,6 +5,7 @@ import {
   ANTHROPIC_RESEARCH_MODEL,
   GOOGLE_RESEARCH_MODEL,
   OPENAI_RESEARCH_MODEL,
+  RESEARCH_MAX_OUTPUT_TOKENS,
 } from "../providers/index.ts";
 import {
   DEFAULT_RESEARCH_BUDGET_USD,
@@ -14,7 +15,7 @@ import {
 } from "./budget.ts";
 
 export const RESEARCH_PRICING_RETRIEVED_DATE = "2026-08-21";
-export const RESEARCH_MAX_OUTPUT_TOKENS = 256;
+export { RESEARCH_MAX_OUTPUT_TOKENS };
 /**
  * Per-call allowance for schema compilation and provider-injected structured-output instructions.
  * Anthropic documents that its injected JSON-output prompt is billable; this deliberately large

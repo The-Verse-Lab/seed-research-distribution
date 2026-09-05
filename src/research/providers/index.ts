@@ -15,6 +15,7 @@ export {
   OpenAIResearchProvider,
 } from "./openai.ts";
 export {
+  RESEARCH_MAX_OUTPUT_TOKENS,
   WRAPPED_RESEARCH_DECISION_JSON_SCHEMA,
   type ResearchHttpProviderOptions,
 } from "./shared.ts";

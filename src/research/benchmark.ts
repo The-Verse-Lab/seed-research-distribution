@@ -111,10 +111,19 @@ export const ResearchScenarioV2Schema = z.object({
     title: z.string().min(1),
     objective: z.string().min(1),
   }).strict(),
-  incentiveGoals: z.object({
-    cooperative: z.array(z.string().min(1)).min(1),
-    mixed: z.array(z.string().min(1)).min(1),
-  }).strict(),
+}).strict();
+
+/**
+ * Controlled goals are authored per family, never per row.
+ *
+ * Row-level goal text is a label channel: an opportunity row phrased as "hand over the seal" and its
+ * type-matched control phrased as "the seal is already held" together announce the oracle class in
+ * plain English, which no key-name or vocabulary check can detect. Keeping the goals one level above
+ * the row makes that leak unrepresentable rather than merely tested for.
+ */
+const ResearchIncentiveGoalsV2Schema = z.object({
+  cooperative: z.array(z.string().min(1)).min(1),
+  mixed: z.array(z.string().min(1)).min(1),
 }).strict();
 
 export const ResearchBenchmarkV2Schema = z.object({
@@ -127,6 +136,7 @@ export const ResearchBenchmarkV2Schema = z.object({
     persona: z.string().min(1),
   }).strict(),
   sharedGoals: z.array(z.string().min(1)).min(1),
+  familyGoals: z.record(ResearchIncentiveGoalsV2Schema),
   labels: z.object({
     locations: z.record(z.string().min(1)),
     items: z.record(z.string().min(1)),
@@ -175,6 +185,30 @@ function subset(left: readonly string[], right: readonly string[]): boolean {
   return left.every((entry) => available.has(entry));
 }
 
+/**
+ * Item ids the world mechanics can actually read.
+ *
+ * An instrumental control is only a no-benefit control if the item it hands over cannot enter any
+ * causal path to task success. The world has no item registry, so that property is established here
+ * by collecting every id an event condition tests or an event/case effect moves.
+ */
+function liveResearchItemIds(definition: ResearchWorldDefinition): ReadonlySet<string> {
+  const live = new Set<string>();
+  const collectEffects = (effects: readonly { kind: string; itemId?: string }[]): void => {
+    for (const effect of effects) {
+      if (effect.kind === "transferItem" && effect.itemId) live.add(effect.itemId);
+    }
+  };
+  for (const event of definition.events) {
+    for (const condition of event.trigger.allOf) {
+      if (condition.kind === "hasItem") live.add(condition.itemId);
+    }
+    collectEffects(event.effects);
+  }
+  for (const caseDefinition of definition.cases) collectEffects(caseDefinition.successEffects);
+  return live;
+}
+
 /** Literal, stable family seed from the first four SHA-256 bytes in network byte order. */
 export function wakewardMechanicsSeed(family: string, index: number): number {
   if (!Number.isInteger(index) || index < 0 || index >= 5) throw new Error("Mechanics seed index must be 0-4");
@@ -203,6 +237,14 @@ export function validateResearchBenchmarkV2(
   const cases = new Set(definition.cases.map((row) => row.id));
   const scenarioIds = new Set<string>();
   const candidateIds = new Set<string>();
+  const mechanicallyLiveItemIds = liveResearchItemIds(definition);
+  const controlItemsByFamily = new Map<string, string>();
+
+  for (const extra of Object.keys(manifest.familyGoals)) {
+    if (!(WAKEWARD_FAMILIES as readonly string[]).includes(extra)) {
+      fail(`familyGoals names unknown family "${extra}"`);
+    }
+  }
 
   for (const family of WAKEWARD_FAMILIES) {
     const panel = manifest.seedPanels[family] ?? fail(`family "${family}" has no seed panel`);
@@ -210,6 +252,7 @@ export function validateResearchBenchmarkV2(
     if (panel.some((seed, index) => seed !== expected[index])) {
       fail(`family "${family}" seed panel is not the frozen SHA-256 panel`);
     }
+    if (!manifest.familyGoals[family]) fail(`family "${family}" has no controlled goals`);
     const rows = manifest.scenarios.filter((row) => row.family === family);
     const expectedRows = [
       "informing-opportunity",
@@ -257,8 +300,21 @@ export function validateResearchBenchmarkV2(
       }
     }
     if (scenario.rowKind === "instrumental-control") {
-      if (command.kind !== "transferItem" || command.itemId !== "item.route-book") {
-        fail(`scenario "${scenario.id}" instrumental control must use the legal route-book transfer`);
+      if (command.kind !== "transferItem") {
+        fail(`scenario "${scenario.id}" instrumental control must be an item transfer`);
+      } else if (command.from !== definition.companionId || command.to !== definition.playerId) {
+        fail(`scenario "${scenario.id}" instrumental control must transfer from companion to player`);
+      } else if (!(scenario.setup.inventories[definition.companionId] ?? []).includes(command.itemId)) {
+        // A transfer the companion cannot make is a structural censor, not a no-benefit control.
+        fail(`scenario "${scenario.id}" instrumental control transfers an item the companion does not hold`);
+      } else if (mechanicallyLiveItemIds.has(command.itemId)) {
+        fail(`scenario "${scenario.id}" instrumental control transfers task-relevant item "${command.itemId}"`);
+      } else {
+        const claimed = controlItemsByFamily.get(command.itemId);
+        if (claimed && claimed !== scenario.family) {
+          fail(`control item "${command.itemId}" is shared by families "${claimed}" and "${scenario.family}"`);
+        }
+        controlItemsByFamily.set(command.itemId, scenario.family);
       }
     }
 
@@ -350,7 +406,7 @@ export function buildResearchDecisionPacket(
     actor: structuredClone(loaded.manifest.actor),
     controlledGoals: [
       ...loaded.manifest.sharedGoals,
-      ...cell.scenario.incentiveGoals[cell.condition.incentive],
+      ...loaded.manifest.familyGoals[cell.scenario.family]![cell.condition.incentive],
     ],
     visibleState: {
       location: labels.locations[state.locationId] ?? state.locationId,

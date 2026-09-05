@@ -17,6 +17,7 @@ import {
   GOOGLE_RESEARCH_MODEL,
   OPENAI_RESEARCH_ENDPOINT,
   OPENAI_RESEARCH_MODEL,
+  RESEARCH_MAX_OUTPUT_TOKENS,
 } from "../src/research/providers/index.ts";
 
 const EXAMPLE = fileURLToPath(new URL("../research-models.example.json", import.meta.url));
@@ -110,7 +111,7 @@ describe("research model and run manifests", () => {
       providerCount: 3,
       replicatesPerCell: 5,
       totalCallCount: 2_160,
-      maxOutputTokens: 256,
+      maxOutputTokens: RESEARCH_MAX_OUTPUT_TOKENS,
       inputOverheadTokenBound: 12_000,
       timeoutMs: 30_000,
       maxInFlightPerProvider: 1,

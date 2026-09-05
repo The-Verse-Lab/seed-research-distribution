@@ -232,6 +232,9 @@ export function analyzeResearchTrials(
   ).length;
   const modelDrifts = trials.filter((trial) => trial.modelAttempt.status === "model-drift").length;
   const providerErrors = trials.filter((trial) => trial.modelAttempt.status === "provider-error").length;
+  const outputTruncations = trials.filter((trial) =>
+    trial.modelAttempt.errorClass === "output-truncated"
+  ).length;
   const rate = (count: number): number => trials.length === 0 ? 0 : rounded(count / trials.length);
   const byFamily = groupSlices(trials, (trial) => trial.family);
   const familyDPrimes = Object.values(byFamily)
@@ -276,6 +279,8 @@ export function analyzeResearchTrials(
       groundingFailureRate: rate(groundingFailures),
       providerErrors,
       providerErrorRate: rate(providerErrors),
+      outputTruncations,
+      outputTruncationRate: rate(outputTruncations),
     },
     familyVariance: {
       familyCount: Object.keys(byFamily).length,

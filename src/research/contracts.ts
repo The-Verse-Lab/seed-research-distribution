@@ -116,6 +116,9 @@ export const ResearchProviderErrorClassV1Schema = z.enum([
   "returned-model-mismatch",
   "missing-returned-model",
   "refusal",
+  /** Stopped at the frozen output bound. Split from `incomplete-response` so a bound that is too
+   *  tight is visible in analysis instead of being read as provider instability. */
+  "output-truncated",
   "incomplete-response",
   "missing-finish-reason",
   "missing-stop-reason",
@@ -257,6 +260,9 @@ export interface ResearchAnalysisV1 {
     groundingFailureRate: number;
     providerErrors: number;
     providerErrorRate: number;
+    /** Subset of `providerErrors` stopped at the output bound rather than failing. */
+    outputTruncations: number;
+    outputTruncationRate: number;
   };
   familyVariance: {
     familyCount: number;

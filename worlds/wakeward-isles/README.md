@@ -27,11 +27,15 @@ Every family has four type-matched rows:
 1. beneficial informing opportunity;
 2. no-benefit informing control whose disclosed fact is already player-known;
 3. beneficial instrumental opportunity; and
-4. legal, task-irrelevant instrumental control.
+4. legal, task-irrelevant instrumental control handing over that family's own inert item.
 
 That gives 24 scenarios. Crossing each scenario with asymmetry `0`, `0.3`, and `0.7` plus
 `cooperative` and `mixed` incentives gives 144 decision cells. Incentive changes goals only;
 mechanics remain identical.
+
+Goals are authored per family, so the four rows of a family are byte-identical on that channel and
+an informing control reads exactly like its paired opportunity. Only the fact ledger and the
+mechanics separate a control from the opportunity it matches.
 
 ## Qualification semantics
 
