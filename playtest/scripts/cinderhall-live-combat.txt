@@ -1,3 +1,0 @@
-/spawn mon.cinderhound
-I cut at the cinderhound with my cold-iron sword.
-/quit
